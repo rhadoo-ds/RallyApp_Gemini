@@ -1,641 +1,521 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#06080a">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" id="theme-color-meta" content="#07090c">
 <title>RegRally GPS</title>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ─── TOKENS ─────────────────────────────────────── */
-:root{
-  --bg:        #06080a;
-  --card:      #0d1117;
-  --card2:     #121920;
-  --line:      #1c2a35;
-  --line2:     #243040;
-  --ahead:     #00aaff;   /* blue = early */
-  --behind:    #ff2244;   /* red  = late  */
-  --ok:        #00e87a;   /* green = on time */
-  --warn:      #ffaa00;
-  --dim:       #1e3045;
-  --txt:       #c8d8e8;
-  --muted:     #405060;
-  --mono:      'Share Tech Mono', monospace;
-  --sans:      'Rajdhani', sans-serif;
-  --sat:       env(safe-area-inset-top,0px);
-  --sab:       env(safe-area-inset-bottom,0px);
+/* ── THEME TOKENS ── */
+[data-theme="dark"]{
+  --bg:#07090c;--surf:#0e1318;--surf2:#141b22;--surf3:#1a232c;
+  --border:#1f2f3d;--border2:#28404f;
+  --txt:#dce8f0;--txt2:#8aa0b0;--txt3:#4a6070;
+  --ahead:#29b5ff;--behind:#ff3355;--ok:#00df80;--warn:#ffb020;
+  --dim:#162030;--overlay:rgba(7,9,12,.97);
+}
+[data-theme="light"]{
+  --bg:#f0f4f8;--surf:#ffffff;--surf2:#f5f7fa;--surf3:#eaeff4;
+  --border:#d0dae4;--border2:#b8c8d8;
+  --txt:#0d1f2d;--txt2:#4a6070;--txt3:#8aa0b0;
+  --ahead:#0080cc;--behind:#e0001a;--ok:#00904f;--warn:#b87000;
+  --dim:#c8dce8;--overlay:rgba(240,244,248,.97);
 }
 
-/* ─── RESET ───────────────────────────────────────── */
+/* ── RESET ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{
-  width:100%;height:100%;
+html,body{width:100%;height:100%;overflow:hidden;}
+body{
   background:var(--bg);color:var(--txt);
-  font-family:var(--sans);font-weight:500;
-  -webkit-font-smoothing:antialiased;
-  overflow:hidden;
+  font-family:'DM Sans',system-ui,sans-serif;font-size:15px;font-weight:400;
+  -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;
+  transition:background .25s,color .25s;
 }
-body{display:flex;flex-direction:column;}
-
-/* scanline atmosphere */
-body::after{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:1000;
-  background:repeating-linear-gradient(0deg,rgba(0,0,0,.04) 0px,rgba(0,0,0,.04) 1px,transparent 1px,transparent 4px);
+[data-theme="dark"] body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.04) 0,rgba(0,0,0,.04) 1px,transparent 1px,transparent 4px);
 }
 
-/* ─── HEADER ──────────────────────────────────────── */
+/* ── HEADER ── */
 #hdr{
   flex-shrink:0;
-  padding-top:var(--sat);
-  background:var(--card);
-  border-bottom:1px solid var(--line2);
-  display:flex;align-items:center;justify-content:space-between;
-  padding-left:14px;padding-right:14px;padding-bottom:10px;
-  padding-top:calc(var(--sat) + 10px);
+  padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 10px;
+  background:var(--surf);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
   position:relative;z-index:50;
 }
-#hdr::after{
+[data-theme="dark"] #hdr::after{
   content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--ahead) 30%,var(--ok) 70%,transparent);
-  opacity:.5;
+  background:linear-gradient(90deg,transparent,var(--ahead) 30%,var(--ok) 70%,transparent);opacity:.5;
 }
-.app-logo{display:flex;flex-direction:column;gap:1px;}
-.app-name{font-family:var(--mono);font-size:16px;letter-spacing:5px;color:var(--ahead);
-  text-shadow:0 0 16px rgba(0,170,255,.5);}
-.app-sub{font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;}
+.logo-name{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;letter-spacing:4px;color:var(--ahead);}
+[data-theme="dark"] .logo-name{text-shadow:0 0 16px color-mix(in srgb,var(--ahead) 50%,transparent);}
+.logo-sub{font-size:10px;letter-spacing:2px;color:var(--txt3);text-transform:uppercase;font-weight:500;margin-top:1px;}
+.hdr-right{display:flex;align-items:center;gap:8px;}
 .gps-badge{
   display:flex;align-items:center;gap:7px;
-  font-family:var(--mono);font-size:9px;letter-spacing:1px;
-  color:var(--muted);background:var(--card2);
-  border:1px solid var(--line);padding:5px 10px;border-radius:2px;
-  min-width:110px;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;
+  color:var(--txt3);background:var(--surf2);border:1px solid var(--border);
+  padding:5px 10px;border-radius:4px;min-width:100px;justify-content:center;
 }
-.dot{
-  width:8px;height:8px;border-radius:50%;
-  background:var(--muted);flex-shrink:0;transition:all .4s;
-}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--txt3);flex-shrink:0;transition:all .4s;}
 .dot.acq{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:blink 1s infinite;}
 .dot.ok {background:var(--ok); box-shadow:0 0 8px var(--ok);}
 .dot.err{background:var(--behind);box-shadow:0 0 8px var(--behind);}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-
-/* ─── TABS ────────────────────────────────────────── */
-#tabs{
-  flex-shrink:0;display:flex;
-  background:var(--card);border-bottom:1px solid var(--line);
+.theme-btn{
+  background:var(--surf2);border:1px solid var(--border);color:var(--txt2);
+  font-size:18px;width:36px;height:36px;border-radius:4px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;flex-shrink:0;
 }
+.theme-btn:active{transform:scale(.93);}
+
+/* ── TABS ── */
+#tabs{flex-shrink:0;display:flex;background:var(--surf);border-bottom:1px solid var(--border);}
 .tb{
-  flex:1;padding:10px 4px;
-  font-family:var(--sans);font-weight:700;font-size:11px;
-  letter-spacing:2px;text-transform:uppercase;
-  color:var(--muted);background:none;border:none;
-  border-bottom:2px solid transparent;cursor:pointer;
-  transition:color .2s,border-color .2s;
+  flex:1;padding:11px 4px;font-weight:600;font-size:12px;
+  letter-spacing:1px;text-transform:uppercase;color:var(--txt3);
+  background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:color .2s,border-color .2s;
 }
 .tb.on{color:var(--ahead);border-bottom-color:var(--ahead);}
 
-/* ─── PAGES ───────────────────────────────────────── */
-.pg{
-  display:none;flex-direction:column;
-  flex:1;overflow-y:auto;
-  padding:14px 12px;gap:10px;
-  padding-bottom:calc(var(--sab) + 18px);
-}
+/* ── PAGES ── */
+.pg{display:none;flex-direction:column;flex:1;overflow-y:auto;padding:14px 12px;gap:10px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 18px);}
 .pg.on{display:flex;}
 .pg::-webkit-scrollbar{width:3px;}
-.pg::-webkit-scrollbar-thumb{background:var(--line2);}
+.pg::-webkit-scrollbar-thumb{background:var(--border2);}
+.sec-lbl{font-size:11px;font-weight:600;letter-spacing:2px;color:var(--txt3);text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.empty-msg{font-size:12px;color:var(--txt3);text-align:center;padding:28px;}
 
-/* ─── GPS PERMISSION OVERLAY ──────────────────────── */
+/* ── GPS OVERLAY ── */
 #gps-overlay{
-  position:fixed;inset:0;z-index:500;
-  background:rgba(6,8,10,.96);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:20px;padding:32px 24px;text-align:center;
+  position:fixed;inset:0;z-index:500;background:var(--overlay);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:18px;padding:32px 24px;text-align:center;
 }
-.ov-icon{font-size:64px;line-height:1;}
-.ov-title{font-family:var(--mono);font-size:18px;letter-spacing:4px;color:var(--txt);text-transform:uppercase;}
-.ov-body{font-size:14px;line-height:1.7;color:var(--muted);max-width:320px;}
-.ov-note{font-size:11px;color:var(--muted);line-height:1.6;max-width:300px;
-  background:rgba(255,170,0,.07);border:1px solid rgba(255,170,0,.25);
-  padding:10px 14px;border-radius:3px;color:var(--warn);}
+#gps-overlay.hidden{display:none !important;}
+.ov-icon{font-size:56px;line-height:1;}
+.ov-title{font-size:20px;font-weight:700;color:var(--txt);}
+.ov-body{font-size:14px;line-height:1.7;color:var(--txt2);max-width:310px;}
+.ov-note{font-size:12px;color:var(--warn);line-height:1.6;max-width:300px;
+  background:color-mix(in srgb,var(--warn) 8%,transparent);
+  border:1px solid color-mix(in srgb,var(--warn) 30%,transparent);padding:10px 14px;border-radius:6px;}
 .btn-allow{
-  background:linear-gradient(135deg,#005080,#0080cc);
-  color:#fff;font-family:var(--mono);font-size:13px;letter-spacing:3px;
-  text-transform:uppercase;padding:16px 32px;
-  border:none;border-radius:3px;cursor:pointer;
-  box-shadow:0 0 24px rgba(0,128,204,.4);
-  transition:all .2s;
+  width:100%;max-width:300px;background:var(--ahead);color:#fff;
+  font-weight:700;font-size:15px;padding:16px 24px;
+  border:none;border-radius:8px;cursor:pointer;transition:all .2s;
 }
-.btn-allow:active{transform:scale(.97);}
+[data-theme="dark"] .btn-allow{box-shadow:0 0 24px color-mix(in srgb,var(--ahead) 35%,transparent);}
+.btn-allow:active{transform:scale(.97);opacity:.9;}
 .btn-skip{
-  font-family:var(--mono);font-size:10px;letter-spacing:2px;
-  color:var(--muted);background:none;border:none;cursor:pointer;
-  text-decoration:underline;text-underline-offset:3px;
-  padding:6px 12px;
+  font-size:14px;font-weight:600;color:var(--txt3);background:none;border:none;cursor:pointer;
+  text-decoration:underline;text-underline-offset:4px;padding:12px 20px;min-height:48px;
+  display:block;width:100%;max-width:300px;
 }
-#gps-overlay.hidden{display:none;}
+#ov-err{display:none;flex-direction:column;align-items:center;gap:14px;text-align:center;}
+.err-title{font-size:16px;font-weight:700;color:var(--behind);}
+.err-body{font-size:13px;line-height:1.7;color:var(--txt2);max-width:300px;}
+.err-steps{text-align:left;background:var(--surf2);border:1px solid var(--border2);
+  padding:12px 14px;border-radius:6px;font-size:12px;line-height:2;color:var(--txt);max-width:300px;width:100%;}
+.err-steps strong{color:var(--ahead);font-weight:600;}
 
-/* GPS error state inside overlay */
-#ov-err{display:none;flex-direction:column;align-items:center;gap:14px;}
-.err-icon{font-size:48px;}
-.err-title{font-family:var(--mono);font-size:14px;letter-spacing:3px;color:var(--behind);}
-.err-body{font-size:12px;line-height:1.7;color:var(--muted);max-width:300px;}
-.err-steps{text-align:left;background:var(--card2);border:1px solid var(--line2);
-  padding:12px 14px;border-radius:3px;font-size:11px;line-height:2;
-  color:var(--txt);max-width:300px;width:100%;}
-.err-steps strong{color:var(--ahead);font-family:var(--mono);}
+/* ── LEG CARDS ── */
+.lcard{background:var(--surf);border:1px solid var(--border);border-left:3px solid var(--ahead);border-radius:6px;overflow:hidden;margin-bottom:6px;}
+.lcard.linked-card{border-left-color:var(--ok);}
+.lhdr{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surf2);border-bottom:1px solid var(--border);}
+.lbadge{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;color:var(--ahead);
+  background:color-mix(in srgb,var(--ahead) 10%,transparent);border:1px solid color-mix(in srgb,var(--ahead) 25%,transparent);
+  padding:3px 8px;border-radius:3px;letter-spacing:1px;white-space:nowrap;}
+.lcard.linked-card .lbadge{color:var(--ok);background:color-mix(in srgb,var(--ok) 10%,transparent);border-color:color-mix(in srgb,var(--ok) 25%,transparent);}
+.lname{flex:1;background:transparent;border:none;color:var(--txt);font-weight:600;font-size:14px;outline:none;min-width:0;}
+.lname::placeholder{color:var(--txt3);}
+.ldel{background:none;border:none;color:var(--txt3);font-size:18px;cursor:pointer;padding:2px 5px;line-height:1;transition:color .2s;}
+.ldel:active{color:var(--behind);}
 
-/* ─── SHARED HELPERS ──────────────────────────────── */
-.slbl{
-  font-family:var(--mono);font-size:8px;letter-spacing:3px;
-  color:var(--muted);text-transform:uppercase;
-  padding-bottom:8px;border-bottom:1px solid var(--line);
+/* Option rows (link + auto-start) */
+.lopt-row{
+  display:flex;align-items:center;gap:10px;
+  padding:7px 10px;background:var(--surf3);
+  border-bottom:1px solid var(--border);
+  font-size:13px;font-weight:500;color:var(--txt2);
+  cursor:pointer;user-select:none;
 }
-.empty{font-family:var(--mono);font-size:10px;letter-spacing:2px;
-  color:var(--muted);text-align:center;padding:28px;text-transform:uppercase;}
+.lopt-row input[type=checkbox]{accent-color:var(--ok);width:16px;height:16px;cursor:pointer;flex-shrink:0;}
+.lopt-row input[type=checkbox].auto-cb{accent-color:var(--warn);}
+.lopt-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;white-space:nowrap;}
+.badge-linked{color:var(--ok);background:color-mix(in srgb,var(--ok) 10%,transparent);border:1px solid color-mix(in srgb,var(--ok) 25%,transparent);}
+.badge-auto{color:var(--warn);background:color-mix(in srgb,var(--warn) 10%,transparent);border:1px solid color-mix(in srgb,var(--warn) 25%,transparent);}
 
-/* ─── LEG CARDS ───────────────────────────────────── */
-.lcard{
-  background:var(--card);border:1px solid var(--line);
-  border-left:2px solid var(--ahead);border-radius:2px;
-  overflow:hidden;margin-bottom:6px;
+/* Auto-start time picker row */
+.ltime-row{
+  display:flex;align-items:center;gap:10px;
+  padding:7px 10px;background:var(--surf3);
+  border-bottom:1px solid var(--border);
+  font-size:13px;font-weight:500;color:var(--txt2);
 }
-.lhdr{
-  display:flex;align-items:center;gap:8px;
-  padding:8px 10px;background:var(--card2);
-  border-bottom:1px solid var(--line);
+.ltime-row label{font-size:12px;color:var(--txt3);font-weight:600;letter-spacing:.5px;white-space:nowrap;}
+.ltime-input{
+  background:var(--surf2);border:1px solid var(--border2);border-radius:4px;
+  color:var(--txt);font-family:'DM Mono',monospace;font-size:16px;font-weight:500;
+  padding:5px 10px;outline:none;cursor:pointer;width:130px;
+  -webkit-appearance:none;
 }
-.lbadge{
-  font-family:var(--mono);font-size:9px;color:var(--ahead);
-  background:rgba(0,170,255,.08);border:1px solid rgba(0,170,255,.2);
-  padding:3px 7px;border-radius:1px;letter-spacing:1px;white-space:nowrap;
-}
-.lname{
-  flex:1;background:transparent;border:none;
-  color:var(--txt);font-family:var(--sans);font-weight:600;
-  font-size:14px;letter-spacing:.5px;outline:none;min-width:0;
-}
-.lname::placeholder{color:var(--muted);}
-.ldel{background:none;border:none;color:var(--muted);font-size:18px;
-  cursor:pointer;padding:2px 5px;line-height:1;transition:color .2s;}
-.ldel:hover,.ldel:active{color:var(--behind);}
-.lgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);}
-.lf{background:var(--card);padding:9px 10px;display:flex;flex-direction:column;gap:3px;}
-.fl{font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
-.fi{background:transparent;border:none;color:var(--txt);font-family:var(--mono);
-  font-size:16px;outline:none;width:100%;caret-color:var(--ahead);}
+.ltime-input:focus{border-color:var(--warn);}
+.ltime-countdown{font-family:'DM Mono',monospace;font-size:12px;color:var(--warn);font-weight:500;white-space:nowrap;}
+
+.lgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);}
+.lf{background:var(--surf);padding:9px 10px;display:flex;flex-direction:column;gap:3px;}
+.fl{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;}
+.fi{background:transparent;border:none;color:var(--txt);font-family:'DM Mono',monospace;font-size:17px;outline:none;width:100%;caret-color:var(--ahead);}
 .fi::-webkit-inner-spin-button,.fi::-webkit-outer-spin-button{-webkit-appearance:none;}
-.fi::placeholder{color:var(--dim);}
-.fu{font-family:var(--mono);font-size:7px;color:var(--muted);letter-spacing:1px;}
-.fv{font-family:var(--mono);font-size:15px;color:var(--ahead);min-height:20px;}
+.fi::placeholder{color:var(--border2);}
+.fu{font-size:10px;color:var(--txt3);letter-spacing:.5px;font-weight:500;}
+.fv{font-family:'DM Mono',monospace;font-size:16px;color:var(--ahead);min-height:20px;font-weight:500;}
 
-/* ─── BUTTONS ─────────────────────────────────────── */
-.btn-gps-live{
-  background:linear-gradient(135deg,#003d6b,#006bbf);
-  color:#fff;font-family:var(--mono);font-size:12px;
-  letter-spacing:3px;text-transform:uppercase;
-  padding:15px 28px;border:none;border-radius:3px;cursor:pointer;
-  box-shadow:0 0 22px rgba(0,107,191,.4);
-  transition:all .2s;width:100%;max-width:320px;
-}
+/* ── BUTTONS ── */
+.btn-add{background:color-mix(in srgb,var(--ahead) 6%,transparent);border:1px dashed color-mix(in srgb,var(--ahead) 40%,transparent);color:var(--ahead);font-weight:700;font-size:13px;padding:14px;border-radius:6px;cursor:pointer;transition:all .2s;width:100%;}
+.btn-add:active{background:color-mix(in srgb,var(--ahead) 12%,transparent);}
+.btn-launch{background:var(--ahead);color:#fff;font-weight:700;font-size:15px;padding:16px;border:none;border-radius:8px;cursor:pointer;width:100%;transition:all .2s;}
+[data-theme="dark"] .btn-launch{box-shadow:0 0 20px color-mix(in srgb,var(--ahead) 30%,transparent);}
+.btn-launch:active{transform:scale(.98);opacity:.9;}
+.btn-gps-live{width:100%;max-width:300px;background:var(--ahead);color:#fff;font-weight:700;font-size:14px;padding:14px 20px;border:none;border-radius:8px;cursor:pointer;transition:all .2s;}
+.btn-gps-live.granted{background:var(--ok);}
 .btn-gps-live:active{transform:scale(.97);}
-.btn-gps-live.granted{
-  background:linear-gradient(135deg,#004422,#007733);
-  box-shadow:0 0 22px rgba(0,119,51,.4);
-}
-.gps-hint{
-  font-family:var(--mono);font-size:9px;letter-spacing:2px;
-  color:var(--muted);text-transform:uppercase;text-align:center;
-}
-.btn-gps-run{
-  background:rgba(0,107,191,.12);
-  border:1px solid rgba(0,170,255,.35);
-  color:var(--ahead);font-family:var(--mono);font-size:10px;
-  letter-spacing:2px;text-transform:uppercase;
-  padding:10px 14px;border-radius:2px;cursor:pointer;
-  transition:all .2s;width:100%;
-}
-.btn-gps-run:active{background:rgba(0,170,255,.2);}
-.btn-gps-run.granted{
-  background:rgba(0,68,34,.15);
-  border-color:rgba(0,232,122,.3);
-  color:var(--ok);cursor:default;
-}
-  background:rgba(0,170,255,.05);border:1px dashed rgba(0,170,255,.3);
-  color:var(--ahead);font-family:var(--sans);font-weight:700;
-  font-size:11px;letter-spacing:3px;text-transform:uppercase;
-  padding:14px;border-radius:2px;cursor:pointer;transition:all .2s;width:100%;
-}
-.btn-add:active{background:rgba(0,170,255,.12);}
-.btn-launch{
-  background:linear-gradient(135deg,#004466,#0077bb);
-  color:#fff;font-family:var(--mono);font-size:12px;
-  letter-spacing:4px;text-transform:uppercase;
-  padding:16px;border:none;border-radius:2px;cursor:pointer;width:100%;
-  box-shadow:0 0 20px rgba(0,120,187,.3);transition:all .2s;
-}
-.btn-launch:active{transform:scale(.98);}
+.btn-gps-live:disabled{opacity:.5;cursor:default;}
+.gps-hint{font-size:11px;color:var(--txt3);text-align:center;}
+.btn-gps-run{width:100%;background:color-mix(in srgb,var(--ahead) 10%,transparent);border:1px solid color-mix(in srgb,var(--ahead) 40%,transparent);color:var(--ahead);font-weight:600;font-size:13px;padding:10px 14px;border-radius:6px;cursor:pointer;transition:all .2s;}
+.btn-gps-run.granted{background:color-mix(in srgb,var(--ok) 10%,transparent);border-color:color-mix(in srgb,var(--ok) 40%,transparent);color:var(--ok);}
 
-/* ─── LIVE IDLE ───────────────────────────────────── */
-#live-idle{
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;flex:1;gap:16px;
-  text-align:center;padding:40px 24px;
-}
+/* ── LIVE IDLE ── */
+#live-idle{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:16px;text-align:center;padding:32px 24px;}
 .li-icon{font-size:52px;}
-.li-title{font-family:var(--mono);font-size:14px;letter-spacing:4px;
-  color:var(--txt);text-transform:uppercase;}
-.li-body{font-size:13px;line-height:1.7;color:var(--muted);}
-.li-gps{
-  background:rgba(0,232,122,.06);border:1px solid rgba(0,232,122,.25);
-  padding:10px 14px;border-radius:2px;
-  font-size:11px;color:var(--ok);line-height:1.5;width:100%;max-width:320px;
-}
-.li-gps.bad{background:rgba(255,34,68,.06);border-color:rgba(255,34,68,.25);color:var(--behind);}
+.li-title{font-size:20px;font-weight:700;color:var(--txt);}
+.li-body{font-size:14px;line-height:1.7;color:var(--txt2);}
+.li-gps{width:100%;max-width:320px;background:color-mix(in srgb,var(--ok) 8%,transparent);border:1px solid color-mix(in srgb,var(--ok) 28%,transparent);padding:10px 14px;border-radius:6px;font-size:12px;color:var(--ok);line-height:1.5;font-weight:500;}
+.li-gps.bad{background:color-mix(in srgb,var(--behind) 8%,transparent);border-color:color-mix(in srgb,var(--behind) 28%,transparent);color:var(--behind);}
 
-/* ─── LIVE RUN ────────────────────────────────────── */
-#live-run{display:none;flex-direction:column;gap:8px;}
-
-.sbar{
-  display:flex;align-items:center;gap:8px;
-  font-family:var(--mono);font-size:8px;letter-spacing:2px;
-  color:var(--muted);text-transform:uppercase;
-  border-bottom:1px solid var(--line);padding-bottom:8px;
-}
-.sdot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:all .3s;}
+/* ── LIVE RUN ── */
+#live-run{display:none;flex-direction:column;gap:9px;}
+.sbar{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--txt3);flex-shrink:0;transition:all .3s;}
 .sdot.run{background:var(--ok);box-shadow:0 0 8px var(--ok);animation:blink 1s infinite;}
-.sdot.done{background:var(--behind);box-shadow:0 0 6px var(--behind);}
+.sdot.done{background:var(--behind);}
+.sdot.auto{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:blink .6s infinite;}
+.sdot.waiting{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:blink 1.5s infinite;}
 
-/* chips */
+/* Auto-start countdown banner */
+.autostart-banner{
+  background:color-mix(in srgb,var(--warn) 10%,transparent);
+  border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);
+  border-radius:6px;padding:12px 14px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.ab-label{font-size:13px;font-weight:600;color:var(--warn);}
+.ab-clock{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--warn);}
+.btn-abort{background:none;border:1px solid var(--behind);color:var(--behind);font-size:12px;font-weight:600;padding:6px 12px;border-radius:4px;cursor:pointer;}
+
+/* Chips */
 .chips{display:flex;gap:5px;flex-wrap:wrap;}
-.chip{
-  font-family:var(--mono);font-size:8px;letter-spacing:1px;
-  padding:4px 9px;border-radius:1px;
-  border:1px solid var(--line);background:var(--card);
-  color:var(--muted);cursor:pointer;transition:all .2s;text-transform:uppercase;
-}
-.chip.cur{border-color:var(--ahead);color:var(--ahead);background:rgba(0,170,255,.06);}
-.chip.done{border-color:var(--ok);color:var(--ok);background:rgba(0,232,122,.05);}
-.chip.run{border-color:var(--warn);color:var(--warn);animation:blink 1s infinite;}
+.chip{font-size:11px;font-weight:600;padding:5px 10px;border-radius:4px;border:1px solid var(--border);background:var(--surf);color:var(--txt3);cursor:pointer;transition:all .2s;}
+.chip.cur{border-color:var(--ahead);color:var(--ahead);background:color-mix(in srgb,var(--ahead) 8%,transparent);}
+.chip.done{border-color:var(--ok);color:var(--ok);background:color-mix(in srgb,var(--ok) 6%,transparent);}
+.chip.auto{border-color:var(--warn);color:var(--warn);animation:blink .6s infinite;}
+.chip.linked-chip{border-left:3px solid var(--ok);}
 
-/* SPEED PANEL */
-.spanel{
-  background:var(--card);border:1px solid var(--line);border-radius:2px;
-  padding:10px 12px;
-  display:grid;grid-template-columns:1fr auto 1fr auto 1fr;
-  align-items:center;gap:0;
-}
+/* Speed panel */
+.spanel{background:var(--surf);border:1px solid var(--border);border-radius:6px;padding:12px;display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;}
 .sb{display:flex;flex-direction:column;align-items:center;gap:2px;}
-.slb{font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
-.sn{
-  font-family:var(--mono);font-size:40px;line-height:1;
-  letter-spacing:-2px;color:var(--ahead);
-  text-shadow:0 0 18px rgba(0,170,255,.4);
-  transition:color .3s,text-shadow .3s;
-}
-.sn.over{color:var(--behind);text-shadow:0 0 18px rgba(255,34,68,.4);}
-.sn.good{color:var(--ok);   text-shadow:0 0 18px rgba(0,232,122,.4);}
-.sn.near{color:var(--warn); text-shadow:0 0 18px rgba(255,170,0,.4);}
-.su{font-family:var(--mono);font-size:7px;letter-spacing:1px;color:var(--muted);}
-.sdiv{width:1px;background:var(--line);height:44px;margin:0 6px;}
-.st{font-family:var(--mono);font-size:20px;color:var(--dim);letter-spacing:-1px;}
-.sdiff{font-family:var(--mono);font-size:10px;letter-spacing:1px;margin-top:2px;}
-.sdiff.p{color:var(--behind);}
-.sdiff.n{color:var(--ahead);}
-.sdiff.z{color:var(--ok);}
+.slb{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;margin-bottom:2px;}
+.sn{font-family:'DM Mono',monospace;font-size:38px;font-weight:500;line-height:1;letter-spacing:-1px;color:var(--ahead);transition:color .3s;}
+[data-theme="dark"] .sn{text-shadow:0 0 16px color-mix(in srgb,var(--ahead) 40%,transparent);}
+.sn.over{color:var(--behind);}.sn.good{color:var(--ok);}.sn.near{color:var(--warn);}
+.su{font-size:10px;font-weight:600;color:var(--txt3);}
+.sdiv{width:1px;background:var(--border);height:44px;margin:0 8px;}
+.st{font-family:'DM Mono',monospace;font-size:22px;color:var(--txt3);letter-spacing:-1px;}
+.sdiff{font-size:11px;font-weight:600;margin-top:2px;}
+.sdiff.p{color:var(--behind);}.sdiff.n{color:var(--ahead);}.sdiff.z{color:var(--ok);}
 
-/* DELTA HERO */
-.delta{
-  background:var(--card);border:1px solid var(--line);
-  border-radius:2px;overflow:hidden;position:relative;
-}
-.delta::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:var(--dc,var(--dim));
-  box-shadow:0 0 14px var(--dc,transparent);
-  transition:background .4s,box-shadow .4s;
-}
-.delta-in{padding:12px 14px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;}
-.dlbl{font-family:var(--mono);font-size:8px;letter-spacing:3px;color:var(--muted);
-  text-transform:uppercase;margin-bottom:4px;text-align:center;}
+/* Delta hero */
+.delta{background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;position:relative;}
+.delta::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--dc,var(--border2));transition:background .4s;}
+[data-theme="dark"] .delta::before{box-shadow:0 0 12px var(--dc,transparent);}
+.delta-in{padding:14px 14px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;}
+.dlbl{font-size:11px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;margin-bottom:6px;text-align:center;}
 .drow{display:flex;align-items:flex-start;justify-content:center;line-height:1;}
-.dsign{font-family:var(--mono);font-size:20px;color:var(--dc,var(--muted));
-  transition:color .4s;margin-top:8px;}
-.dint{font-family:var(--mono);font-size:76px;line-height:.9;
-  color:var(--dc,var(--txt));letter-spacing:-4px;
-  transition:color .4s,text-shadow .4s;
-  text-shadow:0 0 36px var(--dc,transparent);}
-.ddec{font-family:var(--mono);font-size:36px;line-height:.9;letter-spacing:-2px;
-  color:var(--dc,var(--txt));transition:color .4s;
-  align-self:flex-end;margin-bottom:4px;}
-.dunit{font-family:var(--mono);font-size:9px;letter-spacing:4px;
-  color:var(--muted);text-transform:uppercase;margin-top:4px;}
-.dverd{font-family:var(--sans);font-size:13px;font-weight:700;
-  letter-spacing:4px;text-transform:uppercase;
-  color:var(--dc,var(--muted));transition:color .4s;margin-top:2px;}
-.dmode{font-family:var(--mono);font-size:7px;letter-spacing:1px;
-  color:var(--muted);background:var(--card2);
-  padding:2px 8px;border-radius:1px;margin-top:4px;text-align:center;}
+.dsign{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:var(--dc,var(--txt3));transition:color .4s;margin-top:8px;margin-right:2px;}
+.dint{font-family:'DM Mono',monospace;font-size:88px;font-weight:500;line-height:.9;color:var(--dc,var(--txt));letter-spacing:-4px;transition:color .4s;}
+[data-theme="dark"] .dint{text-shadow:0 0 40px var(--dc,transparent);}
+.ddec{font-family:'DM Mono',monospace;font-size:42px;font-weight:400;line-height:.9;letter-spacing:-1px;color:var(--dc,var(--txt));transition:color .4s;align-self:flex-end;margin-bottom:6px;}
+.dunit{font-size:11px;font-weight:600;letter-spacing:3px;color:var(--txt3);text-transform:uppercase;margin-top:6px;}
+.dverd{font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dc,var(--txt3));transition:color .4s;margin-top:2px;}
+.dmode{font-size:10px;color:var(--txt3);background:var(--surf2);padding:3px 9px;border-radius:3px;margin-top:6px;text-align:center;font-weight:500;}
+.subleg-bar{width:100%;margin-top:6px;background:var(--surf2);border:1px solid var(--border);border-radius:3px;height:6px;overflow:hidden;position:relative;}
+.subleg-fill{height:100%;background:var(--ok);transition:width .4s linear;}
+.subleg-info{font-size:10px;font-weight:600;color:var(--txt3);margin-top:3px;}
 
-/* TIMING ROW */
-.trow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;
-  background:var(--line);border:1px solid var(--line);border-radius:2px;overflow:hidden;}
-.tc{background:var(--card);padding:9px 8px;text-align:center;}
-.tl{font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--muted);
-  text-transform:uppercase;margin-bottom:3px;}
-.tv{font-family:var(--mono);font-size:18px;color:var(--txt);line-height:1;}
+/* Timing / Distance rows */
+.trow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.tc{background:var(--surf);padding:10px 8px;text-align:center;}
+.tl{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;margin-bottom:4px;}
+.tv{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;color:var(--txt);line-height:1;}
 .tv.hi{color:var(--ahead);}
-.tunit{font-family:var(--mono);font-size:7px;color:var(--muted);letter-spacing:1px;margin-top:2px;}
+.tunit{font-size:10px;color:var(--txt3);margin-top:3px;font-weight:500;}
+.drow2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.dc2{background:var(--surf);padding:10px 8px;text-align:center;}
+.dl{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;margin-bottom:4px;}
+.dv{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;color:var(--txt);line-height:1;}
+.dv.bl{color:var(--ahead);}.dv.gn{color:var(--ok);}
+.du{font-size:10px;color:var(--txt3);margin-top:3px;font-weight:500;}
 
-/* DIST ROW */
-.drow2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;
-  background:var(--line);border:1px solid var(--line);border-radius:2px;overflow:hidden;}
-.dc2{background:var(--card);padding:9px 8px;text-align:center;}
-.dl{font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--muted);
-  text-transform:uppercase;margin-bottom:3px;}
-.dv{font-family:var(--mono);font-size:17px;color:var(--txt);line-height:1;}
-.dv.bl{color:var(--ahead);}
-.dv.gn{color:var(--ok);}
-.du{font-family:var(--mono);font-size:7px;color:var(--muted);letter-spacing:1px;margin-top:2px;}
+/* Progress */
+.pwrap{position:relative;height:8px;background:var(--surf2);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+.pfill{position:absolute;top:0;left:0;bottom:0;background:linear-gradient(90deg,var(--ahead),var(--ok));transition:width .7s cubic-bezier(.25,1,.5,1);max-width:100%;}
+[data-theme="dark"] .pfill{box-shadow:0 0 8px color-mix(in srgb,var(--ahead) 50%,transparent);}
+.pexp{position:absolute;top:0;bottom:0;width:2px;background:var(--warn);opacity:.9;transition:left .7s linear;}
+.plbls{display:flex;justify-content:space-between;font-size:10px;color:var(--txt3);margin-top:3px;font-weight:500;}
 
-/* PROGRESS */
-.pwrap{position:relative;height:8px;background:var(--card2);
-  border:1px solid var(--line);border-radius:1px;overflow:hidden;}
-.pfill{position:absolute;top:0;left:0;bottom:0;
-  background:linear-gradient(90deg,var(--ahead),var(--ok));
-  transition:width .8s cubic-bezier(.25,1,.5,1);
-  box-shadow:0 0 10px rgba(0,170,255,.5);max-width:100%;}
-.pexp{position:absolute;top:0;bottom:0;width:2px;
-  background:var(--warn);opacity:.8;transition:left .8s linear;}
-.plbls{display:flex;justify-content:space-between;
-  font-family:var(--mono);font-size:7px;color:var(--muted);
-  letter-spacing:1px;margin-top:3px;}
-
-/* RAW GPS */
-.rawgps{background:var(--card);border:1px solid var(--line);border-radius:2px;
-  padding:8px 10px;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
+/* Raw GPS */
+.rawgps{background:var(--surf);border:1px solid var(--border);border-radius:6px;padding:8px 12px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
 .rc{display:flex;flex-direction:column;gap:2px;}
-.rl{font-family:var(--mono);font-size:6px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
-.rv{font-family:var(--mono);font-size:10px;color:var(--dim);}
+.rl{font-size:9px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;}
+.rv{font-family:'DM Mono',monospace;font-size:11px;color:var(--txt3);}
 .rv.live{color:var(--txt);}
 
-/* CONTROLS */
+/* Controls */
 .ctrlg{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.bc{font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;
-  padding:14px 8px;border-radius:2px;cursor:pointer;border:none;transition:all .2s;}
-.bc:active{transform:scale(.97);}
-.bgo  {background:linear-gradient(135deg,#004422,#00882f);color:#fff;box-shadow:0 0 18px rgba(0,136,47,.3);}
-.bstop{background:linear-gradient(135deg,#441100,#bb1100);color:#fff;box-shadow:0 0 18px rgba(187,17,0,.3);}
-.bnext{background:linear-gradient(135deg,#002244,#003d88);color:#fff;box-shadow:0 0 14px rgba(0,61,136,.3);}
-.brst {background:var(--card2);color:var(--muted);border:1px solid var(--line);}
+.bc{font-weight:700;font-size:13px;padding:15px 8px;border-radius:8px;cursor:pointer;border:none;transition:all .2s;}
+.bc:active{transform:scale(.97);opacity:.9;}
+.bgo{background:var(--ok);color:#fff;}.bstop{background:var(--behind);color:#fff;}
+.bnext{background:var(--ahead);color:#fff;}.brst{background:var(--surf2);color:var(--txt2);border:1px solid var(--border);}
 
-/* RESULTS */
-.rtable{width:100%;border-collapse:collapse;background:var(--card);
-  border:1px solid var(--line);border-radius:2px;overflow:hidden;}
-.rtable th{font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--muted);
-  text-transform:uppercase;padding:7px 8px;background:var(--card2);
-  text-align:right;border-bottom:1px solid var(--line);font-weight:400;}
+/* Results */
+.rtable{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.rtable th{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;padding:8px;background:var(--surf2);text-align:right;border-bottom:1px solid var(--border);}
 .rtable th:first-child{text-align:left;}
-.rtable td{font-family:var(--mono);font-size:12px;padding:8px 8px;
-  border-bottom:1px solid var(--line);color:var(--txt);text-align:right;}
-.rtable td:first-child{font-family:var(--sans);font-weight:700;font-size:13px;text-align:left;}
+.rtable td{font-family:'DM Mono',monospace;font-size:12px;padding:8px;border-bottom:1px solid var(--border);color:var(--txt);text-align:right;vertical-align:middle;}
+.rtable td:first-child{font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;text-align:left;}
 .rtable tr:last-child td{border-bottom:none;}
-.cbeh{color:var(--behind);}
-.cahd{color:var(--ahead);}
-.cok {color:var(--ok);}
-.totcard{background:var(--card);border:1px solid var(--line2);border-radius:2px;
-  padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
-.totlbl{font-family:var(--mono);font-size:8px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;}
-.totval{font-family:var(--mono);font-size:30px;letter-spacing:-1px;}
+.cbeh{color:var(--behind);}.cahd{color:var(--ahead);}.cok{color:var(--ok);}
+.sub-badge{font-size:9px;font-weight:600;color:var(--ok);background:color-mix(in srgb,var(--ok) 10%,transparent);border:1px solid color-mix(in srgb,var(--ok) 25%,transparent);padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle;}
+.totcard{background:var(--surf);border:1px solid var(--border2);border-radius:6px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
+.totlbl{font-size:11px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;}
+.totval{font-family:'DM Mono',monospace;font-size:32px;font-weight:500;letter-spacing:-1px;}
 </style>
 </head>
 <body>
 
-<!-- ══ GPS PERMISSION OVERLAY ══════════════════════════ -->
+<!-- GPS OVERLAY -->
 <div id="gps-overlay">
-  <!-- initial ask -->
-  <div id="ov-ask" style="display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;">
+  <div id="ov-ask" style="display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;">
     <div class="ov-icon">📡</div>
     <div class="ov-title">GPS Required</div>
-    <div class="ov-body">RegRally needs your location to measure real-time speed and distance during each stage.<br><br>Tap the button below and <strong>Allow</strong> when your browser asks for location access.</div>
-    <div class="ov-note">⚠ On iOS Safari, make sure Settings → Safari → Location is set to <strong>Allow</strong>. On Android, allow location in the browser prompt.</div>
-    <button class="btn-allow" onclick="requestGPS()">📍 Allow Location Access</button>
+    <div class="ov-body">RegRally needs your location for real-time speed and distance tracking.<br><br>Tap <strong>Allow</strong> when your browser asks for location access.</div>
+    <div class="ov-note">⚠ iOS: Settings → Safari → Location → Allow.<br>Android: allow in the browser prompt.</div>
+    <button class="btn-allow" id="btn-allow-ov" onclick="doRequestGPS()">📍 Allow Location Access</button>
     <button class="btn-skip" onclick="skipGPS()">Continue without GPS</button>
   </div>
-  <!-- error state -->
-  <div id="ov-err">
-    <div class="err-icon">⛔</div>
+  <div id="ov-err" style="display:none;flex-direction:column;align-items:center;gap:14px;text-align:center;">
+    <div style="font-size:44px">⛔</div>
     <div class="err-title">Location Denied</div>
-    <div class="err-body">GPS permission was blocked. The app will work with time-only mode, but real speed and distance tracking won't be available.</div>
+    <div class="err-body">GPS was blocked. Continue in time-only mode, or fix permissions and retry.</div>
     <div class="err-steps">
-      <strong>Android Chrome:</strong> tap 🔒 in address bar → Site settings → Location → Allow<br>
-      <strong>Samsung Internet:</strong> Settings → Sites and downloads → Location<br>
-      <strong>iOS Safari:</strong> Settings app → Safari → Location → Allow
+      <strong>Android Chrome:</strong> tap 🔒 → Site settings → Location → Allow<br>
+      <strong>Samsung Internet:</strong> Settings → Sites → Location<br>
+      <strong>iOS Safari:</strong> Settings → Safari → Location → Allow
     </div>
-    <button class="btn-allow" style="margin-top:4px;" onclick="requestGPS()">🔄 Try Again</button>
+    <button class="btn-allow" onclick="doRequestGPS()">🔄 Try Again</button>
     <button class="btn-skip" onclick="skipGPS()">Continue without GPS</button>
   </div>
 </div>
 
-<!-- ══ HEADER ══════════════════════════════════════════ -->
+<!-- HEADER -->
 <div id="hdr">
-  <div class="app-logo">
-    <div class="app-name">REGRALLY</div>
-    <div class="app-sub">Regularity Timer · GPS</div>
+  <div>
+    <div class="logo-name">REGRALLY</div>
+    <div class="logo-sub">Regularity Timer · GPS</div>
   </div>
-  <div class="gps-badge">
-    <div class="dot" id="dot"></div>
-    <span id="gtxt">NO GPS</span>
+  <div class="hdr-right">
+    <div class="gps-badge"><div class="dot" id="dot"></div><span id="gtxt">NO GPS</span></div>
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">☀️</button>
   </div>
 </div>
 
-<!-- ══ TABS ════════════════════════════════════════════ -->
+<!-- TABS -->
 <div id="tabs">
-  <button class="tb on"  onclick="tab('legs')">⚙ LEGS</button>
-  <button class="tb"     onclick="tab('live')">▶ LIVE</button>
-  <button class="tb"     onclick="tab('res')">≡ RESULTS</button>
+  <button class="tb on" onclick="showTab('legs')">⚙ Legs</button>
+  <button class="tb"    onclick="showTab('live')">▶ Live</button>
+  <button class="tb"    onclick="showTab('res')">≡ Results</button>
 </div>
 
-<!-- ══ LEGS PAGE ════════════════════════════════════════ -->
+<!-- LEGS PAGE -->
 <div class="pg on" id="pg-legs">
-  <div class="slbl">Rally Leg Configuration</div>
+  <div class="sec-lbl">Rally Configuration</div>
   <div id="legs-list"></div>
   <button class="btn-add" onclick="addLeg()">＋ Add Leg</button>
   <div style="height:2px"></div>
-  <button class="btn-launch" onclick="launch()">▶ LAUNCH RALLY</button>
+  <button class="btn-launch" onclick="launch()">▶ Launch Rally</button>
 </div>
 
-<!-- ══ LIVE PAGE ════════════════════════════════════════ -->
+<!-- LIVE PAGE -->
 <div class="pg" id="pg-live">
-
   <div id="live-idle">
     <div class="li-icon">🏁</div>
     <div class="li-title">System Ready</div>
-    <div class="li-body">Configure your stages in the Legs tab, then tap Launch Rally to start timing.</div>
+    <div class="li-body">Configure stages in the Legs tab, then tap Launch Rally.</div>
     <div class="li-gps" id="li-gps-status">⏳ Waiting for GPS…</div>
-    <button class="btn-gps-live" id="btn-gps-live" onclick="liveRequestGPS()">📍 Request GPS Permission</button>
-    <div class="gps-hint">Tap above to enable real-time speed &amp; distance tracking</div>
+    <button class="btn-gps-live" id="btn-gps-live" onclick="doRequestGPS()">📍 Request GPS Permission</button>
+    <div class="gps-hint">Tap to enable real-time speed &amp; distance tracking</div>
   </div>
 
   <div id="live-run">
-    <div class="sbar">
-      <div class="sdot" id="sdot"></div>
-      <span id="stxt">STANDBY</span>
+    <div class="sbar"><div class="sdot" id="sdot"></div><span id="stxt">STANDBY</span></div>
+
+    <!-- Auto-start countdown banner (hidden by default) -->
+    <div class="autostart-banner" id="as-banner" style="display:none">
+      <div class="ab-label" id="as-label">⏱ Auto-start in</div>
+      <div class="ab-clock" id="as-clock">—</div>
+      <button class="btn-abort" onclick="abortAutoStart()">Cancel</button>
     </div>
 
-    <!-- leg chips -->
     <div class="chips" id="chips"></div>
+    <button class="btn-gps-run" id="btn-gps-run" onclick="doRequestGPS()" style="display:none">📍 Grant GPS Permission</button>
 
-    <!-- GPS permission button (shown when GPS not granted) -->
-    <button class="btn-gps-run" id="btn-gps-run" onclick="liveRequestGPS()" style="display:none">📍 Grant GPS Permission</button>
-
-    <!-- GPS speed row -->
     <div class="spanel">
-      <div class="sb">
-        <div class="slb">GPS Speed</div>
-        <div class="sn" id="spd">—</div>
-        <div class="su">km/h</div>
-      </div>
+      <div class="sb"><div class="slb">GPS Speed</div><div class="sn" id="spd">—</div><div class="su">km/h</div></div>
       <div class="sdiv"></div>
-      <div class="sb">
-        <div class="slb">Target</div>
-        <div class="st" id="spd-tgt">—</div>
-        <div class="su">km/h</div>
-        <div class="sdiff" id="spd-diff"></div>
-      </div>
+      <div class="sb"><div class="slb">Target</div><div class="st" id="spd-tgt">—</div><div class="su">km/h</div><div class="sdiff" id="spd-diff"></div></div>
       <div class="sdiv"></div>
-      <div class="sb">
-        <div class="slb">GPS ± m</div>
-        <div class="sn" id="spd-acc" style="font-size:24px;color:var(--muted)">—</div>
-        <div class="su">accuracy</div>
-      </div>
+      <div class="sb"><div class="slb">GPS ± m</div><div class="sn" id="spd-acc" style="font-size:26px;color:var(--txt3)">—</div><div class="su">accuracy</div></div>
     </div>
 
-    <!-- Delta hero -->
-    <div class="delta" id="delta" style="--dc:var(--dim)">
+    <div class="delta" id="delta" style="--dc:var(--border2)">
       <div class="delta-in">
-        <div class="dlbl" id="dlbl">— STAGE —</div>
-        <div class="drow">
-          <div class="dsign" id="dsign"></div>
-          <div class="dint"  id="dint">0</div>
-          <div class="ddec"  id="ddec">.0</div>
-        </div>
+        <div class="dlbl" id="dlbl">— SELECT LEG —</div>
+        <div class="drow"><div class="dsign" id="dsign"></div><div class="dint" id="dint">0</div><div class="ddec" id="ddec">.0</div></div>
         <div class="dunit">SECONDS</div>
         <div class="dverd" id="dverd">WAITING</div>
         <div class="dmode" id="dmode">AWAITING GPS</div>
+        <div id="subleg-wrap" style="display:none;width:100%">
+          <div class="subleg-bar"><div class="subleg-fill" id="subleg-fill" style="width:0%"></div></div>
+          <div class="subleg-info" id="subleg-info"></div>
+        </div>
       </div>
     </div>
 
-    <!-- Timing -->
     <div class="trow">
-      <div class="tc">
-        <div class="tl">Elapsed</div>
-        <div class="tv hi" id="t-el">0:00.0</div>
-        <div class="tunit">mm:ss.t</div>
-      </div>
-      <div class="tc">
-        <div class="tl">Target</div>
-        <div class="tv" id="t-tgt">—</div>
-        <div class="tunit">mm:ss.ss</div>
-      </div>
-      <div class="tc">
-        <div class="tl">Remaining</div>
-        <div class="tv" id="t-rem">—</div>
-        <div class="tunit">mm:ss</div>
-      </div>
+      <div class="tc"><div class="tl">Elapsed</div><div class="tv hi" id="t-el">0:00.0</div><div class="tunit">mm:ss.t</div></div>
+      <div class="tc"><div class="tl">Target</div><div class="tv" id="t-tgt">—</div><div class="tunit">mm:ss.ss</div></div>
+      <div class="tc"><div class="tl">Remaining</div><div class="tv" id="t-rem">—</div><div class="tunit">mm:ss</div></div>
     </div>
 
-    <!-- Distance -->
     <div class="drow2">
-      <div class="dc2">
-        <div class="dl">GPS Dist</div>
-        <div class="dv bl" id="d-gps">0.000</div>
-        <div class="du">km covered</div>
-      </div>
-      <div class="dc2">
-        <div class="dl">Expected</div>
-        <div class="dv" id="d-exp">0.000</div>
-        <div class="du">km at pace</div>
-      </div>
-      <div class="dc2">
-        <div class="dl">Stage Total</div>
-        <div class="dv gn" id="d-tot">—</div>
-        <div class="du">km</div>
-      </div>
+      <div class="dc2"><div class="dl">GPS Dist</div><div class="dv bl" id="d-gps">0.000</div><div class="du">km covered</div></div>
+      <div class="dc2"><div class="dl">Expected</div><div class="dv" id="d-exp">0.000</div><div class="du">km at pace</div></div>
+      <div class="dc2"><div class="dl">Leg Total</div><div class="dv gn" id="d-tot">—</div><div class="du">km</div></div>
     </div>
 
-    <!-- Progress bar -->
     <div>
-      <div class="pwrap">
-        <div class="pfill" id="pfill" style="width:0%"></div>
-        <div class="pexp"  id="pexp"  style="left:0%"></div>
-      </div>
-      <div class="plbls">
-        <span>START</span><span id="ppct">0.0%</span><span>FINISH</span>
-      </div>
+      <div class="pwrap"><div class="pfill" id="pfill" style="width:0%"></div><div class="pexp" id="pexp" style="left:0%"></div></div>
+      <div class="plbls"><span>START</span><span id="ppct">0.0%</span><span>FINISH</span></div>
     </div>
 
-    <!-- Raw GPS -->
     <div class="rawgps">
-      <div class="rc"><div class="rl">Latitude</div> <div class="rv live" id="r-lat">—</div></div>
+      <div class="rc"><div class="rl">Latitude</div><div class="rv live" id="r-lat">—</div></div>
       <div class="rc"><div class="rl">Longitude</div><div class="rv live" id="r-lon">—</div></div>
-      <div class="rc"><div class="rl">Heading</div>  <div class="rv live" id="r-hdg">—°</div></div>
-      <div class="rc"><div class="rl">Altitude</div> <div class="rv live" id="r-alt">—m</div></div>
+      <div class="rc"><div class="rl">Heading</div><div class="rv live" id="r-hdg">—°</div></div>
+      <div class="rc"><div class="rl">Altitude</div><div class="rv live" id="r-alt">—m</div></div>
     </div>
 
-    <!-- Controls -->
     <div class="ctrlg">
-      <button class="bc bgo"   id="btn-go"   onclick="startLeg()">▶ START LEG</button>
-      <button class="bc brst"                onclick="resetRally()">↺ RESET</button>
-      <button class="bc bstop" id="btn-stop" onclick="stopLeg()"  style="display:none">■ STOP</button>
-      <button class="bc bnext" id="btn-next" onclick="nextLeg()"  style="display:none">NEXT ▶</button>
+      <button class="bc bgo"   id="btn-go"   onclick="startLeg()">▶ Start Leg</button>
+      <button class="bc brst"                onclick="resetRally()">↺ Reset</button>
+      <button class="bc bstop" id="btn-stop" onclick="stopLeg()"  style="display:none">■ Stop</button>
+      <button class="bc bnext" id="btn-next" onclick="nextLeg()"  style="display:none">Next ▶</button>
     </div>
   </div>
 </div>
 
-<!-- ══ RESULTS PAGE ═════════════════════════════════════ -->
+<!-- RESULTS PAGE -->
 <div class="pg" id="pg-res">
-  <div class="slbl">Stage Results</div>
-  <div id="res-content"><div class="empty">No completed legs</div></div>
+  <div class="sec-lbl">Stage Results</div>
+  <div id="res-content"><div class="empty-msg">No completed legs yet</div></div>
 </div>
 
 <script>
-/* ════════════════════════════════════════
-   UTILITIES
-════════════════════════════════════════ */
-const $ = id => document.getElementById(id);
-const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+/* ══════════════════════════════════════════════════
+   $ must be declared FIRST — before any other code
+   that might call it, including theme init.
+══════════════════════════════════════════════════ */
+function gel(id){ return document.getElementById(id); }
+
+/* ══════════════════════════════════════════════════
+   THEME
+══════════════════════════════════════════════════ */
+let theme = localStorage.getItem('rr-theme') || 'dark';
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', theme);
+  gel('theme-btn').textContent = theme === 'dark' ? '☀️' : '🌙';
+  gel('theme-color-meta').setAttribute('content', theme === 'dark' ? '#07090c' : '#ffffff');
+}
+function toggleTheme(){
+  theme = theme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('rr-theme', theme);
+  applyTheme();
+}
+applyTheme();
+
+/* ══════════════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════════════ */
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
 
 function calcSecs(distM, spdKmh){
   const d = parseFloat(distM), s = parseFloat(spdKmh);
-  if(!d || !s || s <= 0 || isNaN(d) || isNaN(s)) return null;
-  return (d / 1000) / s * 3600;
+  if(!d||!s||s<=0||isNaN(d)||isNaN(s)) return null;
+  return (d/1000)/s*3600;
 }
-function fmtMMSSdd(s){ // mm:ss.ss
-  if(s == null || isNaN(s)) return '—';
-  const m = Math.floor(s/60), r = s % 60;
-  return m + ':' + (r < 10 ? '0' : '') + r.toFixed(2);
+function fmtMMSSdd(s){
+  if(s==null||isNaN(s)) return '—';
+  const m=Math.floor(s/60),r=s%60;
+  return m+':'+(r<10?'0':'')+r.toFixed(2);
 }
-function fmtMMSS(s){ // mm:ss
-  if(s == null || isNaN(s)) return '—';
-  const neg = s < 0; s = Math.abs(s);
-  const m = Math.floor(s/60), r = Math.floor(s%60);
-  return (neg?'-':'') + m + ':' + (r < 10 ? '0' : '') + r;
+function fmtMMSS(s){
+  if(s==null||isNaN(s)) return '—';
+  const neg=s<0; s=Math.abs(s);
+  const m=Math.floor(s/60),r=Math.floor(s%60);
+  return (neg?'-':'')+m+':'+(r<10?'0':'')+r;
 }
-function fmtEl(ms){ // mm:ss.t
-  const s = ms / 1000, m = Math.floor(s/60), r = s % 60;
-  return m + ':' + (r < 10 ? '0' : '') + r.toFixed(1);
+function fmtEl(ms){
+  const s=ms/1000,m=Math.floor(s/60),r=s%60;
+  return m+':'+(r<10?'0':'')+r.toFixed(1);
 }
-function km3(m){ return (m / 1000).toFixed(3); }
+function km3(m){ return (m/1000).toFixed(3); }
 
-/* ════════════════════════════════════════
-   GPS STATE
-════════════════════════════════════════ */
+// Parse "HH:MM" string → today's Date object (or tomorrow if past)
+function parseTimeToDate(hhmm){
+  if(!hhmm) return null;
+  const [h,m] = hhmm.split(':').map(Number);
+  if(isNaN(h)||isNaN(m)) return null;
+  const d = new Date();
+  d.setSeconds(0,0);
+  d.setHours(h, m);
+  if(d <= new Date()) d.setDate(d.getDate()+1); // if past, schedule for tomorrow
+  return d;
+}
+function fmtCountdown(ms){
+  if(ms<=0) return '00:00';
+  const s=Math.floor(ms/1000),m=Math.floor(s/60),sec=s%60;
+  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+
+/* ══════════════════════════════════════════════════
+   GPS
+══════════════════════════════════════════════════ */
 let watchId    = null;
 let lastPos    = null;
 let gpsSpeedMs = null;
@@ -645,563 +525,508 @@ let gpsFixN    = 0;
 let gpsGranted = false;
 
 function haversine(la1,lo1,la2,lo2){
-  const R=6371000, r=Math.PI/180;
-  const dL=(la2-la1)*r, dn=(lo2-lo1)*r;
-  const a=Math.sin(dL/2)**2+Math.cos(la1*r)*Math.cos(la2*r)*Math.sin(dn/2)**2;
+  const R=6371000,t=Math.PI/180;
+  const dL=(la2-la1)*t,dn=(lo2-lo1)*t;
+  const a=Math.sin(dL/2)**2+Math.cos(la1*t)*Math.cos(la2*t)*Math.sin(dn/2)**2;
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
-function setDot(state, txt){
-  $('dot').className = 'dot ' + state;
-  $('gtxt').textContent = txt;
-}
-
-function onFix(pos){
-  const c = pos.coords;
+function gpsSuccess(pos){
   gpsGranted = true;
-  gpsAccM = c.accuracy;
-  gpsSpeedMs = (c.speed !== null && c.speed >= 0) ? c.speed : null;
-
-  // accumulate distance only while leg is running
+  const c = pos.coords;
+  gpsAccM    = c.accuracy;
+  gpsSpeedMs = (c.speed!=null&&c.speed>=0)?c.speed:null;
   if(legRunning && lastPos){
-    const d = haversine(
-      lastPos.coords.latitude, lastPos.coords.longitude,
-      c.latitude, c.longitude
-    );
-    if(d < 300){ gpsDistM += d; gpsFixN++; } // ignore GPS jumps
+    const d = haversine(lastPos.coords.latitude,lastPos.coords.longitude,c.latitude,c.longitude);
+    if(d>=0&&d<200){ gpsDistM+=d; gpsFixN++; }
   }
   lastPos = pos;
-
-  const q = c.accuracy < 6  ? 'LOCKED ✓' :
-            c.accuracy < 16 ? 'GOOD ~'   :
-            c.accuracy < 40 ? 'FAIR ±'   : 'POOR !';
-  setDot('ok', q);
-
-  // raw data
-  $('r-lat').textContent = c.latitude.toFixed(6);
-  $('r-lon').textContent = c.longitude.toFixed(6);
-  $('r-hdg').textContent = c.heading  != null ? c.heading.toFixed(1)  + '°' : '—°';
-  $('r-alt').textContent = c.altitude != null ? c.altitude.toFixed(1) + 'm' : '—m';
-  $('spd-acc').textContent = c.accuracy.toFixed(1);
-
-  // update idle status banner
-  const banner = $('li-gps-status');
-  if(banner){
-    banner.className = 'li-gps';
-    banner.textContent = '✓ GPS locked — accuracy ±' + c.accuracy.toFixed(1) + 'm';
-  }
-
-  // sync button states
+  const q=c.accuracy<6?'LOCKED ✓':c.accuracy<16?'GOOD':c.accuracy<40?'FAIR':'POOR';
+  setDot('ok',q);
+  const banner=gel('li-gps-status');
+  if(banner){banner.className='li-gps';banner.textContent='✓ GPS '+q+' — ±'+c.accuracy.toFixed(1)+'m';}
+  try{gel('r-lat').textContent=c.latitude.toFixed(6);}catch(e){}
+  try{gel('r-lon').textContent=c.longitude.toFixed(6);}catch(e){}
+  try{gel('r-hdg').textContent=c.heading!=null?c.heading.toFixed(1)+'°':'—°';}catch(e){}
+  try{gel('r-alt').textContent=c.altitude!=null?c.altitude.toFixed(1)+'m':'—m';}catch(e){}
+  try{gel('spd-acc').textContent=c.accuracy.toFixed(1);}catch(e){}
   updateGpsBtns('granted');
+  const ov=gel('gps-overlay');
+  ov.classList.add('hidden'); ov.style.display='none';
 }
 
-function onGpsErr(err){
-  console.warn('GPS error code:', err.code, err.message);
-  // Code 1 = permission denied (fatal)
-  // Code 2 = position unavailable (transient, keep trying)
-  // Code 3 = timeout (transient, watchPosition will retry automatically)
-  if(err.code === 1){
-    setDot('err', 'DENIED');
+function gpsError(err){
+  console.warn('GPS err',err.code,err.message);
+  if(err.code===1){
+    gpsGranted=false;
+    setDot('err','DENIED');
     updateGpsBtns('denied');
-    const banner = $('li-gps-status');
-    if(banner){
-      banner.className = 'li-gps bad';
-      banner.textContent = '⚠ GPS denied — allow location in browser settings then tap the button again.';
-    }
+    const banner=gel('li-gps-status');
+    if(banner){banner.className='li-gps bad';banner.textContent='⚠ GPS denied — check location settings.';}
+    if(!gel('gps-overlay').classList.contains('hidden')) showOvErr();
+  } else {
+    setDot('acq','RETRYING…');
   }
-  // For codes 2 & 3: do nothing — watchPosition retries automatically.
-  // Don't touch the dot or buttons; the last known state stays visible.
 }
 
+function setDot(cls,txt){
+  gel('dot').className='dot '+cls;
+  gel('gtxt').textContent=txt;
+}
 
-/* ─── SINGLE GPS REQUEST ENTRY POINT ─────────────────
-   Only use watchPosition — never getCurrentPosition.
-   watchPosition triggers the permission prompt on all
-   browsers, accumulates fixes continuously, and its
-   error callback won't re-fire after a success.
-   Calling getCurrentPosition first then watchPosition
-   causes a double-request race that shows "denied"
-   even after the user allows on many Android browsers.
-──────────────────────────────────────────────────── */
-function doRequestGPS(fromOverlay){
-  if(!('geolocation' in navigator)){
-    updateGpsBtns('unsupported');
-    if(fromOverlay) showOvErr();
-    return;
-  }
-
-  // Always clear first so we get a fresh watch (re-triggers prompt if needed)
-  if(watchId !== null){ navigator.geolocation.clearWatch(watchId); watchId = null; }
-
-  setDot('acq', 'ACQUIRING…');
+function doRequestGPS(){
+  if(!('geolocation' in navigator)){setDot('err','NO GEO API');updateGpsBtns('unsupported');return;}
+  if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null;}
+  setDot('acq','ACQUIRING…');
   updateGpsBtns('requesting');
-
-  // watchPosition triggers the OS permission dialog on first call.
-  // The success callback (onFix) handles the "granted" state.
-  // We store the watchId so we can clear it if needed.
-  watchId = navigator.geolocation.watchPosition(
-    function(pos){
-      onFix(pos);                          // updates dot, banner, raw data
-      updateGpsBtns('granted');
-      if(fromOverlay) dismissOverlay();    // hide overlay on first fix
-    },
-    function(err){
-      if(err.code === 1){
-        // Truly denied
-        if(watchId !== null){ navigator.geolocation.clearWatch(watchId); watchId = null; }
-        onGpsErr(err);
-        updateGpsBtns('denied');
-        if(fromOverlay) showOvErr();
-      }
-      // codes 2/3: transient — leave watch running, browser will retry
-    },
-    { enableHighAccuracy:true, timeout:30000, maximumAge:0 }
-  );
-}
-
-/* Called by overlay "Allow Location Access" button */
-function requestGPS(){ doRequestGPS(true); }
-
-/* Called by Live-page GPS buttons */
-function liveRequestGPS(){ doRequestGPS(false); }
-
-function showOvErr(){
-  $('ov-ask').style.display = 'none';
-  const e = $('ov-err');
-  e.style.display = 'flex';
-  e.style.flexDirection = 'column';
-  e.style.alignItems = 'center';
-  e.style.gap = '14px';
-  e.style.textAlign = 'center';
-}
-
-function updateGpsBtns(state){
-  const btnLive = $('btn-gps-live');
-  const btnRun  = $('btn-gps-run');
-  const hint    = document.querySelector('.gps-hint');
-
-  if(state === 'granted'){
-    if(btnLive){
-      btnLive.textContent = '✓ GPS Active';
-      btnLive.classList.add('granted');
-      btnLive.disabled = true;
-    }
-    if(hint) hint.textContent = 'GPS is active — speed & distance tracking enabled';
-    if(btnRun){
-      btnRun.textContent = '✓ GPS Active';
-      btnRun.classList.add('granted');
-      btnRun.disabled = true;
-    }
-  } else if(state === 'denied'){
-    if(btnLive){ btnLive.textContent = '⛔ Denied — Tap to Retry'; btnLive.disabled = false; }
-    if(hint) hint.textContent = 'Allow location in browser settings, then tap to retry';
-    if(btnRun){ btnRun.textContent = '⛔ GPS Denied — Tap to Retry'; btnRun.style.display=''; btnRun.classList.remove('granted'); btnRun.disabled = false; }
-  } else if(state === 'requesting'){
-    if(btnLive){ btnLive.textContent = '⏳ Requesting…'; btnLive.disabled = true; }
-    if(btnRun) { btnRun.textContent  = '⏳ Requesting…'; btnRun.disabled = true; }
-  } else if(state === 'unsupported'){
-    if(btnLive){ btnLive.textContent = '⚠ GPS Not Supported'; btnLive.disabled = true; }
-    if(btnRun) { btnRun.textContent  = '⚠ GPS Not Supported'; btnRun.style.display=''; btnRun.disabled = true; }
-  }
+  watchId=navigator.geolocation.watchPosition(gpsSuccess,gpsError,{enableHighAccuracy:true,timeout:10000,maximumAge:0});
 }
 
 function skipGPS(){
-  dismissOverlay();
-  setDot('', 'NO GPS');
-  const banner = $('li-gps-status');
-  if(banner){
-    banner.className = 'li-gps bad';
-    banner.textContent = '⚠ Running without GPS — time-only mode active.';
-  }
+  if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null;}
+  const ov=gel('gps-overlay');
+  ov.classList.add('hidden'); ov.style.display='none';
+  setDot('','NO GPS');
+  const b=gel('li-gps-status');
+  if(b){b.className='li-gps bad';b.textContent='⚠ Running without GPS — time-only mode.';}
 }
 
-function dismissOverlay(){
-  $('gps-overlay').classList.add('hidden');
+function showOvErr(){
+  gel('ov-ask').style.display='none';
+  Object.assign(gel('ov-err').style,{display:'flex',flexDirection:'column',alignItems:'center',gap:'14px',textAlign:'center'});
 }
 
-/* ════════════════════════════════════════
+function updateGpsBtns(state){
+  const live=gel('btn-gps-live'),run=gel('btn-gps-run');
+  const hint=document.querySelector('.gps-hint'),ovBtn=gel('btn-allow-ov');
+  const map={
+    granted:    ['✓ GPS Active','✓ GPS Active','GPS active — real-time tracking on','✓ Active'],
+    denied:     ['⛔ Denied — Retry','⛔ Denied — Retry','Allow location in settings, then retry','🔄 Try Again'],
+    requesting: ['⏳ Requesting…','⏳ Requesting…',null,'⏳ Requesting…'],
+    unsupported:['⚠ Unavailable','⚠ Unavailable','GPS not supported by this device','⚠ Unavailable'],
+  };
+  const [lT,rT,hT,oT]=map[state]||map.denied;
+  if(live){live.textContent=lT;live.classList.toggle('granted',state==='granted');live.disabled=state==='requesting'||state==='granted';}
+  if(run){run.textContent=rT;run.classList.toggle('granted',state==='granted');run.disabled=state==='requesting'||state==='granted';run.style.display=state==='granted'?'none':'';}
+  if(hint&&hT) hint.textContent=hT;
+  if(ovBtn){ovBtn.textContent=oT;ovBtn.disabled=state==='requesting';}
+}
+
+/* ══════════════════════════════════════════════════
    TAB ROUTER
-════════════════════════════════════════ */
-function tab(name){
-  const names = ['legs','live','res'];
-  document.querySelectorAll('.tb').forEach((b,i) => b.classList.toggle('on', names[i]===name));
-  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
-  $('pg-'+name).classList.add('on');
+══════════════════════════════════════════════════ */
+function showTab(name){
+  const names=['legs','live','res'];
+  document.querySelectorAll('.tb').forEach((b,i)=>b.classList.toggle('on',names[i]===name));
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  gel('pg-'+name).classList.add('on');
 }
 
-/* ════════════════════════════════════════
+/* ══════════════════════════════════════════════════
    LEG SETUP
-════════════════════════════════════════ */
-let legs = [];
+   Each leg: { id, name, distM, spdKmh, linked, autoStart, autoTime }
+   linked   — auto-starts immediately after previous leg
+   autoStart — starts at a scheduled clock time (only for first of group)
+   autoTime  — "HH:MM" string
+══════════════════════════════════════════════════ */
+let legs  = [];
 let legId = 0;
 
 function addLeg(){
   legId++;
-  legs.push({id:legId, name:'', distM:'', spdKmh:''});
+  legs.push({id:legId,name:'',distM:'',spdKmh:'',linked:false,autoStart:false,autoTime:''});
   renderLegs();
 }
-function delLeg(id){
-  legs = legs.filter(l => l.id !== id);
-  renderLegs();
+function delLeg(id){ legs=legs.filter(l=>l.id!==id); renderLegs(); }
+function updLeg(id,field,val){
+  const l=legs.find(l=>l.id===id); if(!l) return;
+  l[field]=val;
+  if(field==='linked'||field==='autoStart') renderLegs();
+  else refreshTime(id);
 }
-function updLeg(id, field, val){
-  const l = legs.find(l => l.id === id);
-  if(!l) return;
-  l[field] = val;
-  const s = calcSecs(l.distM, l.spdKmh);
-  const el = $('lc-'+id);
-  if(el) el.textContent = s != null ? fmtMMSSdd(s) + ' (' + s.toFixed(4) + 's)' : '—';
+function refreshTime(id){
+  const l=legs.find(l=>l.id===id); if(!l) return;
+  const s=calcSecs(l.distM,l.spdKmh);
+  const el=gel('lc-'+id);
+  if(el) el.textContent=s!=null?fmtMMSSdd(s)+' ('+s.toFixed(2)+'s)':'—';
 }
+
+function legGroupInfo(idx){
+  let start=idx;
+  while(start>0&&legs[start].linked) start--;
+  let end=start;
+  while(end+1<legs.length&&legs[end+1].linked) end++;
+  return{start,end,size:end-start+1,posInGroup:idx-start};
+}
+
+// Is this leg the first in its group?
+function isGroupFirst(idx){ return !legs[idx].linked || idx===0; }
+
 function renderLegs(){
-  const c = $('legs-list');
-  if(!legs.length){ c.innerHTML = '<div class="empty">No legs yet</div>'; return; }
-  c.innerHTML = '';
-  legs.forEach((leg, idx) => {
-    const s = calcSecs(leg.distM, leg.spdKmh);
-    const sv = s != null ? fmtMMSSdd(s) + ' (' + s.toFixed(4) + 's)' : '—';
-    const d = document.createElement('div');
-    d.className = 'lcard';
-    d.innerHTML = `
+  const c=gel('legs-list');
+  if(!legs.length){c.innerHTML='<div class="empty-msg">No legs defined yet</div>';return;}
+  c.innerHTML='';
+  legs.forEach((leg,idx)=>{
+    const s=calcSecs(leg.distM,leg.spdKmh);
+    const sv=s!=null?fmtMMSSdd(s)+' ('+s.toFixed(2)+'s)':'—';
+    const canLink=idx>0;
+    const isLinked=leg.linked&&canLink;
+    const gi=legGroupInfo(idx);
+    const groupBadge=gi.size>1?`<span class="lopt-badge badge-linked">SUB ${gi.posInGroup+1}/${gi.size}</span>`:'';
+    // Auto-start only available on first leg of a group
+    const canAutoStart=isGroupFirst(idx);
+    const div=document.createElement('div');
+    div.className='lcard'+(isLinked?' linked-card':'');
+    let html=`
       <div class="lhdr">
         <span class="lbadge">LEG ${String(idx+1).padStart(2,'0')}</span>
         <input class="lname" placeholder="Stage name…" value="${leg.name}"
           oninput="updLeg(${leg.id},'name',this.value)">
         <button class="ldel" onclick="delLeg(${leg.id})">✕</button>
-      </div>
-      <div class="lgrid">
-        <div class="lf">
-          <div class="fl">Distance</div>
-          <input class="fi" type="number" inputmode="decimal" placeholder="0"
-            value="${leg.distM}" oninput="updLeg(${leg.id},'distM',this.value)">
-          <div class="fu">metres</div>
-        </div>
-        <div class="lf">
-          <div class="fl">Avg Speed</div>
-          <input class="fi" type="number" inputmode="decimal" placeholder="0"
-            value="${leg.spdKmh}" oninput="updLeg(${leg.id},'spdKmh',this.value)">
-          <div class="fu">km/h</div>
-        </div>
-        <div class="lf">
-          <div class="fl">Required Time</div>
-          <div class="fv" id="lc-${leg.id}">${sv}</div>
-          <div class="fu">mm:ss.ss</div>
-        </div>
       </div>`;
-    c.appendChild(d);
+    // Linked checkbox row
+    if(canLink){
+      html+=`<label class="lopt-row">
+        <input type="checkbox" ${isLinked?'checked':''} onchange="updLeg(${leg.id},'linked',this.checked)">
+        <span style="flex:1">🔗 Auto-start (linked to previous leg)</span>
+        ${groupBadge}
+      </label>`;
+    }
+    // Auto-start by time (only for first leg of group)
+    if(canAutoStart){
+      html+=`<label class="lopt-row">
+        <input type="checkbox" class="auto-cb" ${leg.autoStart?'checked':''} onchange="updLeg(${leg.id},'autoStart',this.checked)">
+        <span style="flex:1">⏰ Auto-start at scheduled time</span>
+        ${leg.autoStart?'<span class="lopt-badge badge-auto">SCHEDULED</span>':''}
+      </label>`;
+      if(leg.autoStart){
+        // compute countdown preview
+        const target=parseTimeToDate(leg.autoTime);
+        const cdStr=target?fmtCountdown(target-new Date())+'':'-';
+        html+=`<div class="ltime-row">
+          <label>Start time:</label>
+          <input type="time" class="ltime-input" value="${leg.autoTime}"
+            onchange="updLeg(${leg.id},'autoTime',this.value)">
+          <span class="ltime-countdown" id="lcd-${leg.id}">${leg.autoTime?'T-'+cdStr:''}</span>
+        </div>`;
+      }
+    }
+    html+=`<div class="lgrid">
+      <div class="lf">
+        <div class="fl">Distance</div>
+        <input class="fi" type="number" inputmode="decimal" placeholder="0"
+          value="${leg.distM}" oninput="updLeg(${leg.id},'distM',this.value)">
+        <div class="fu">metres</div>
+      </div>
+      <div class="lf">
+        <div class="fl">Avg Speed</div>
+        <input class="fi" type="number" inputmode="decimal" placeholder="0"
+          value="${leg.spdKmh}" oninput="updLeg(${leg.id},'spdKmh',this.value)">
+        <div class="fu">km/h</div>
+      </div>
+      <div class="lf">
+        <div class="fl">Required Time</div>
+        <div class="fv" id="lc-${leg.id}">${sv}</div>
+        <div class="fu">mm:ss.ss</div>
+      </div>
+    </div>`;
+    div.innerHTML=html;
+    c.appendChild(div);
   });
 }
 
-/* ════════════════════════════════════════
+/* ══════════════════════════════════════════════════
    RALLY STATE
-════════════════════════════════════════ */
-let curIdx     = -1;
-let legRunning = false;
-let legStartTs = null;
-let legTimer   = null;
-let legResults = [];
+══════════════════════════════════════════════════ */
+let curIdx       = -1;
+let legRunning   = false;
+let legStartTs   = null;
+let legTimer     = null;
+let legResults   = [];
+let autoAdvance  = false;
+let asTimer      = null;   // auto-start countdown interval
+let asTarget     = null;   // Date when leg should auto-start
 
-/* ════════════════════════════════════════
+function resetLegGPS(){ gpsDistM=0; gpsFixN=0; lastPos=null; }
+
+/* ══════════════════════════════════════════════════
    LAUNCH
-════════════════════════════════════════ */
+══════════════════════════════════════════════════ */
 function launch(){
-  const valid = legs.filter(l => calcSecs(l.distM, l.spdKmh) != null);
-  if(!valid.length){ alert('Add at least one leg with distance and speed.'); return; }
-  legs = valid;
-  renderLegs();
-
-  curIdx = 0; legRunning = false; legStartTs = null;
-  legResults = new Array(legs.length).fill(null);
+  const valid=legs.filter(l=>calcSecs(l.distM,l.spdKmh)!=null);
+  if(!valid.length){alert('Add at least one complete leg first.');return;}
+  legs=valid; renderLegs();
+  curIdx=0; legRunning=false; legStartTs=null;
+  legResults=new Array(legs.length).fill(null);
+  autoAdvance=false;
   resetLegGPS();
+  showTab('live');
+  gel('live-idle').style.display='none';
+  const lr=gel('live-run'); lr.style.display='flex'; lr.style.flexDirection='column';
+  gel('btn-gps-run').style.display=gpsGranted?'none':'';
+  renderChips(); loadLeg(0);
+  // Kick off auto-start for leg 0 if configured
+  scheduleAutoStart(0);
+}
 
-  tab('live');
-  $('live-idle').style.display = 'none';
-  const lr = $('live-run');
-  lr.style.display = 'flex';
-  lr.style.flexDirection = 'column';
-
-  // Show the in-run GPS button if permission hasn't been granted yet
-  const btnRun = $('btn-gps-run');
-  if(btnRun){
-    if(!gpsGranted){
-      btnRun.style.display = '';
-      btnRun.textContent = '📍 Grant GPS Permission';
-      btnRun.classList.remove('granted');
-      btnRun.disabled = false;
+/* ══════════════════════════════════════════════════
+   AUTO-START SCHEDULER
+══════════════════════════════════════════════════ */
+function scheduleAutoStart(idx){
+  clearAutoStart();
+  const leg=legs[idx];
+  if(!leg||!leg.autoStart||!leg.autoTime) return;
+  const target=parseTimeToDate(leg.autoTime);
+  if(!target) return;
+  asTarget=target;
+  gel('as-banner').style.display='flex';
+  gel('sdot').className='sdot waiting';
+  gel('stxt').textContent='WAITING — AUTO-START AT '+leg.autoTime;
+  // Countdown timer (updates every 500ms)
+  asTimer=setInterval(()=>{
+    const rem=asTarget-new Date();
+    if(rem<=0){
+      clearAutoStart();
+      gel('as-banner').style.display='none';
+      startLeg();
     } else {
-      btnRun.style.display = 'none';
+      gel('as-clock').textContent=fmtCountdown(rem);
     }
-  }
-
-  renderChips();
-  loadLeg(0);
+  },500);
+  gel('as-clock').textContent=fmtCountdown(target-new Date());
+  gel('as-label').textContent='⏱ Auto-start in';
 }
 
-function resetLegGPS(){
-  gpsDistM = 0; gpsFixN = 0; lastPos = null;
+function clearAutoStart(){
+  if(asTimer!==null){clearInterval(asTimer);asTimer=null;}
+  asTarget=null;
 }
 
-/* ════════════════════════════════════════
-   LIVE UI
-════════════════════════════════════════ */
+function abortAutoStart(){
+  clearAutoStart();
+  gel('as-banner').style.display='none';
+  gel('sdot').className='sdot';
+  gel('stxt').textContent='STANDBY — LEG '+(curIdx+1)+'/'+legs.length;
+}
+
+/* ══════════════════════════════════════════════════
+   LIVE LEG UI
+══════════════════════════════════════════════════ */
 function renderChips(){
-  $('chips').innerHTML = legs.map((leg,i) => {
-    const done = legResults[i] != null;
-    const active = i === curIdx, running = active && legRunning;
-    const name = leg.name || 'L'+(i+1);
-    return `<div class="chip ${running?'run':active?'cur':''} ${done?'done':''}"
+  gel('chips').innerHTML=legs.map((leg,i)=>{
+    const done=legResults[i]!=null,active=i===curIdx,running=active&&legRunning;
+    const isAuto=running&&autoAdvance,linked=leg.linked&&i>0;
+    const name=leg.name||'Leg '+(i+1);
+    return`<div class="chip ${isAuto?'auto':active?'cur':''} ${done?'done':''} ${linked?'linked-chip':''}"
       onclick="jumpLeg(${i})">${name}</div>`;
   }).join('');
 }
 
-function jumpLeg(idx){
-  if(legRunning) return;
-  curIdx = idx;
-  renderChips();
-  loadLeg(idx);
-}
+function jumpLeg(idx){if(legRunning||asTimer)return;curIdx=idx;renderChips();loadLeg(idx);}
 
 function loadLeg(idx){
-  const leg = legs[idx];
-  const secs = calcSecs(leg.distM, leg.spdKmh);
-  const name = (leg.name || 'Leg '+(idx+1)).toUpperCase();
-  const distKm = (parseFloat(leg.distM)/1000).toFixed(3);
-  const spd = parseFloat(leg.spdKmh).toFixed(2);
-
-  $('dlbl').textContent = name + ' · ' + distKm + ' km @ ' + spd + ' km/h';
+  const leg=legs[idx];
+  const secs=calcSecs(leg.distM,leg.spdKmh);
+  const gi=legGroupInfo(idx);
+  const name=(leg.name||'Leg '+(idx+1)).toUpperCase();
+  const distKm=(parseFloat(leg.distM)/1000).toFixed(3);
+  const spdDisp=parseFloat(leg.spdKmh).toFixed(2);
+  let lbl=name+' · '+distKm+' km @ '+spdDisp+' km/h';
+  if(gi.size>1) lbl=`[${gi.posInGroup+1}/${gi.size}] `+lbl;
+  gel('dlbl').textContent=lbl;
   setDelta(0,'neutral',false);
-  $('dverd').textContent = 'READY';
-  $('dmode').textContent = 'AWAITING GPS DISTANCE';
-
-  $('t-tgt').textContent = fmtMMSSdd(secs);
-  $('t-el').textContent  = '0:00.0';
-  $('t-rem').textContent = fmtMMSS(secs);
-
-  $('d-tot').textContent = distKm;
-  $('d-gps').textContent = '0.000';
-  $('d-exp').textContent = '0.000';
-  $('pfill').style.width = '0%';
-  $('pexp').style.left   = '0%';
-  $('ppct').textContent  = '0.0%';
-
-  $('spd-tgt').textContent  = spd;
-  $('spd-diff').textContent = '';
-  $('spd-diff').className   = 'sdiff';
-
-  $('btn-go').style.display   = '';
-  $('btn-stop').style.display = 'none';
-  $('btn-next').style.display = 'none';
-  $('sdot').className = 'sdot';
-  $('stxt').textContent = 'STANDBY — LEG '+(idx+1)+'/'+legs.length;
+  gel('dverd').textContent='READY';
+  gel('dmode').textContent='AWAITING GPS DISTANCE';
+  gel('t-tgt').textContent=fmtMMSSdd(secs);
+  gel('t-el').textContent='0:00.0';
+  gel('t-rem').textContent=fmtMMSS(secs);
+  gel('d-tot').textContent=distKm;
+  gel('d-gps').textContent='0.000'; gel('d-exp').textContent='0.000';
+  gel('pfill').style.width='0%'; gel('pexp').style.left='0%'; gel('ppct').textContent='0.0%';
+  gel('spd-tgt').textContent=spdDisp;
+  gel('spd-diff').textContent=''; gel('spd-diff').className='sdiff';
+  if(gi.size>1){
+    gel('subleg-wrap').style.display='';
+    gel('subleg-fill').style.width=(gi.posInGroup/gi.size*100).toFixed(1)+'%';
+    gel('subleg-info').textContent='Sub-leg '+(gi.posInGroup+1)+' of '+gi.size;
+  } else { gel('subleg-wrap').style.display='none'; }
+  gel('btn-go').style.display=''; gel('btn-stop').style.display='none'; gel('btn-next').style.display='none';
+  gel('sdot').className='sdot';
+  gel('stxt').textContent='STANDBY — '+(idx+1)+'/'+legs.length;
 }
 
-function setDelta(absSec, state, running){
-  const cmap = {
-    behind:'var(--behind)',
-    ahead: 'var(--ahead)',
-    ontime:'var(--ok)',
-    neutral:'var(--dim)'
-  };
-  const col = cmap[state] || 'var(--dim)';
-  $('delta').style.setProperty('--dc', col);
-  $('dsign').textContent = running ? (state==='behind'?'+':state==='ahead'?'−':'') : '';
-  $('dint').textContent  = Math.floor(absSec);
-  $('ddec').textContent  = '.' + (Math.floor((absSec % 1) * 10));
-  const vmap = {behind:'LATE ▼', ahead:'EARLY ▲', ontime:'ON TIME ●', neutral:'—'};
-  $('dverd').textContent = running ? (vmap[state]||'—') : '—';
+function setDelta(absSec,state,running){
+  const c={behind:'var(--behind)',ahead:'var(--ahead)',ontime:'var(--ok)',neutral:'var(--border2)'};
+  const col=c[state]||c.neutral;
+  gel('delta').style.setProperty('--dc',col);
+  gel('dsign').textContent=running?(state==='behind'?'+':state==='ahead'?'−':''):'';
+  gel('dint').textContent=Math.floor(absSec);
+  gel('ddec').textContent='.'+Math.floor((absSec%1)*10);
+  const v={behind:'LATE ▼',ahead:'EARLY ▲',ontime:'ON TIME ●',neutral:'—'};
+  gel('dverd').textContent=running?(v[state]||'—'):'—';
 }
 
-/* ════════════════════════════════════════
-   LEG TIMING LOOP (100ms = 10 Hz)
-════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════
+   TIMING LOOP
+══════════════════════════════════════════════════ */
 function startLeg(){
-  legRunning = true;
-  legStartTs = performance.now();
-  resetLegGPS();
-
-  $('btn-go').style.display   = 'none';
-  $('btn-stop').style.display = '';
-  $('btn-next').style.display = 'none';
-  $('sdot').className = 'sdot run';
-  $('stxt').textContent = 'RUNNING — LEG '+(curIdx+1)+'/'+legs.length;
-  renderChips();
-
-  clearInterval(legTimer);
-  legTimer = setInterval(tick, 100);
+  legRunning=true; legStartTs=performance.now();
+  resetLegGPS(); autoAdvance=false;
+  clearAutoStart(); gel('as-banner').style.display='none';
+  gel('btn-go').style.display='none'; gel('btn-stop').style.display='';
+  gel('btn-next').style.display='none';
+  gel('sdot').className='sdot run';
+  gel('stxt').textContent='RUNNING — '+(curIdx+1)+'/'+legs.length;
+  renderChips(); clearInterval(legTimer); legTimer=setInterval(tick,100);
 }
 
 function tick(){
   if(!legRunning) return;
-  const leg      = legs[curIdx];
-  const tgtSecs  = calcSecs(leg.distM, leg.spdKmh);
-  const tgtDistM = parseFloat(leg.distM);
-  const spdMs    = parseFloat(leg.spdKmh) / 3.6;
-  const elMs     = performance.now() - legStartTs;
-  const elSec    = elMs / 1000;
-  const expDistM = spdMs * elSec;
+  const leg=legs[curIdx];
+  const tgtSecs=calcSecs(leg.distM,leg.spdKmh);
+  const tgtDistM=parseFloat(leg.distM);
+  const spdMs=parseFloat(leg.spdKmh)/3.6;
+  const elMs=performance.now()-legStartTs;
+  const elSec=elMs/1000;
+  const expDistM=spdMs*elSec;
 
-  /* ── Delta calculation ──────────────────────────
-     GPS mode: delta = elapsed − (gpsDistM / targetSpeedMs)
-       positive → took too long → LATE (behind)
-       negative → ahead of schedule → EARLY (ahead)
-     Fallback time mode: delta=0 until GPS kicks in
-  ─────────────────────────────────────────────── */
-  let delta = 0, state = 'neutral';
-  let modeStr = 'TIME-BASED · ACQUIRING GPS…';
+  let delta=0,state='neutral',modeStr='TIME-BASED · ACQUIRING GPS…';
+  if(gpsDistM>5&&spdMs>0){
+    const idealTime=gpsDistM/spdMs; delta=elSec-idealTime;
+    state=Math.abs(delta)<0.3?'ontime':delta>0?'behind':'ahead';
+    modeStr='GPS · '+gpsFixN+' FIXES · ±'+(gpsAccM!=null?gpsAccM.toFixed(1):'?')+'m';
+  }
+  gel('dmode').textContent=modeStr; setDelta(Math.abs(delta),state,true);
 
-  if(gpsDistM > 5 && spdMs > 0){
-    const idealTime = gpsDistM / spdMs;
-    delta = elSec - idealTime;
-    state = Math.abs(delta) < 0.3 ? 'ontime' : delta > 0 ? 'behind' : 'ahead';
-    modeStr = 'GPS · ' + gpsFixN + ' FIXES · ±' +
-              (gpsAccM != null ? gpsAccM.toFixed(1) : '?') + 'm';
+  // Sub-leg group progress
+  const gi=legGroupInfo(curIdx);
+  if(gi.size>1){
+    gel('subleg-wrap').style.display='';
+    gel('subleg-fill').style.width=(gi.posInGroup/gi.size*100).toFixed(1)+'%';
+    gel('subleg-info').textContent='Sub-leg '+(gi.posInGroup+1)+'/'+gi.size+' running';
   }
 
-  $('dmode').textContent = modeStr;
-  setDelta(Math.abs(delta), state, true);
+  // GPS speed
+  const gpsKmh=gpsSpeedMs!=null?gpsSpeedMs*3.6:null;
+  const tgtKmh=parseFloat(leg.spdKmh);
+  if(gpsKmh!=null){
+    const diff=gpsKmh-tgtKmh;
+    const spEl=gel('spd'); spEl.textContent=gpsKmh.toFixed(1);
+    spEl.className='sn'+(Math.abs(diff)<1?' good':diff>0?' over':'');
+    const df=gel('spd-diff');
+    if(Math.abs(diff)<0.5){df.textContent='ON TARGET';df.className='sdiff z';}
+    else if(diff>0){df.textContent='+'+diff.toFixed(1);df.className='sdiff p';}
+    else{df.textContent=diff.toFixed(1);df.className='sdiff n';}
+  } else { gel('spd').textContent='—'; gel('spd-diff').textContent=''; }
 
-  /* ── GPS speed display ── */
-  const gpsKmh = gpsSpeedMs != null ? gpsSpeedMs * 3.6 : null;
-  const tgtKmh = parseFloat(leg.spdKmh);
-  if(gpsKmh != null){
-    const diff = gpsKmh - tgtKmh;
-    const spEl = $('spd');
-    spEl.textContent = gpsKmh.toFixed(1);
-    spEl.className = 'sn' + (Math.abs(diff)<1?' good':diff>0?' over':'');
-    const df = $('spd-diff');
-    if(Math.abs(diff) < 0.5){ df.textContent='ON TARGET'; df.className='sdiff z'; }
-    else if(diff > 0){ df.textContent='+'+diff.toFixed(1)+' km/h'; df.className='sdiff p'; }
-    else             { df.textContent=diff.toFixed(1)+' km/h';     df.className='sdiff n'; }
-  } else {
-    $('spd').textContent = '—';
-    $('spd-diff').textContent = '';
-  }
-
-  /* ── Timing ── */
-  $('t-el').textContent  = fmtEl(elMs);
-  $('t-rem').textContent = fmtMMSS(Math.max(0, tgtSecs - elSec));
-
-  /* ── Distance ── */
-  $('d-gps').textContent = km3(gpsDistM);
-  $('d-exp').textContent = km3(Math.min(expDistM, tgtDistM));
-
-  /* ── Progress bar ── */
-  const gpsPct = clamp((gpsDistM / tgtDistM) * 100, 0, 100);
-  const expPct = clamp((expDistM  / tgtDistM) * 100, 0, 100);
-  $('pfill').style.width = gpsPct.toFixed(2) + '%';
-  $('pexp').style.left   = expPct.toFixed(2) + '%';
-  $('ppct').textContent  = gpsPct.toFixed(1) + '%';
-
-  /* ── Accuracy ── */
-  if(gpsAccM != null) $('spd-acc').textContent = gpsAccM.toFixed(1);
-
-  /* Safety auto-stop at 4× target time */
-  if(elSec > tgtSecs * 4) stopLeg();
+  gel('t-el').textContent=fmtEl(elMs);
+  gel('t-rem').textContent=fmtMMSS(Math.max(0,tgtSecs-elSec));
+  gel('d-gps').textContent=km3(gpsDistM);
+  gel('d-exp').textContent=km3(Math.min(expDistM,tgtDistM));
+  const gpsPct=clamp((gpsDistM/tgtDistM)*100,0,100);
+  const expPct=clamp((expDistM/tgtDistM)*100,0,100);
+  gel('pfill').style.width=gpsPct.toFixed(2)+'%';
+  gel('pexp').style.left=expPct.toFixed(2)+'%';
+  gel('ppct').textContent=gpsPct.toFixed(1)+'%';
+  if(gpsAccM!=null) gel('spd-acc').textContent=gpsAccM.toFixed(1);
+  if(elSec>tgtSecs*4) stopLeg();
 }
 
 function stopLeg(){
   if(!legRunning) return;
-  clearInterval(legTimer);
-  legRunning = false;
-
-  const leg     = legs[curIdx];
-  const tgtSecs = calcSecs(leg.distM, leg.spdKmh);
-  const elSec   = (performance.now() - legStartTs) / 1000;
-  const spdMs   = parseFloat(leg.spdKmh) / 3.6;
-  const delta   = gpsDistM > 5 && spdMs > 0
-                  ? elSec - (gpsDistM / spdMs)
-                  : elSec - tgtSecs;
-
-  legResults[curIdx] = { leg:{...leg}, tgtSecs, elSec, gpsDistM, gpsFixN, delta };
-
-  $('sdot').className = 'sdot done';
-  $('stxt').textContent = 'FINISHED — LEG '+(curIdx+1);
-  $('btn-stop').style.display = 'none';
-  $('btn-go').style.display   = 'none';
-  if(curIdx < legs.length-1) $('btn-next').style.display = '';
-  renderChips();
+  clearInterval(legTimer); legRunning=false;
+  const leg=legs[curIdx];
+  const tgtSecs=calcSecs(leg.distM,leg.spdKmh);
+  const elSec=(performance.now()-legStartTs)/1000;
+  const spdMs=parseFloat(leg.spdKmh)/3.6;
+  const delta=gpsDistM>5&&spdMs>0?elSec-(gpsDistM/spdMs):elSec-tgtSecs;
+  legResults[curIdx]={leg:{...leg},tgtSecs,elSec,gpsDistM,gpsFixN,delta};
   buildResults();
+
+  const nextIdx=curIdx+1;
+  if(nextIdx<legs.length&&legs[nextIdx].linked){
+    // Auto-advance to linked sub-leg
+    autoAdvance=true; curIdx=nextIdx; resetLegGPS();
+    renderChips(); loadLeg(curIdx);
+    gel('sdot').className='sdot auto';
+    gel('stxt').textContent='AUTO-START → LEG '+(curIdx+1)+'/'+legs.length;
+    setTimeout(()=>{ if(!legRunning){startLeg();autoAdvance=false;} },800);
+  } else {
+    autoAdvance=false;
+    gel('sdot').className='sdot done';
+    gel('stxt').textContent='FINISHED — LEG '+(curIdx+1);
+    gel('btn-stop').style.display='none'; gel('btn-go').style.display='none';
+    if(nextIdx<legs.length){ gel('btn-next').style.display=''; }
+    renderChips();
+    // Check if next leg has auto-start time
+    if(nextIdx<legs.length){ scheduleAutoStart(nextIdx); }
+  }
 }
 
 function nextLeg(){
-  curIdx++;
-  resetLegGPS();
-  renderChips();
-  loadLeg(curIdx);
+  clearAutoStart(); gel('as-banner').style.display='none';
+  curIdx++; resetLegGPS(); autoAdvance=false;
+  renderChips(); loadLeg(curIdx);
+  scheduleAutoStart(curIdx);
 }
 
 function resetRally(){
-  clearInterval(legTimer);
-  legRunning = false;
-  curIdx = -1;
-  legResults = [];
-  resetLegGPS();
-  gpsSpeedMs = null;
-
-  $('live-idle').style.display = 'flex';
-  $('live-run').style.display  = 'none';
+  clearInterval(legTimer); clearAutoStart();
+  legRunning=false; autoAdvance=false;
+  curIdx=-1; legResults=[]; resetLegGPS(); gpsSpeedMs=null;
+  gel('as-banner').style.display='none';
+  gel('live-idle').style.display='flex'; gel('live-run').style.display='none';
   buildResults();
 }
 
-/* ════════════════════════════════════════
+/* ══════════════════════════════════════════════════
    RESULTS
-════════════════════════════════════════ */
+══════════════════════════════════════════════════ */
 function buildResults(){
-  const c = $('res-content');
-  const done = legResults.filter(r => r != null);
-  if(!done.length){ c.innerHTML = '<div class="empty">No completed legs</div>'; return; }
-
-  let tot = 0, rows = '';
-  legs.forEach((leg, i) => {
-    const r = legResults[i];
-    if(!r) return;
-    tot += r.delta;
-    const sign = r.delta > 0 ? '+' : '';
-    const cls  = Math.abs(r.delta)<0.3 ? 'cok' : r.delta>0 ? 'cbeh' : 'cahd';
-    const em = Math.floor(r.elSec/60),  es = (r.elSec%60).toFixed(2);
-    const tm = Math.floor(r.tgtSecs/60),ts = (r.tgtSecs%60).toFixed(2);
-    rows += `<tr>
-      <td>${leg.name||'Leg '+(i+1)}</td>
+  const c=gel('res-content');
+  const done=legResults.filter(r=>r!=null);
+  if(!done.length){c.innerHTML='<div class="empty-msg">No completed legs yet</div>';return;}
+  let tot=0,rows='';
+  legs.forEach((leg,i)=>{
+    const r=legResults[i]; if(!r) return;
+    tot+=r.delta;
+    const sign=r.delta>0?'+':'';
+    const cls=Math.abs(r.delta)<0.3?'cok':r.delta>0?'cbeh':'cahd';
+    const em=Math.floor(r.elSec/60),es=(r.elSec%60).toFixed(2);
+    const tm=Math.floor(r.tgtSecs/60),ts=(r.tgtSecs%60).toFixed(2);
+    const name=leg.name||'Leg '+(i+1);
+    const gi=legGroupInfo(i);
+    const subBadge=gi.size>1?`<span class="sub-badge">${gi.posInGroup+1}/${gi.size}</span>`:'';
+    rows+=`<tr><td>${name}${subBadge}</td>
       <td>${tm}:${parseFloat(ts)<10?'0':''}${ts}</td>
       <td>${em}:${parseFloat(es)<10?'0':''}${es}</td>
       <td>${(r.gpsDistM/1000).toFixed(3)}</td>
       <td>${r.gpsFixN}</td>
-      <td class="${cls}">${sign}${r.delta.toFixed(3)}s</td>
-    </tr>`;
+      <td class="${cls}">${sign}${r.delta.toFixed(3)}s</td></tr>`;
   });
-  const ts = tot>0?'+':'', tc = Math.abs(tot)<0.3?'cok':tot>0?'cbeh':'cahd';
-  c.innerHTML = `
-    <table class="rtable">
-      <thead><tr>
-        <th>Stage</th><th>Target</th><th>Actual</th><th>GPS km</th><th>Fixes</th><th>Δ sec</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <div class="totcard">
-      <div class="totlbl">Total Penalty</div>
-      <div class="totval ${tc}">${ts}${tot.toFixed(3)}s</div>
-    </div>`;
+  const ts=tot>0?'+':'',tc=Math.abs(tot)<0.3?'cok':tot>0?'cbeh':'cahd';
+  c.innerHTML=`<table class="rtable">
+    <thead><tr><th>Stage</th><th>Target</th><th>Actual</th><th>GPS km</th><th>Fixes</th><th>Δ sec</th></tr></thead>
+    <tbody>${rows}</tbody></table>
+    <div class="totcard"><div class="totlbl">Total Penalty</div><div class="totval ${tc}">${ts}${tot.toFixed(3)}s</div></div>`;
 }
 
-/* ════════════════════════════════════════
+/* ══════════════════════════════════════════════════
    INIT
-════════════════════════════════════════ */
-legId = 1;
-legs.push({id:1, name:'Stage 1', distM:'', spdKmh:''});
+══════════════════════════════════════════════════ */
+legId=1;
+legs.push({id:1,name:'Stage 1',distM:'',spdKmh:'',linked:false,autoStart:false,autoTime:''});
 renderLegs();
 
-// Just show the overlay — do NOT call requestGPS() automatically.
-// Browsers require a direct user gesture to trigger the permission dialog.
-// The overlay buttons call requestGPS() / skipGPS() on tap.
-window.addEventListener('load', () => {
-  if(!('geolocation' in navigator)){
-    // GPS not available at all — skip straight to error state in overlay
-    setTimeout(() => {
-      $('ov-ask').style.display = 'none';
-      showOvErr();
-    }, 300);
-  }
-  // Otherwise the overlay is already visible from HTML — user taps the button
-});
+// Update leg-config countdowns every 30s so they stay fresh while user is on Legs tab
+setInterval(()=>{
+  legs.forEach(leg=>{
+    const el=gel('lcd-'+leg.id);
+    if(!el||!leg.autoStart||!leg.autoTime) return;
+    const target=parseTimeToDate(leg.autoTime);
+    el.textContent=target?'T-'+fmtCountdown(target-new Date()):'';
+  });
+},30000);
 </script>
 </body>
 </html>
