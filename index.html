@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>RegRally — Regularity Rally Timer</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #2a2a2a;
+    --accent: #e8c840;
+    --accent2: #c8a820;
+    --red: #ff3b30;
+    --green: #34c759;
+    --blue: #0a84ff;
+    --text: #f0f0f0;
+    --muted: #666;
+    --mono: 'Share Tech Mono', monospace;
+    --sans: 'Barlow Condensed', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 2px solid var(--accent);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: var(--sans);
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .logo span { color: var(--text); font-weight: 300; }
+  .header-sub {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    flex: 1;
+    padding: 12px 8px;
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+  }
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* PAGES */
+  .page { display: none; flex-direction: column; flex: 1; padding: 16px; gap: 12px; }
+  .page.active { display: flex; }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 4px 0 8px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
+  }
+
+  /* LEGS LIST */
+  .legs-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .leg-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  .leg-card.active-leg { border-color: var(--accent); }
+  .leg-card.done-leg { border-color: var(--green); opacity: 0.7; }
+
+  .leg-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .leg-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(232,200,64,0.1);
+    padding: 2px 6px;
+    border-radius: 2px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+  .leg-title-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 1px;
+    outline: none;
+    min-width: 0;
+  }
+  .leg-title-input::placeholder { color: var(--muted); }
+
+  .leg-delete {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+  .leg-delete:hover { color: var(--red); }
+
+  .leg-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+  }
+  .leg-field {
+    background: var(--surface);
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .field-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .field-input {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 16px;
+    outline: none;
+    width: 100%;
+    min-width: 0;
+  }
+  .field-input::placeholder { color: var(--border); }
+  .field-input::-webkit-inner-spin-button,
+  .field-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .field-unit {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  .field-computed {
+    font-family: var(--mono);
+    font-size: 16px;
+    color: var(--accent);
+    min-height: 24px;
+  }
+
+  /* ADD LEG BTN */
+  .btn-add {
+    background: rgba(232,200,64,0.08);
+    border: 1px dashed var(--accent2);
+    color: var(--accent);
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+  }
+  .btn-add:hover { background: rgba(232,200,64,0.15); }
+
+  /* PRIMARY BTN */
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    font-family: var(--sans);
+    font-weight: 900;
+    font-size: 15px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+  }
+  .btn-primary:hover { background: #f0d050; }
+  .btn-primary:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+
+  .btn-danger {
+    background: rgba(255,59,48,0.1);
+    border: 1px solid var(--red);
+    color: var(--red);
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+  }
+
+  /* ====== LIVE PAGE ====== */
+  .live-idle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 16px;
+    color: var(--muted);
+    text-align: center;
+    padding: 40px;
+  }
+  .live-idle-icon { font-size: 48px; margin-bottom: 8px; }
+  .live-idle h2 {
+    font-family: var(--sans);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .live-idle p { font-size: 14px; line-height: 1.5; letter-spacing: 0.5px; }
+
+  /* Live running UI */
+  #live-running { display: none; flex-direction: column; gap: 12px; }
+
+  /* Leg selector */
+  .live-leg-selector {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .leg-chip {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+  .leg-chip.active { border-color: var(--accent); color: var(--accent); background: rgba(232,200,64,0.1); }
+  .leg-chip.done { border-color: var(--green); color: var(--green); background: rgba(52,199,89,0.1); }
+
+  /* Big status display */
+  .live-status {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px 16px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .live-status::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--status-color, var(--border));
+    transition: background 0.5s;
+  }
+  .live-leg-name {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .live-delta {
+    font-family: var(--mono);
+    font-size: 64px;
+    font-weight: normal;
+    line-height: 1;
+    color: var(--status-color, var(--text));
+    transition: color 0.5s;
+    letter-spacing: -2px;
+  }
+  .live-delta-label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 6px;
+    font-weight: 700;
+  }
+
+  /* Stats row */
+  .live-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .live-stat {
+    background: var(--surface);
+    padding: 12px 8px;
+    text-align: center;
+  }
+  .live-stat-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .live-stat-value {
+    font-family: var(--mono);
+    font-size: 18px;
+    color: var(--text);
+    letter-spacing: 1px;
+  }
+  .live-stat-value.accent { color: var(--accent); }
+  .live-stat-unit {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    height: 8px;
+  }
+  .progress-bar {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.9s linear;
+    max-width: 100%;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin-top: 4px;
+    font-family: var(--mono);
+  }
+
+  /* Control buttons */
+  .live-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .btn-control {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+  .btn-start { background: var(--green); color: #000; }
+  .btn-stop { background: var(--red); color: #fff; }
+  .btn-next { background: var(--blue); color: #fff; }
+  .btn-reset { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+
+  /* Pulse animation for active */
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  .pulse {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse-dot 1s ease-in-out infinite;
+    margin-right: 6px;
+  }
+
+  /* Elapsed clock */
+  .elapsed-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 2px;
+  }
+
+  /* Summary table */
+  .summary-table {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .summary-table th {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 8px 10px;
+    background: var(--surface2);
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--sans);
+  }
+  .summary-table td {
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .summary-table tr:last-child td { border-bottom: none; }
+  .td-pos { color: var(--green); }
+  .td-neg { color: var(--red); }
+  .td-name { font-family: var(--sans); font-weight: 600; letter-spacing: 1px; font-size: 13px; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .empty-state {
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">Reg<span>Rally</span></div>
+    <div class="header-sub">Regularity Rally Timer</div>
+  </div>
+  <div style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;" id="clock-display">--:--:--</div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('legs')">⚙ Legs</button>
+  <button class="tab" onclick="switchTab('live')">▶ Live</button>
+  <button class="tab" onclick="switchTab('summary')">≡ Summary</button>
+</div>
+
+<!-- ===== LEGS PAGE ===== -->
+<div class="page active" id="page-legs">
+  <div class="section-label">Rally Legs</div>
+  <div class="legs-list" id="legs-list"></div>
+  <button class="btn-add" onclick="addLeg()">+ Add Leg</button>
+  <div style="height:8px"></div>
+  <button class="btn-primary" onclick="goLive()">▶ Start Rally</button>
+</div>
+
+<!-- ===== LIVE PAGE ===== -->
+<div class="page" id="page-live">
+  <div id="live-idle" class="live-idle">
+    <div class="live-idle-icon">🏁</div>
+    <h2>Ready to Race</h2>
+    <p>Configure your legs in the Legs tab, then tap Start Rally to begin timing.</p>
+  </div>
+  <div id="live-running" style="display:none;flex-direction:column;gap:12px;">
+    <div class="section-label" style="display:flex;align-items:center;">
+      <span class="pulse" id="live-pulse" style="display:none"></span>
+      <span id="live-status-label">STANDBY</span>
+    </div>
+
+    <div class="live-leg-selector" id="live-leg-chips"></div>
+
+    <div class="live-status" id="live-status-box" style="--status-color: var(--muted)">
+      <div class="live-leg-name" id="live-leg-name">—</div>
+      <div class="live-delta" id="live-delta">00.0</div>
+      <div class="live-delta-label" id="live-delta-label">SECONDS</div>
+    </div>
+
+    <div class="live-stats">
+      <div class="live-stat">
+        <div class="live-stat-label">Elapsed</div>
+        <div class="live-stat-value accent" id="stat-elapsed">0:00</div>
+        <div class="live-stat-unit">mm:ss</div>
+      </div>
+      <div class="live-stat">
+        <div class="live-stat-label">Target</div>
+        <div class="live-stat-value" id="stat-target">—</div>
+        <div class="live-stat-unit">mm:ss</div>
+      </div>
+      <div class="live-stat">
+        <div class="live-stat-label">Remaining</div>
+        <div class="live-stat-value" id="stat-remaining">—</div>
+        <div class="live-stat-unit">mm:ss</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+      </div>
+      <div class="progress-label">
+        <span>START</span>
+        <span id="progress-pct">0%</span>
+        <span>FINISH</span>
+      </div>
+    </div>
+
+    <div class="live-stats" style="grid-template-columns:1fr 1fr;">
+      <div class="live-stat">
+        <div class="live-stat-label">Avg Speed</div>
+        <div class="live-stat-value" id="stat-speed">—</div>
+        <div class="live-stat-unit">km/h required</div>
+      </div>
+      <div class="live-stat">
+        <div class="live-stat-label">Distance</div>
+        <div class="live-stat-value" id="stat-dist">—</div>
+        <div class="live-stat-unit">metres</div>
+      </div>
+    </div>
+
+    <div class="live-controls" id="live-controls">
+      <button class="btn-control btn-start" id="btn-start-leg" onclick="startCurrentLeg()">▶ Start</button>
+      <button class="btn-control btn-next" id="btn-next-leg" onclick="nextLeg()" style="display:none">Next ▶</button>
+      <button class="btn-control btn-stop" id="btn-stop-leg" onclick="stopCurrentLeg()" style="display:none">■ Stop</button>
+      <button class="btn-control btn-reset" onclick="resetRally()">↺ Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SUMMARY PAGE ===== -->
+<div class="page" id="page-summary">
+  <div class="section-label">Leg Summary</div>
+  <div id="summary-content">
+    <div class="empty-state">No legs completed yet.</div>
+  </div>
+</div>
+
+<script>
+// ===== STATE =====
+let legs = [];
+let legCounter = 0;
+
+// Rally state
+let rallyActive = false;
+let currentLegIndex = 0;
+let legStartTime = null;
+let legTimer = null;
+let legResults = [];
+let clockTimer = null;
+let legRunning = false;
+
+// ===== CLOCK =====
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock-display').textContent =
+    now.toTimeString().slice(0,8);
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ===== TABS =====
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.toggle('active', ['legs','live','summary'][i] === tab);
+  });
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+}
+
+// ===== LEG MANAGEMENT =====
+function addLeg() {
+  legCounter++;
+  const leg = { id: legCounter, name: '', distance: '', speed: '' };
+  legs.push(leg);
+  renderLegs();
+}
+
+function removeLeg(id) {
+  legs = legs.filter(l => l.id !== id);
+  renderLegs();
+}
+
+function computeSeconds(dist, speed) {
+  const d = parseFloat(dist);
+  const s = parseFloat(speed);
+  if (!d || !s || s <= 0) return null;
+  // time = distance(km) / speed(km/h) * 3600 seconds
+  return (d / 1000) / s * 3600;
+}
+
+function fmtSec(s) {
+  if (s === null) return '—';
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return m + ':' + sec.toFixed(1).padStart(4,'0');
+}
+
+function renderLegs() {
+  const list = document.getElementById('legs-list');
+  if (legs.length === 0) {
+    list.innerHTML = '<div class="empty-state">No legs yet. Add your first leg below.</div>';
+    return;
+  }
+  list.innerHTML = legs.map((leg, idx) => {
+    const secs = computeSeconds(leg.distance, leg.speed);
+    const secsDisplay = secs !== null ? secs.toFixed(1) + 's' : '—';
+    return `
+    <div class="leg-card" id="leg-card-${leg.id}">
+      <div class="leg-header">
+        <span class="leg-num">LEG ${String(idx+1).padStart(2,'0')}</span>
+        <input class="leg-title-input" placeholder="Leg name (optional)"
+          value="${leg.name}"
+          oninput="updateLeg(${leg.id}, 'name', this.value)">
+        <button class="leg-delete" onclick="removeLeg(${leg.id})">✕</button>
+      </div>
+      <div class="leg-fields">
+        <div class="leg-field">
+          <div class="field-label">Distance</div>
+          <input class="field-input" type="number" inputmode="decimal" placeholder="0"
+            value="${leg.distance}"
+            oninput="updateLeg(${leg.id}, 'distance', this.value)">
+          <div class="field-unit">metres</div>
+        </div>
+        <div class="leg-field">
+          <div class="field-label">Avg Speed</div>
+          <input class="field-input" type="number" inputmode="decimal" placeholder="0"
+            value="${leg.speed}"
+            oninput="updateLeg(${leg.id}, 'speed', this.value)">
+          <div class="field-unit">km/h</div>
+        </div>
+        <div class="leg-field">
+          <div class="field-label">Required Time</div>
+          <div class="field-computed" id="leg-time-${leg.id}">${secsDisplay}</div>
+          <div class="field-unit">mm:ss.s</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateLeg(id, field, value) {
+  const leg = legs.find(l => l.id === id);
+  if (!leg) return;
+  leg[field] = value;
+  // Update computed time display
+  const secs = computeSeconds(leg.distance, leg.speed);
+  const el = document.getElementById('leg-time-' + id);
+  if (el) {
+    if (secs !== null) {
+      const total = secs;
+      const m = Math.floor(total / 60);
+      const s = total % 60;
+      el.textContent = m + ':' + s.toFixed(1).padStart(4,'0') + ' (' + total.toFixed(1) + 's)';
+    } else {
+      el.textContent = '—';
+    }
+  }
+}
+
+// ===== RALLY CONTROL =====
+function goLive() {
+  const valid = legs.filter(l => computeSeconds(l.distance, l.speed) !== null);
+  if (valid.length === 0) {
+    alert('Please add at least one leg with distance and speed before starting.');
+    return;
+  }
+  // Filter to valid legs only
+  legs = legs.filter(l => computeSeconds(l.distance, l.speed) !== null);
+  renderLegs();
+
+  rallyActive = true;
+  currentLegIndex = 0;
+  legResults = [];
+  legRunning = false;
+  legStartTime = null;
+
+  switchTab('live');
+  document.getElementById('live-idle').style.display = 'none';
+  const run = document.getElementById('live-running');
+  run.style.display = 'flex';
+
+  renderLegChips();
+  loadLegUI(currentLegIndex);
+}
+
+function renderLegChips() {
+  const container = document.getElementById('live-leg-chips');
+  container.innerHTML = legs.map((leg, idx) => {
+    const done = legResults[idx] !== undefined;
+    const active = idx === currentLegIndex;
+    const name = leg.name || `Leg ${idx+1}`;
+    return `<div class="leg-chip ${active?'active':''} ${done?'done':''}" id="chip-${idx}" onclick="jumpToLeg(${idx})">${name}</div>`;
+  }).join('');
+}
+
+function jumpToLeg(idx) {
+  if (legRunning) return; // can't jump while running
+  currentLegIndex = idx;
+  renderLegChips();
+  loadLegUI(idx);
+}
+
+function loadLegUI(idx) {
+  const leg = legs[idx];
+  const secs = computeSeconds(leg.distance, leg.speed);
+  const name = leg.name || `Leg ${idx+1}`;
+
+  document.getElementById('live-leg-name').textContent = name.toUpperCase();
+  document.getElementById('live-delta').textContent = '0.0';
+  document.getElementById('live-delta-label').textContent = 'ON TIME';
+  document.getElementById('live-status-box').style.setProperty('--status-color', 'var(--muted)');
+
+  const mm = Math.floor(secs/60);
+  const ss = (secs%60).toFixed(1).padStart(4,'0');
+  document.getElementById('stat-elapsed').textContent = '0:00';
+  document.getElementById('stat-target').textContent = mm+':'+ss;
+  document.getElementById('stat-remaining').textContent = mm+':'+ss;
+  document.getElementById('stat-speed').textContent = parseFloat(leg.speed).toFixed(1);
+  document.getElementById('stat-dist').textContent = parseInt(leg.distance).toLocaleString();
+  document.getElementById('progress-bar').style.width = '0%';
+  document.getElementById('progress-pct').textContent = '0%';
+
+  // Buttons
+  document.getElementById('btn-start-leg').style.display = '';
+  document.getElementById('btn-stop-leg').style.display = 'none';
+  document.getElementById('btn-next-leg').style.display = 'none';
+  document.getElementById('live-pulse').style.display = 'none';
+  document.getElementById('live-status-label').textContent = 'STANDBY — LEG ' + (idx+1) + '/' + legs.length;
+}
+
+function startCurrentLeg() {
+  legRunning = true;
+  legStartTime = Date.now();
+
+  document.getElementById('btn-start-leg').style.display = 'none';
+  document.getElementById('btn-stop-leg').style.display = '';
+  document.getElementById('btn-next-leg').style.display = 'none';
+  document.getElementById('live-pulse').style.display = 'inline-block';
+  document.getElementById('live-status-label').textContent = 'RUNNING — LEG ' + (currentLegIndex+1) + '/' + legs.length;
+
+  if (legTimer) clearInterval(legTimer);
+  legTimer = setInterval(tickLeg, 100);
+}
+
+function tickLeg() {
+  if (!legRunning || !legStartTime) return;
+  const leg = legs[currentLegIndex];
+  const target = computeSeconds(leg.distance, leg.speed);
+  const elapsed = (Date.now() - legStartTime) / 1000;
+  const delta = elapsed - target; // positive = late, negative = early
+
+  // Elapsed display
+  const em = Math.floor(elapsed/60);
+  const es = Math.floor(elapsed%60).toString().padStart(2,'0');
+  document.getElementById('stat-elapsed').textContent = em+':'+es;
+
+  // Remaining
+  const rem = Math.max(0, target - elapsed);
+  const rm = Math.floor(rem/60);
+  const rs = Math.floor(rem%60).toString().padStart(2,'0');
+  document.getElementById('stat-remaining').textContent = rm+':'+rs;
+
+  // Delta display
+  const absDelta = Math.abs(delta);
+  const sign = delta > 0 ? '+' : delta < 0 ? '-' : '';
+  document.getElementById('live-delta').textContent = sign + absDelta.toFixed(1);
+
+  let color, label;
+  if (Math.abs(delta) < 0.5) {
+    color = 'var(--accent)'; label = 'ON TIME';
+  } else if (delta > 0) {
+    color = 'var(--red)'; label = 'LATE';
+  } else {
+    color = 'var(--green)'; label = 'EARLY';
+  }
+  document.getElementById('live-delta-label').textContent = label;
+  document.getElementById('live-status-box').style.setProperty('--status-color', color);
+  document.getElementById('live-delta').style.color = color;
+
+  // Progress
+  const pct = Math.min(100, (elapsed / target) * 100);
+  document.getElementById('progress-bar').style.width = pct.toFixed(1) + '%';
+  document.getElementById('progress-pct').textContent = pct.toFixed(0) + '%';
+
+  // Auto-finish detection (give 2x time before auto-stop)
+  if (elapsed > target * 3) {
+    stopCurrentLeg();
+  }
+}
+
+function stopCurrentLeg() {
+  if (!legRunning) return;
+  legRunning = false;
+  clearInterval(legTimer);
+
+  const leg = legs[currentLegIndex];
+  const target = computeSeconds(leg.distance, leg.speed);
+  const elapsed = (Date.now() - legStartTime) / 1000;
+  const delta = elapsed - target;
+
+  legResults[currentLegIndex] = { elapsed, target, delta, leg: { ...leg } };
+
+  document.getElementById('live-pulse').style.display = 'none';
+  document.getElementById('live-status-label').textContent = 'FINISHED — LEG ' + (currentLegIndex+1);
+  document.getElementById('btn-stop-leg').style.display = 'none';
+  document.getElementById('btn-start-leg').style.display = 'none';
+
+  const hasNext = currentLegIndex < legs.length - 1;
+  if (hasNext) {
+    document.getElementById('btn-next-leg').style.display = '';
+  }
+  renderLegChips();
+  updateSummary();
+}
+
+function nextLeg() {
+  currentLegIndex++;
+  renderLegChips();
+  loadLegUI(currentLegIndex);
+}
+
+function resetRally() {
+  if (legRunning) {
+    clearInterval(legTimer);
+    legRunning = false;
+  }
+  rallyActive = false;
+  legResults = [];
+  currentLegIndex = 0;
+  legStartTime = null;
+
+  document.getElementById('live-idle').style.display = 'flex';
+  document.getElementById('live-running').style.display = 'none';
+  updateSummary();
+}
+
+// ===== SUMMARY =====
+function updateSummary() {
+  const container = document.getElementById('summary-content');
+  const done = legResults.filter(r => r !== undefined && r !== null);
+  if (done.length === 0) {
+    container.innerHTML = '<div class="empty-state">No legs completed yet.</div>';
+    return;
+  }
+
+  let totalDelta = 0;
+  let rows = '';
+  legs.forEach((leg, idx) => {
+    const r = legResults[idx];
+    if (!r) return;
+    totalDelta += r.delta;
+    const sign = r.delta > 0 ? '+' : '';
+    const cls = r.delta > 0 ? 'td-neg' : r.delta < -0.2 ? 'td-pos' : '';
+    const em = Math.floor(r.elapsed/60);
+    const es = (r.elapsed%60).toFixed(1).padStart(4,'0');
+    const tm = Math.floor(r.target/60);
+    const ts = (r.target%60).toFixed(1).padStart(4,'0');
+    const name = leg.name || `Leg ${idx+1}`;
+    rows += `<tr>
+      <td class="td-name">${name}</td>
+      <td>${tm}:${ts}</td>
+      <td>${em}:${es}</td>
+      <td class="${cls}">${sign}${r.delta.toFixed(1)}s</td>
+    </tr>`;
+  });
+
+  const totalSign = totalDelta > 0 ? '+' : '';
+  const totalCls = totalDelta > 0 ? 'td-neg' : totalDelta < 0 ? 'td-pos' : '';
+
+  container.innerHTML = `
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>Leg</th>
+          <th>Target</th>
+          <th>Actual</th>
+          <th>Delta</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows}
+        <tr style="background:var(--surface2)">
+          <td class="td-name" style="color:var(--accent)">TOTAL</td>
+          <td></td>
+          <td></td>
+          <td class="${totalCls}" style="font-size:15px">${totalSign}${totalDelta.toFixed(1)}s</td>
+        </tr>
+      </tbody>
+    </table>`;
+}
+
+// ===== INIT =====
+// Add a sample leg to get started
+addLeg();
+legs[0].name = 'Stage 1';
+renderLegs();
+</script>
+</body>
+</html>
