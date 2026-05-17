@@ -152,27 +152,21 @@ body{
 .badge-auto{color:var(--warn);background:color-mix(in srgb,var(--warn) 10%,transparent);border:1px solid color-mix(in srgb,var(--warn) 25%,transparent);}
 
 /* Auto-start time picker row */
-/* Auto-start time picker row — single compact row */
 .ltime-row{
-  display:flex;align-items:center;gap:8px;
+  display:flex;align-items:center;gap:10px;
   padding:7px 10px;background:var(--surf3);
   border-bottom:1px solid var(--border);
-  font-size:12px;font-weight:600;color:var(--txt3);
-  flex-wrap:nowrap;overflow-x:auto;
+  font-size:13px;font-weight:500;color:var(--txt2);
 }
-.ltime-row label{white-space:nowrap;flex-shrink:0;}
+.ltime-row label{font-size:12px;color:var(--txt3);font-weight:600;letter-spacing:.5px;white-space:nowrap;}
 .ltime-input{
   background:var(--surf2);border:1px solid var(--border2);border-radius:4px;
   color:var(--txt);font-family:'DM Mono',monospace;font-size:16px;font-weight:500;
-  padding:4px 6px;outline:none;-webkit-appearance:none;
-  text-align:center;
+  padding:5px 10px;outline:none;cursor:pointer;width:130px;
+  -webkit-appearance:none;
 }
 .ltime-input:focus{border-color:var(--warn);}
-.ltime-sep{font-size:18px;font-weight:700;color:var(--txt2);flex-shrink:0;}
-.ltime-result{
-  font-family:'DM Mono',monospace;font-size:12px;font-weight:600;
-  color:var(--warn);white-space:nowrap;flex-shrink:0;margin-left:auto;
-}
+.ltime-countdown{font-family:'DM Mono',monospace;font-size:12px;color:var(--warn);font-weight:500;white-space:nowrap;}
 
 .lgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);}
 .lf{background:var(--surf);padding:9px 10px;display:flex;flex-direction:column;gap:3px;}
@@ -183,45 +177,7 @@ body{
 .fu{font-size:10px;color:var(--txt3);letter-spacing:.5px;font-weight:500;}
 .fv{font-family:'DM Mono',monospace;font-size:16px;color:var(--ahead);min-height:20px;font-weight:500;}
 
-/* ── EXPORT / IMPORT ── */
-.io-section{
-  background:var(--surf);border:1px solid var(--border);
-  border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:10px;
-}
-.io-title{font-size:11px;font-weight:600;letter-spacing:2px;color:var(--txt3);text-transform:uppercase;}
-.io-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.btn-io{
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  font-weight:700;font-size:13px;padding:13px 10px;
-  border-radius:6px;cursor:pointer;transition:all .2s;border:none;
-  text-align:center;
-}
-.btn-export{
-  background:color-mix(in srgb,var(--ahead) 10%,transparent);
-  border:1px solid color-mix(in srgb,var(--ahead) 40%,transparent);
-  color:var(--ahead);
-}
-.btn-export:active{background:color-mix(in srgb,var(--ahead) 18%,transparent);}
-.btn-import{
-  background:color-mix(in srgb,var(--ok) 10%,transparent);
-  border:1px solid color-mix(in srgb,var(--ok) 40%,transparent);
-  color:var(--ok);
-}
-.btn-import:active{background:color-mix(in srgb,var(--ok) 18%,transparent);}
-.io-feedback{
-  font-size:12px;font-weight:600;padding:8px 12px;
-  border-radius:4px;line-height:1.5;
-}
-.io-feedback.ok{
-  background:color-mix(in srgb,var(--ok) 10%,transparent);
-  border:1px solid color-mix(in srgb,var(--ok) 30%,transparent);
-  color:var(--ok);
-}
-.io-feedback.err{
-  background:color-mix(in srgb,var(--behind) 10%,transparent);
-  border:1px solid color-mix(in srgb,var(--behind) 30%,transparent);
-  color:var(--behind);
-}
+/* ── BUTTONS ── */
 .btn-add{background:color-mix(in srgb,var(--ahead) 6%,transparent);border:1px dashed color-mix(in srgb,var(--ahead) 40%,transparent);color:var(--ahead);font-weight:700;font-size:13px;padding:14px;border-radius:6px;cursor:pointer;transition:all .2s;width:100%;}
 .btn-add:active{background:color-mix(in srgb,var(--ahead) 12%,transparent);}
 .btn-launch{background:var(--ahead);color:#fff;font-weight:700;font-size:15px;padding:16px;border:none;border-radius:8px;cursor:pointer;width:100%;transition:all .2s;}
@@ -280,16 +236,7 @@ body{
 .sn.over{color:var(--behind);}.sn.good{color:var(--ok);}.sn.near{color:var(--warn);}
 .su{font-size:10px;font-weight:600;color:var(--txt3);}
 .sdiv{width:1px;background:var(--border);height:44px;margin:0 8px;}
-/* Target speed block — highlighted */
-.tgt-block{
-  display:flex;flex-direction:column;align-items:center;gap:2px;
-  background:color-mix(in srgb,var(--warn) 10%,transparent);
-  border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);
-  border-radius:5px;padding:6px 10px;margin:0 2px;
-}
-.tgt-block .slb{color:var(--warn);}
-.st{font-family:'DM Mono',monospace;font-size:28px;font-weight:700;color:var(--warn);letter-spacing:-1px;line-height:1;}
-[data-theme="dark"] .st{text-shadow:0 0 12px color-mix(in srgb,var(--warn) 40%,transparent);}
+.st{font-family:'DM Mono',monospace;font-size:22px;color:var(--txt3);letter-spacing:-1px;}
 .sdiff{font-size:11px;font-weight:600;margin-top:2px;}
 .sdiff.p{color:var(--behind);}.sdiff.n{color:var(--ahead);}.sdiff.z{color:var(--ok);}
 
@@ -410,18 +357,6 @@ body{
   <div class="sec-lbl">Rally Configuration</div>
   <div id="legs-list"></div>
   <button class="btn-add" onclick="addLeg()">＋ Add Leg</button>
-
-  <!-- Export / Import -->
-  <div class="io-section">
-    <div class="io-title">Export / Import</div>
-    <div class="io-row">
-      <button class="btn-io btn-export" onclick="exportLegs()">⬇ Export JSON</button>
-      <label class="btn-io btn-import" for="import-file">⬆ Import JSON</label>
-      <input type="file" id="import-file" accept=".json,application/json" style="display:none" onchange="importLegs(this)">
-    </div>
-    <div id="io-feedback" class="io-feedback" style="display:none"></div>
-  </div>
-
   <div style="height:2px"></div>
   <button class="btn-launch" onclick="launch()">▶ Launch Rally</button>
 </div>
@@ -453,12 +388,7 @@ body{
     <div class="spanel">
       <div class="sb"><div class="slb">GPS Speed</div><div class="sn" id="spd">—</div><div class="su">km/h</div></div>
       <div class="sdiv"></div>
-      <div class="tgt-block">
-        <div class="slb">Target</div>
-        <div class="st" id="spd-tgt">—</div>
-        <div class="su">km/h</div>
-        <div class="sdiff" id="spd-diff"></div>
-      </div>
+      <div class="sb"><div class="slb">Target</div><div class="st" id="spd-tgt">—</div><div class="su">km/h</div><div class="sdiff" id="spd-diff"></div></div>
       <div class="sdiv"></div>
       <div class="sb"><div class="slb">GPS ± m</div><div class="sn" id="spd-acc" style="font-size:26px;color:var(--txt3)">—</div><div class="su">accuracy</div></div>
     </div>
@@ -566,22 +496,21 @@ function fmtEl(ms){
 }
 function km3(m){ return (m/1000).toFixed(3); }
 
-// Parse "HH:MM" + offsetMins → absolute Date (today or tomorrow if past)
-function computeAutoStartDate(leg){
-  if(!leg.autoStart||!leg.autoHH||!leg.autoMM) return null;
-  const h=parseInt(leg.autoHH,10), m=parseInt(leg.autoMM,10);
-  const off=parseInt(leg.autoOffset||'0',10)||0;
+// Parse "HH:MM" string → today's Date object (or tomorrow if past)
+function parseTimeToDate(hhmm){
+  if(!hhmm) return null;
+  const [h,m] = hhmm.split(':').map(Number);
   if(isNaN(h)||isNaN(m)) return null;
-  const d=new Date();
+  const d = new Date();
   d.setSeconds(0,0);
-  d.setHours(h,m+off);
-  if(d<=new Date()) d.setDate(d.getDate()+1);
+  d.setHours(h, m);
+  if(d <= new Date()) d.setDate(d.getDate()+1); // if past, schedule for tomorrow
   return d;
 }
-function autoStartLabel(leg){
-  const d=computeAutoStartDate(leg);
-  if(!d) return '';
-  return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+function fmtCountdown(ms){
+  if(ms<=0) return '00:00';
+  const s=Math.floor(ms/1000),m=Math.floor(s/60),sec=s%60;
+  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
 }
 
 /* ══════════════════════════════════════════════════
@@ -705,44 +634,21 @@ let legId = 0;
 
 function addLeg(){
   legId++;
-  legs.push({id:legId,name:'',distM:'',spdKmh:'',linked:false,autoStart:false,autoHH:'',autoMM:'',autoOffset:'0'});
+  legs.push({id:legId,name:'',distM:'',spdKmh:'',linked:false,autoStart:false,autoTime:''});
   renderLegs();
 }
 function delLeg(id){ legs=legs.filter(l=>l.id!==id); renderLegs(); }
 function updLeg(id,field,val){
   const l=legs.find(l=>l.id===id); if(!l) return;
   l[field]=val;
-  if(field==='linked'||field==='autoStart'){
-    renderLegs();
-  } else if(field==='autoHH'||field==='autoMM'||field==='autoOffset'){
-    // Update computed start-time label in-place — no full re-render (keeps keyboard open)
-    refreshAutoLabel(id);
-  } else {
-    refreshTime(id);
-  }
+  if(field==='linked'||field==='autoStart') renderLegs();
+  else refreshTime(id);
 }
 function refreshTime(id){
   const l=legs.find(l=>l.id===id); if(!l) return;
   const s=calcSecs(l.distM,l.spdKmh);
   const el=gel('lc-'+id);
   if(el) el.textContent=s!=null?fmtMMSSdd(s)+' ('+s.toFixed(2)+'s)':'—';
-}
-
-function refreshAutoLabel(id){
-  const l=legs.find(l=>l.id===id); if(!l) return;
-  const absLabel=autoStartLabel(l);
-  // Update the "→ Starts at HH:MM" span without touching the inputs
-  const el=gel('al-'+id);
-  if(el){
-    el.textContent=absLabel?'→ Starts at '+absLabel:'';
-    el.style.display=absLabel?'':'none';
-  }
-  // Also update the badge in the checkbox row
-  const badge=gel('ab-'+id);
-  if(badge){
-    badge.textContent=absLabel?'⏰ '+absLabel:'';
-    badge.style.display=absLabel?'':'none';
-  }
 }
 
 function legGroupInfo(idx){
@@ -788,31 +694,20 @@ function renderLegs(){
     }
     // Auto-start by time (only for first leg of group)
     if(canAutoStart){
-      const absLabel = autoStartLabel(leg);
-      const scheduledBadge = leg.autoStart
-        ? `<span class="lopt-badge badge-auto" id="ab-${leg.id}" style="${absLabel?'':'display:none'}">⏰ ${absLabel}</span>` : '';
       html+=`<label class="lopt-row">
         <input type="checkbox" class="auto-cb" ${leg.autoStart?'checked':''} onchange="updLeg(${leg.id},'autoStart',this.checked)">
         <span style="flex:1">⏰ Auto-start at scheduled time</span>
-        ${scheduledBadge}
+        ${leg.autoStart?'<span class="lopt-badge badge-auto">SCHEDULED</span>':''}
       </label>`;
       if(leg.autoStart){
-        const absLabel2=absLabel;
+        // compute countdown preview
+        const target=parseTimeToDate(leg.autoTime);
+        const cdStr=target?fmtCountdown(target-new Date())+'':'-';
         html+=`<div class="ltime-row">
-          <label>Ref:</label>
-          <input type="number" class="ltime-input" style="width:46px" placeholder="HH"
-            min="0" max="23" inputmode="numeric" value="${leg.autoHH}"
-            oninput="updLeg(${leg.id},'autoHH',this.value)">
-          <span class="ltime-sep">:</span>
-          <input type="number" class="ltime-input" style="width:46px" placeholder="MM"
-            min="0" max="59" inputmode="numeric" value="${leg.autoMM}"
-            oninput="updLeg(${leg.id},'autoMM',this.value)">
-          <label>+</label>
-          <input type="number" class="ltime-input" style="width:52px" placeholder="0"
-            min="0" inputmode="numeric" value="${leg.autoOffset||0}"
-            oninput="updLeg(${leg.id},'autoOffset',this.value)">
-          <label>min</label>
-          <span class="ltime-result" id="al-${leg.id}" style="${absLabel2?'':'visibility:hidden'}">→ ${absLabel2||'—'}</span>
+          <label>Start time:</label>
+          <input type="time" class="ltime-input" value="${leg.autoTime}"
+            onchange="updLeg(${leg.id},'autoTime',this.value)">
+          <span class="ltime-countdown" id="lcd-${leg.id}">${leg.autoTime?'T-'+cdStr:''}</span>
         </div>`;
       }
     }
@@ -852,13 +747,7 @@ let autoAdvance  = false;
 let asTimer      = null;   // auto-start countdown interval
 let asTarget     = null;   // Date when leg should auto-start
 
-function resetLegGPS(){
-  // Reset accumulated distance counters for the new leg
-  // but keep lastPos so the NEXT GPS fix immediately starts accumulating distance
-  // (avoids the "ACQUIRING GPS…" flash between legs)
-  gpsDistM=0; gpsFixN=0;
-  // lastPos intentionally NOT cleared here — GPS watch keeps running
-}
+function resetLegGPS(){ gpsDistM=0; gpsFixN=0; lastPos=null; }
 
 /* ══════════════════════════════════════════════════
    LAUNCH
@@ -883,25 +772,17 @@ function launch(){
 /* ══════════════════════════════════════════════════
    AUTO-START SCHEDULER
 ══════════════════════════════════════════════════ */
-function fmtCountdown(ms){
-  if(ms<=0) return '00:00';
-  const s=Math.floor(ms/1000),m=Math.floor(s/60),sec=s%60;
-  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
-}
-
 function scheduleAutoStart(idx){
   clearAutoStart();
   const leg=legs[idx];
-  if(!leg||!leg.autoStart) return;
-  const target=computeAutoStartDate(leg);
+  if(!leg||!leg.autoStart||!leg.autoTime) return;
+  const target=parseTimeToDate(leg.autoTime);
   if(!target) return;
   asTarget=target;
-  const absLabel=autoStartLabel(leg);
   gel('as-banner').style.display='flex';
   gel('sdot').className='sdot waiting';
-  gel('stxt').textContent='WAITING — AUTO-START AT '+absLabel;
-  gel('as-label').textContent='⏱ Auto-start in';
-  gel('as-clock').textContent=fmtCountdown(target-new Date());
+  gel('stxt').textContent='WAITING — AUTO-START AT '+leg.autoTime;
+  // Countdown timer (updates every 500ms)
   asTimer=setInterval(()=>{
     const rem=asTarget-new Date();
     if(rem<=0){
@@ -912,6 +793,8 @@ function scheduleAutoStart(idx){
       gel('as-clock').textContent=fmtCountdown(rem);
     }
   },500);
+  gel('as-clock').textContent=fmtCountdown(target-new Date());
+  gel('as-label').textContent='⏱ Auto-start in';
 }
 
 function clearAutoStart(){
@@ -990,13 +873,8 @@ function startLeg(){
   legRunning=true; legStartTs=performance.now();
   resetLegGPS(); autoAdvance=false;
   clearAutoStart(); gel('as-banner').style.display='none';
-  gel('btn-go').style.display='none';
+  gel('btn-go').style.display='none'; gel('btn-stop').style.display='';
   gel('btn-next').style.display='none';
-  // Label Stop button based on whether next leg is a linked sub-leg
-  const nextIsLinked = curIdx+1 < legs.length && legs[curIdx+1].linked;
-  const stopBtn = gel('btn-stop');
-  stopBtn.textContent = nextIsLinked ? 'Next Sub-leg ▶' : '■ Stop';
-  stopBtn.style.display='';
   gel('sdot').className='sdot run';
   gel('stxt').textContent='RUNNING — '+(curIdx+1)+'/'+legs.length;
   renderChips(); clearInterval(legTimer); legTimer=setInterval(tick,100);
@@ -1078,17 +956,10 @@ function stopLeg(){
     gel('sdot').className='sdot done';
     gel('stxt').textContent='FINISHED — LEG '+(curIdx+1);
     gel('btn-stop').style.display='none'; gel('btn-go').style.display='none';
-    if(nextIdx<legs.length){
-      // Load the next leg UI immediately so target speed/time are correct
-      loadLeg(nextIdx);
-      // Override the status text that loadLeg resets
-      gel('sdot').className='sdot done';
-      gel('stxt').textContent='FINISHED — LEG '+(curIdx+1)+' · NEXT: '+(nextIdx+1)+'/'+legs.length;
-      gel('btn-go').style.display='none';
-      gel('btn-next').style.display='';
-      scheduleAutoStart(nextIdx);
-    }
+    if(nextIdx<legs.length){ gel('btn-next').style.display=''; }
     renderChips();
+    // Check if next leg has auto-start time
+    if(nextIdx<legs.length){ scheduleAutoStart(nextIdx); }
   }
 }
 
@@ -1115,166 +986,47 @@ function buildResults(){
   const c=gel('res-content');
   const done=legResults.filter(r=>r!=null);
   if(!done.length){c.innerHTML='<div class="empty-msg">No completed legs yet</div>';return;}
-  let tot=0, realPenalty=0, rows='';
+  let tot=0,rows='';
   legs.forEach((leg,i)=>{
     const r=legResults[i]; if(!r) return;
     tot+=r.delta;
-    realPenalty+=Math.abs(r.delta);
-    // Build sign and absolute value separately — never rely on toFixed() for sign display
-    const absDelta = Math.abs(r.delta);
-    const sign  = r.delta > 0.0005 ? '+' : r.delta < -0.0005 ? '−' : '±';
-    const cls   = absDelta < 0.3 ? 'cok' : r.delta > 0 ? 'cbeh' : 'cahd';
-    const em=Math.floor(r.elSec/60),  es=(r.elSec%60).toFixed(2);
+    const sign=r.delta>0?'+':'';
+    const cls=Math.abs(r.delta)<0.3?'cok':r.delta>0?'cbeh':'cahd';
+    const em=Math.floor(r.elSec/60),es=(r.elSec%60).toFixed(2);
     const tm=Math.floor(r.tgtSecs/60),ts=(r.tgtSecs%60).toFixed(2);
     const name=leg.name||'Leg '+(i+1);
     const gi=legGroupInfo(i);
     const subBadge=gi.size>1?`<span class="sub-badge">${gi.posInGroup+1}/${gi.size}</span>`:'';
-    rows+=`<tr>
-      <td>${name}${subBadge}</td>
+    rows+=`<tr><td>${name}${subBadge}</td>
       <td>${tm}:${parseFloat(ts)<10?'0':''}${ts}</td>
       <td>${em}:${parseFloat(es)<10?'0':''}${es}</td>
       <td>${(r.gpsDistM/1000).toFixed(3)}</td>
       <td>${r.gpsFixN}</td>
-      <td class="${cls}">${sign}${absDelta.toFixed(3)}s</td>
-    </tr>`;
+      <td class="${cls}">${sign}${r.delta.toFixed(3)}s</td></tr>`;
   });
-  const totSign = tot > 0.0005 ? '+' : tot < -0.0005 ? '−' : '±';
-  const totAbs  = Math.abs(tot);
-  const tc      = totAbs < 0.3 ? 'cok' : tot > 0 ? 'cbeh' : 'cahd';
+  const ts=tot>0?'+':'',tc=Math.abs(tot)<0.3?'cok':tot>0?'cbeh':'cahd';
   c.innerHTML=`<table class="rtable">
     <thead><tr><th>Stage</th><th>Target</th><th>Actual</th><th>GPS km</th><th>Fixes</th><th>Δ sec</th></tr></thead>
     <tbody>${rows}</tbody></table>
-    <div class="totcard"><div class="totlbl">Net Penalty</div><div class="totval ${tc}">${totSign}${totAbs.toFixed(3)}s</div></div>
-    <div class="totcard" style="margin-top:6px;border-color:var(--behind);background:color-mix(in srgb,var(--behind) 6%,var(--surf))">
-      <div>
-        <div class="totlbl" style="color:var(--behind)">Real Penalty</div>
-        <div style="font-size:11px;color:var(--txt3);margin-top:2px;">Sum of |Δ| per leg (signs ignored)</div>
-      </div>
-      <div class="totval" style="color:var(--behind)">${realPenalty.toFixed(3)}s</div>
-    </div>`;
-}
-
-/* ══════════════════════════════════════════════════
-   EXPORT / IMPORT
-══════════════════════════════════════════════════ */
-
-const EXPORT_VERSION = 1;
-
-function showFeedback(msg, isErr, autoClear){
-  const el = gel('io-feedback');
-  el.textContent = msg;
-  el.className = 'io-feedback ' + (isErr ? 'err' : 'ok');
-  el.style.display = 'block';
-  if(autoClear) setTimeout(()=>{ el.style.display='none'; }, 4000);
-}
-
-function exportLegs(){
-  if(!legs.length){ showFeedback('⚠ No legs to export.', true, true); return; }
-
-  const payload = {
-    version: EXPORT_VERSION,
-    exportedAt: new Date().toISOString(),
-    legs: legs.map(l => ({
-      name:       l.name,
-      distM:      l.distM,
-      spdKmh:     l.spdKmh,
-      linked:     l.linked,
-      autoStart:  l.autoStart,
-      autoHH:     l.autoHH,
-      autoMM:     l.autoMM,
-      autoOffset: l.autoOffset,
-    }))
-  };
-
-  const json = JSON.stringify(payload, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
-  const url  = URL.createObjectURL(blob);
-
-  // Build a filename like "regrally-2025-05-17.json"
-  const datePart = new Date().toISOString().slice(0,10);
-  const a = document.createElement('a');
-  a.href     = url;
-  a.download = 'regrally-' + datePart + '.json';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 5000);
-
-  showFeedback('✓ Exported ' + legs.length + ' leg' + (legs.length>1?'s':'') + ' to JSON.', false, true);
-}
-
-function importLegs(input){
-  const file = input.files && input.files[0];
-  if(!file){ return; }
-
-  const reader = new FileReader();
-  reader.onload = function(e){
-    try{
-      const raw = JSON.parse(e.target.result);
-
-      // Accept both a plain array of legs OR our versioned wrapper object
-      let imported;
-      if(Array.isArray(raw)){
-        imported = raw;
-      } else if(raw && Array.isArray(raw.legs)){
-        imported = raw.legs;
-      } else {
-        throw new Error('Unrecognised format — expected a JSON array or {legs:[…]} object.');
-      }
-
-      if(!imported.length) throw new Error('File contains no legs.');
-
-      // Validate each leg has the minimum required fields
-      imported.forEach((l, i) => {
-        if(l.distM === undefined && l.distance !== undefined) l.distM = l.distance;
-        if(l.spdKmh === undefined && l.speed !== undefined)   l.spdKmh = l.speed;
-        const d = parseFloat(l.distM), s = parseFloat(l.spdKmh);
-        if(isNaN(d) || isNaN(s) || d <= 0 || s <= 0){
-          throw new Error(`Leg ${i+1} ("${l.name||'unnamed'}") is missing valid distance or speed.`);
-        }
-      });
-
-      // Replace current legs
-      legs = imported.map(l => {
-        legId++;
-        return {
-          id:         legId,
-          name:       String(l.name   || ''),
-          distM:      String(l.distM  || l.distance || ''),
-          spdKmh:     String(l.spdKmh || l.speed    || ''),
-          linked:     !!l.linked,
-          autoStart:  !!l.autoStart,
-          autoHH:     String(l.autoHH     || ''),
-          autoMM:     String(l.autoMM     || ''),
-          autoOffset: String(l.autoOffset || '0'),
-        };
-      });
-
-      renderLegs();
-      showFeedback('✓ Imported ' + legs.length + ' leg' + (legs.length>1?'s':'') + ' successfully.', false, true);
-
-    } catch(err){
-      showFeedback('⛔ Import failed: ' + err.message, true, false);
-    }
-
-    // Reset file input so same file can be re-imported if needed
-    input.value = '';
-  };
-
-  reader.onerror = function(){
-    showFeedback('⛔ Could not read file.', true, false);
-    input.value = '';
-  };
-
-  reader.readAsText(file);
+    <div class="totcard"><div class="totlbl">Total Penalty</div><div class="totval ${tc}">${ts}${tot.toFixed(3)}s</div></div>`;
 }
 
 /* ══════════════════════════════════════════════════
    INIT
 ══════════════════════════════════════════════════ */
 legId=1;
-legs.push({id:1,name:'Stage 1',distM:'',spdKmh:'',linked:false,autoStart:false,autoHH:'',autoMM:'',autoOffset:'0'});
+legs.push({id:1,name:'Stage 1',distM:'',spdKmh:'',linked:false,autoStart:false,autoTime:''});
 renderLegs();
+
+// Update leg-config countdowns every 30s so they stay fresh while user is on Legs tab
+setInterval(()=>{
+  legs.forEach(leg=>{
+    const el=gel('lcd-'+leg.id);
+    if(!el||!leg.autoStart||!leg.autoTime) return;
+    const target=parseTimeToDate(leg.autoTime);
+    el.textContent=target?'T-'+fmtCountdown(target-new Date()):'';
+  });
+},30000);
 </script>
 </body>
 </html>
