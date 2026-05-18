@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" id="theme-color-meta" content="#07090c">
-<title>RegRally GPS Pro v0.44</title>
+<title>RegRally GPS Pro</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ── THEME TOKENS ── */
@@ -52,9 +52,10 @@ body{
   content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,var(--ahead) 30%,var(--ok) 70%,transparent);opacity:.5;
 }
-.hdr-clock-container { display: flex; align-items: center; }
-.hdr-clock{font-family:'DM Mono',monospace;font-size:26px;font-weight:700;letter-spacing:1px;color:var(--warn); line-height:1;}
+.hdr-clock-container { display: flex; flex-direction: column; }
+.hdr-clock{font-family:'DM Mono',monospace;font-size:24px;font-weight:700;letter-spacing:1px;color:var(--warn); line-height:1.1;}
 [data-theme="dark"] .hdr-clock{text-shadow:0 0 12px color-mix(in srgb,var(--warn) 40%,transparent);}
+.logo-sub{font-size:10px;letter-spacing:2px;color:var(--txt3);text-transform:uppercase;font-weight:500;margin-top:1px;}
 .hdr-right{display:flex;align-items:center;gap:10px;}
 
 .app-version{
@@ -69,30 +70,24 @@ body{
   letter-spacing:0.5px;
 }
 
-/* GPS Telemetry Badge Block */
 .gps-badge-container {
   display: flex;
   flex-direction: column;
   background: var(--surf2);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 5px 8px;
-  min-width: 175px;
+  padding: 4px 8px;
+  min-width: 155px;
   font-family: 'DM Mono', monospace;
 }
 .gps-badge-top {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 6px;
   border-bottom: 1px dashed var(--border);
   padding-bottom: 3px;
   margin-bottom: 3px;
-}
-.gps-fix-counter-highlight {
-  color: var(--ok);
-  font-weight: 700;
-  font-size: 10px;
 }
 .gps-status-text {
   font-size: 10px;
@@ -105,14 +100,13 @@ body{
   justify-content: space-between;
   font-size: 9px;
   color: var(--txt3);
-  gap: 6px;
+  gap: 8px;
   white-space: nowrap;
 }
 .gps-metric-live {
+  color: var(--txt);
   font-weight: 500;
 }
-.gps-precision-highlight { color: var(--warn); font-weight: 700; }
-.gps-altitude-highlight { color: var(--ahead); font-weight: 700; }
 
 .dot{width:8px;height:8px;border-radius:50%;background:var(--txt3);flex-shrink:0;transition:all .4s;}
 .dot.acq{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:blink 1s infinite;}
@@ -207,7 +201,7 @@ body{
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 5px 10px 5px 14px;
+  padding: 5px 10px 5px 32px;
   background: var(--surf3);
   border-bottom: 1px solid var(--border);
   font-size: 12px;
@@ -272,38 +266,20 @@ body{
   color:var(--ok);
 }
 .btn-import:active{background:color-mix(in srgb,var(--ok) 18%,transparent);}
-
-.io-url-row {
-  display: flex;
-  gap: 8px;
-  margin-top: 2px;
+.io-feedback{
+  font-size:12px;font-weight:600;padding:8px 12px;
+  border-radius:4px;line-height:1.5;
 }
-.fi-url {
-  flex: 1;
-  background: var(--surf2);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--txt);
-  font-family: inherit;
-  font-size: 13px;
-  padding: 10px 12px;
-  outline: none;
+.io-feedback.ok{
+  background:color-mix(in srgb,var(--ok) 10%,transparent);
+  border:1px solid color-mix(in srgb,var(--ok) 30%,transparent);
+  color:var(--ok);
 }
-.fi-url:focus { border-color: var(--ahead); }
-.btn-url-fetch {
-  background: var(--surf3);
-  border: 1px solid var(--border2);
-  color: var(--txt2);
-  font-weight: 600;
-  font-size: 13px;
-  padding: 0 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
+.io-feedback.err{
+  background:color-mix(in srgb,var(--behind) 10%,transparent);
+  border:1px solid color-mix(in srgb,var(--behind) 30%,transparent);
+  color:var(--behind);
 }
-.btn-url-fetch:active { background: var(--border); color: var(--txt); }
-
 .btn-add{background:color-mix(in srgb,var(--ahead) 6%,transparent);border:1px dashed color-mix(in srgb,var(--ahead) 40%,transparent);color:var(--ahead);font-weight:700;font-size:13px;padding:14px;border-radius:6px;cursor:pointer;transition:all .2s;width:100%;}
 .btn-add:active{background:color-mix(in srgb,var(--ahead) 12%,transparent);}
 .btn-launch{background:var(--ahead);color:#fff;font-weight:700;font-size:15px;padding:16px;border:none;border-radius:8px;cursor:pointer;width:100%;transition:all .2s;}
@@ -334,46 +310,6 @@ body{
 .sdot.auto{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:blink .6s infinite;}
 .sdot.waiting{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:blink 1.5s infinite;}
 
-/* Space Saving Collapsible Panel */
-.collapsible-container {
-  border: 1px solid var(--border);
-  background: var(--surf);
-  border-radius: 6px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-.collapsible-trigger {
-  padding: 10px 12px;
-  font-weight: 700;
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: var(--txt2);
-  background: var(--surf2);
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  user-select: none;
-}
-.collapsible-trigger::after {
-  content: '▼';
-  font-size: 9px;
-  transition: transform 0.2s ease;
-  color: var(--txt3);
-}
-.collapsible-container.open .collapsible-trigger::after {
-  transform: rotate(180deg);
-}
-.collapsible-content {
-  padding: 10px;
-  display: none;
-  background: var(--surf);
-}
-.collapsible-container.open .collapsible-content {
-  display: block;
-}
-
 /* Auto-start countdown banner */
 .autostart-banner{
   background:color-mix(in srgb,var(--warn) 10%,transparent);
@@ -387,7 +323,7 @@ body{
 
 /* Chips */
 .chips{display:flex;gap:5px;flex-wrap:wrap;}
-.chip{font-size:11px;font-weight:600;padding:5px 10px;border-radius:4px;border:1px solid var(--border);background:var(--surf2);color:var(--txt3);cursor:pointer;transition:all .2s;}
+.chip{font-size:11px;font-weight:600;padding:5px 10px;border-radius:4px;border:1px solid var(--border);background:var(--surf);color:var(--txt3);cursor:pointer;transition:all .2s;}
 .chip.cur{border-color:var(--ahead);color:var(--ahead);background:color-mix(in srgb,var(--ahead) 8%,transparent);}
 .chip.done{border-color:var(--ok);color:var(--ok);background:color-mix(in srgb,var(--ok) 6%,transparent);}
 .chip.auto{border-color:var(--warn);color:var(--warn);animation:blink .6s infinite;}
@@ -402,7 +338,8 @@ body{
 .sn.over{color:var(--behind);}.sn.good{color:var(--ok);}.sn.near{color:var(--warn);}
 .su{font-size:10px;font-weight:600;color:var(--txt3);}
 .sdiv{width:1px;background:var(--border);height:44px;margin:0 8px;}
-/* Target speed block — highlighted */
+
+/* Target speed block */
 .tgt-block{
   display:flex;flex-direction:column;align-items:center;gap:2px;
   background:color-mix(in srgb,var(--warn) 10%,transparent);
@@ -415,14 +352,23 @@ body{
 .sdiff{font-size:11px;font-weight:600;margin-top:2px;}
 .sdiff.p{color:var(--behind);}.sdiff.n{color:var(--ahead);}.sdiff.z{color:var(--ok);}
 
-/* Delta hero */
+/* ── DELTA HERO PANEL (REFACTORED FOR CONDITIONAL COLOR MATRIX) ── */
 .delta{background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;position:relative;}
-.delta::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--dc,var(--border2));transition:background .4s;}
+.delta::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--dc,var(--border2));transition:background .25s;}
 [data-theme="dark"] .delta::before{box-shadow:0 0 12px var(--dc,transparent);}
 .delta-in{padding:14px 14px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;}
 .dlbl{font-size:11px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;margin-bottom:6px;text-align:center;}
-.drow"><div class="dsign" id="dsign"></div><div class="dint" id="dint">0</div><div class="ddec" id="ddec">.0</div></div>
-.dunit">SECONDS</div>
+
+/* Enforce DM Mono across all text nodes inside hero delta string container */
+.drow{display:flex;align-items:flex-start;justify-content:center;line-height:1; font-family:'DM Mono',monospace;}
+.dsign{font-size:28px;font-weight:500;color:var(--dc,var(--txt3));transition:color .25s;margin-top:8px;margin-right:2px;}
+.dint{font-size:88px;font-weight:500;line-height:.9;color:var(--dc,var(--txt));letter-spacing:-4px;transition:color .25s;}
+[data-theme="dark"] .dint{text-shadow:0 0 40px var(--dc,transparent);}
+.ddec{font-size:42px;font-weight:400;line-height:.9;letter-spacing:-1px;color:var(--dc,var(--txt));transition:color .25s;align-self:flex-end;margin-bottom:6px;}
+
+.dunit{font-size:11px;font-weight:600;letter-spacing:3px;color:var(--txt3);text-transform:uppercase;margin-top:6px;}
+.dverd{font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dc,var(--txt3));transition:color .25s;margin-top:2px;}
+.dmode{font-size:10px;color:var(--txt3);background:var(--surf2);padding:3px 9px;border-radius:3px;margin-top:6px;text-align:center;font-weight:500;}
 #subleg-wrap{width:100%}
 .subleg-bar{width:100%;margin-top:6px;background:var(--surf2);border:1px solid var(--border);border-radius:3px;height:6px;overflow:hidden;position:relative;}
 .subleg-fill{height:100%;background:var(--ok);transition:width .4s linear;}
@@ -449,7 +395,14 @@ body{
 .pexp{position:absolute;top:0;bottom:0;width:2px;background:var(--warn);opacity:.9;transition:left .7s linear;}
 .plbls{display:flex;justify-content:space-between;font-size:10px;color:var(--txt3);margin-top:3px;font-weight:500;}
 
-/* Controls Layout: 3 Columns fixed size */
+/* Raw GPS */
+.rawgps{background:var(--surf);border:1px solid var(--border);border-radius:6px;padding:8px 12px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.rc{display:flex;flex-direction:column;gap:2px;}
+.rl{font-size:9px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;}
+.rv{font-family:'DM Mono',monospace;font-size:11px;color:var(--txt3);}
+.rv.live{color:var(--txt);}
+
+/* Controls Layout */
 .ctrlg-three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
 .bc{font-weight:700;font-size:13px;padding:15px 8px;border-radius:8px;cursor:pointer;border:none;transition:all .2s; text-align:center;}
 .bc:active{transform:scale(.97);opacity:.9;}
@@ -501,18 +454,18 @@ body{
 <div id="hdr">
   <div class="hdr-clock-container">
     <div class="hdr-clock" id="hdr-clock">00:00:00</div>
+    <div class="logo-sub">Regularity Timer · GPS</div>
   </div>
   <div class="hdr-right">
-    <div class="app-version">v0.44</div>
+    <div class="app-version">v0.42</div>
     <div class="gps-badge-container">
       <div class="gps-badge-top">
         <div class="dot" id="dot"></div>
-        <span class="gps-fix-counter-highlight" id="hdr-gps-fixes">[0]</span>
         <span class="gps-status-text" id="gtxt">NO GPS</span>
       </div>
       <div class="gps-badge-metrics">
-        <span>Pr: <span class="gps-precision-highlight" id="hdr-gps-acc">—</span></span>
-        <span>Alt: <span class="gps-altitude-highlight" id="hdr-gps-alt">—</span></span>
+        <span>Pr: <span class="gps-metric-live" id="hdr-gps-acc">—</span></span>
+        <span>Sp: <span class="gps-metric-live" id="hdr-gps-spd">—</span></span>
         <span>Hz: <span class="gps-metric-live" id="hdr-gps-hz">—</span></span>
       </div>
     </div>
@@ -532,16 +485,11 @@ body{
   <button class="btn-add" onclick="addLeg()">＋ Add Leg</button>
 
   <div class="io-section">
-    <div class="io-title">Export / Import Configuration</div>
+    <div class="io-title">Export / Import</div>
     <div class="io-row">
       <button class="btn-io btn-export" onclick="exportLegs()">⬇ Export JSON</button>
-      <label class="btn-io btn-import" for="import-file">⬆ Import Local File</label>
+      <label class="btn-io btn-import" for="import-file">⬆ Import JSON</label>
       <input type="file" id="import-file" accept=".json,application/json" style="display:none" onchange="importLegs(this)">
-    </div>
-    
-    <div class="io-url-row">
-      <input type="url" id="import-url" class="fi-url" placeholder="Paste configuration JSON URL here..." autocomplete="off">
-      <button class="btn-url-fetch" onclick="fetchLegsFromUrl()">🔗 Fetch URL</button>
     </div>
     <div id="io-feedback" class="io-feedback" style="display:none"></div>
   </div>
@@ -569,13 +517,7 @@ body{
       <button class="btn-abort" onclick="abortAutoStart()">Cancel</button>
     </div>
 
-    <div class="collapsible-container open" id="live-legs-collapsible">
-      <div class="collapsible-trigger" onclick="toggleLiveLegsPanel()">Stage Index Selector</div>
-      <div class="collapsible-content">
-         <div class="chips" id="chips"></div>
-      </div>
-    </div>
-    
+    <div class="chips" id="chips"></div>
     <button class="btn-gps-run" id="btn-gps-run" onclick="doRequestGPS()" style="display:none">📍 Grant GPS Permission</button>
 
     <div class="spanel">
@@ -596,6 +538,8 @@ body{
         <div class="dlbl" id="dlbl">— SELECT LEG —</div>
         <div class="drow"><div class="dsign" id="dsign"></div><div class="dint" id="dint">0</div><div class="ddec" id="ddec">.0</div></div>
         <div class="dunit">SECONDS</div>
+        <div class="dverd" id="dverd">WAITING</div>
+        <div class="dmode" id="dmode">AWAITING GPS</div>
         <div id="subleg-wrap" style="width:100%">
           <div class="subleg-bar"><div class="subleg-fill" id="subleg-fill" style="width:0%"></div></div>
           <div class="subleg-info" id="subleg-info"></div>
@@ -620,6 +564,13 @@ body{
       <div class="plbls"><span>START</span><span id="ppct">0.0%</span><span>FINISH</span></div>
     </div>
 
+    <div class="rawgps">
+      <div class="rc"><div class="rl">Latitude</div><div class="rv live" id="r-lat">—</div></div>
+      <div class="rc"><div class="rl">Longitude</div><div class="rv live" id="r-lon">—</div></div>
+      <div class="rc"><div class="rl">Heading</div><div class="rv live" id="r-hdg">—°</div></div>
+      <div class="rc"><div class="rl">Altitude</div><div class="rv live" id="r-alt">—m</div></div>
+    </div>
+
     <div class="ctrlg-three">
       <button class="bc bgo"   id="btn-go"   onclick="startLeg()">▶ Start</button>
       <button class="bc bstop" id="btn-stop" onclick="stopLeg()">■ Stop</button>
@@ -638,11 +589,6 @@ body{
 
 <script>
 function gel(id){ return document.getElementById(id); }
-
-/* ── COLLAPSIBLE PANEL LOGIC ── */
-function toggleLiveLegsPanel(){
-  gel('live-legs-collapsible').classList.toggle('open');
-}
 
 /* ── LIVE SYSTEM CLOCK ── */
 function updateSystemClock(){
@@ -705,7 +651,7 @@ function computeAutoStartDate(leg){
   if(d<=new Date()) d.setDate(d.getDate()+1);
   return d;
 }
-function autoStartLabel(leg);
+function autoStartLabel(leg){
   const d=computeAutoStartDate(leg);
   if(!d) return '';
   return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
@@ -719,7 +665,7 @@ let gpsAccM    = null;
 let gpsDistM   = 0;
 let gpsFixN    = 0;
 let gpsGranted = false;
-let lastFixTime = null; 
+let lastFixTime = null;
 
 function haversine(la1,lo1,la2,lo2){
   const R=6371000,t=Math.PI/180;
@@ -756,12 +702,15 @@ function gpsSuccess(pos){
   const q=c.accuracy<6?'LOCKED ✓':c.accuracy<16?'GOOD':c.accuracy<40?'FAIR':'POOR';
   setDot('ok',q);
   
-  gel('hdr-gps-fixes').textContent = `[${gpsFixN}]`;
-  gel('hdr-gps-acc').textContent = '±' + c.accuracy.toFixed(2) + 'm';
-  gel('hdr-gps-alt').textContent = c.altitude != null ? c.altitude.toFixed(1) + 'm' : '—';
+  gel('hdr-gps-acc').textContent = '±' + c.accuracy.toFixed(0) + 'm';
+  gel('hdr-gps-spd').textContent = gpsSpeedMs != null ? (gpsSpeedMs * 3.6).toFixed(0) + 'k' : '0k';
   
   const banner=gel('li-gps-status');
   if(banner){banner.className='li-gps';banner.textContent='✓ GPS '+q+' — ±'+c.accuracy.toFixed(1)+'m';}
+  try{gel('r-lat').textContent=c.latitude.toFixed(6);}catch(e){}
+  try{gel('r-lon').textContent=c.longitude.toFixed(6);}catch(e){}
+  try{gel('r-hdg').textContent=c.heading!=null?c.heading.toFixed(1)+'°':'—°';}catch(e){}
+  try{gel('r-alt').textContent=c.altitude!=null?c.altitude.toFixed(1)+'m':'—m';}catch(e){}
   try{gel('spd-acc').textContent=c.accuracy.toFixed(1);}catch(e){}
   updateGpsBtns('granted');
   const ov=gel('gps-overlay');
@@ -769,7 +718,7 @@ function gpsSuccess(pos){
 
   if(legRunning && legs[curIdx]){
     const activeLeg = legs[curIdx];
-    if(activeLeg.atDistance){
+    if(activeLeg.linked && activeLeg.atDistance){
       const targetLimitM = parseFloat(activeLeg.distM);
       if(!isNaN(targetLimitM) && targetLimitM > 0 && gpsDistM >= targetLimitM){
         stopLeg(); 
@@ -784,9 +733,8 @@ function gpsError(err){
     gpsGranted=false;
     setDot('err','DENIED');
     updateGpsBtns('denied');
-    gel('hdr-gps-fixes').textContent = '[0]';
     gel('hdr-gps-acc').textContent = '—';
-    gel('hdr-gps-alt').textContent = '—';
+    gel('hdr-gps-spd').textContent = '—';
     gel('hdr-gps-hz').textContent = '—';
     const banner=gel('li-gps-status');
     if(banner){banner.className='li-gps bad';banner.textContent='⚠ GPS denied — check location settings.';}
@@ -814,15 +762,43 @@ function skipGPS(){
   const ov=gel('gps-overlay');
   ov.classList.add('hidden'); ov.style.display='none';
   setDot('','NO GPS');
-  gel('hdr-gps-fixes').textContent = '[0]';
   gel('hdr-gps-acc').textContent = '—';
-  gel('hdr-gps-alt').textContent = '—';
+  gel('hdr-gps-spd').textContent = '—';
   gel('hdr-gps-hz').textContent = '—';
   const b=gel('li-gps-status');
   if(b){b.className='li-gps bad';b.textContent='⚠ Running without GPS — time-only mode.';}
 }
 
-/* ── CONFIGURATION MAPPERS ── */
+function showOvErr(){
+  gel('ov-ask').style.display='none';
+  Object.assign(gel('ov-err').style,{display:'flex',flexDirection:'column',alignItems:'center',gap:'14px',textAlign:'center'});
+}
+
+function updateGpsBtns(state){
+  const live=gel('btn-gps-live'),run=gel('btn-gps-run');
+  const hint=document.querySelector('.gps-hint'),ovBtn=gel('btn-allow-ov');
+  const map={
+    granted:    ['✓ GPS Active','✓ GPS Active','GPS active — real-time tracking on','✓ Active'],
+    denied:     ['⛔ Denied — Retry','⛔ Denied — Retry','Allow location in settings, then retry','🔄 Try Again'],
+    requesting: ['⏳ Requesting…','⏳ Requesting…',null,'⏳ Requesting…'],
+    unsupported:['⚠ Unavailable','⚠ Unavailable','GPS not supported by this device','⚠ Unavailable'],
+  };
+  const [lT,rT,hT,oT]=map[state]||map.denied;
+  if(live){live.textContent=lT;live.classList.toggle('granted',state==='granted');live.disabled=state==='requesting'||state==='granted';}
+  if(run){run.textContent=rT;run.classList.toggle('granted',state==='granted');run.disabled=state==='requesting'||state==='granted';run.style.display=state==='granted'?'none':'';}
+  if(hint&&hT) hint.textContent=hT;
+  if(ovBtn){ovBtn.textContent=oT;ovBtn.disabled=state==='requesting';}
+}
+
+/* ── TAB ROUTER ── */
+function showTab(name){
+  const names=['legs','live','res'];
+  document.querySelectorAll('.tb').forEach((b,i)=>b.classList.toggle('on',names[i]===name));
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  gel('pg-'+name).classList.add('on');
+}
+
+/* ── LEG CONFIGURATION SETUP ── */
 let legs  = [];
 let legId = 0;
 
@@ -904,14 +880,16 @@ function renderLegs(){
         <span style="flex:1">🔗 Auto-start (linked to previous leg)</span>
         ${groupBadge}
       </label>`;
+      
+      if(isLinked){
+         html+=`<div class="lsub-options-row">
+            <label>
+               <input type="checkbox" ${leg.atDistance?'checked':''} onchange="updLeg(${leg.id},'atDistance',this.checked)">
+               <span>🏁 @distance (Trigger automatically on distance match)</span>
+            </label>
+         </div>`;
+      }
     }
-    
-    html+=`<div class="lsub-options-row">
-       <label>
-          <input type="checkbox" ${leg.atDistance?'checked':''} onchange="updLeg(${leg.id},'atDistance',this.checked)">
-          <span>🏁 @distance (Trigger automatically on distance match)</span>
-       </label>
-    </div>`;
     
     if(canAutoStart){
       const absLabel = autoStartLabel(leg);
@@ -966,7 +944,7 @@ function renderLegs(){
   });
 }
 
-/* ── RALLY RUNTIME Pointers ── */
+/* ── RALLY STATE ENGINE ── */
 let curIdx       = -1;
 let legRunning   = false;
 let legStartTs   = null;
@@ -990,7 +968,7 @@ function launch(){
   resetLegGPS();
   showTab('live');
   gel('live-idle').style.display='none';
-  gel('live-run').style.display='flex';
+  const lr=gel('live-run'); lr.style.display='flex'; lr.style.flexDirection='column';
   gel('btn-gps-run').style.display=gpsGranted?'none':'';
   renderChips(); loadLeg(0);
   scheduleAutoStart(0);
@@ -1039,12 +1017,11 @@ function abortAutoStart(){
   gel('stxt').textContent='STANDBY — LEG '+(curIdx+1)+'/'+legs.length;
 }
 
-/* ── METRIC PROCESSING VISUALIZERS ── */
 function renderChips(){
   gel('chips').innerHTML=legs.map((leg,i)=>{
     const done=legResults[i]!=null,active=i===curIdx,running=active&&legRunning;
     const isAuto=running&&autoAdvance,linked=leg.linked&&i>0;
-    const isDistLabel = leg.atDistance ? ' 🎯' : '';
+    const isDistLabel = (linked && leg.atDistance) ? ' 🎯' : '';
     const name=(leg.name||'Leg '+(i+1)) + isDistLabel;
     return`<div class="chip ${isAuto?'auto':active?'cur':''} ${done?'done':''} ${linked?'linked-chip':''}"
       onclick="jumpLeg(${i})">${name}</div>`;
@@ -1061,12 +1038,14 @@ function loadLeg(idx){
   const distKm=(parseFloat(leg.distM)/1000).toFixed(3);
   const spdDisp=parseFloat(leg.spdKmh).toFixed(2);
   
-  let labelModeSuffix = leg.atDistance ? ' [@dist]' : '';
+  let labelModeSuffix = (leg.linked && leg.atDistance) ? ' [@dist]' : '';
   let lbl=name+' · '+distKm+' km @ '+spdDisp+' km/h' + labelModeSuffix;
   if(gi.size>1) lbl=`[${gi.posInGroup+1}/${gi.size}] `+lbl;
   gel('dlbl').textContent=lbl;
   
   setDelta(0,'neutral',false);
+  gel('dverd').textContent='READY';
+  gel('dmode').textContent=leg.linked && leg.atDistance ? 'AUTO DETECT BOUNDARY (@distance)' : 'AWAITING GPS DISTANCE';
   gel('t-tgt').textContent=fmtMMSSdd(secs);
   gel('t-el').textContent='0:00.0';
   gel('t-rem').textContent=fmtMMSS(secs);
@@ -1106,15 +1085,41 @@ function updateControlsState() {
   }
 }
 
+/* ── REFACTORED STATE AND STYLE MATRIX ROUTER FOR THE HERO COUNTER ── */
 function setDelta(absSec,state,running){
-  const c={behind:'var(--behind)',ahead:'var(--ahead)',ontime:'var(--ok)',neutral:'var(--border2)'};
-  const col=c[state]||c.neutral;
-  gel('delta').style.setProperty('--dc',col);
-  gel('dsign').textContent=running?(state==='behind'?'+':state==='ahead'?'−':''):'';
-  gel('dint').textContent=Math.floor(absSec);
-  gel('ddec').textContent='.'+Math.floor((absSec%1)*10);
+  let col = 'var(--border2)'; // Default Standby / Neutral state
+  
+  if(running){
+    // High-contrast color threshold evaluation matching user delta specifications
+    if (state === 'behind_major') {
+      col = 'var(--behind)'; // Greater than +1.0 second variance -> Strict Red
+    } else if (state === 'ahead_major') {
+      col = 'var(--ahead)';  // Greater than -1.0 second variance -> Strict Blue
+    } else {
+      col = 'var(--ok)';     // Safe tracking state zone (Within +/- 1.0s boundaries) -> Green
+    }
+  }
+
+  // Inject structural CSS color definitions down to the container variables
+  gel('delta').style.setProperty('--dc', col);
+  
+  // Format math boundary signs explicitly based on delta standing
+  gel('dsign').textContent = running ? (state.startsWith('behind') ? '+' : state.startsWith('ahead') ? '−' : '') : '';
+  gel('dint').textContent = Math.floor(absSec);
+  gel('ddec').textContent = '.' + Math.floor((absSec % 1) * 10);
+  
+  const labelMap = {
+    behind_major: 'LATE ▼ [CRITICAL]',
+    behind_minor: 'LATE ▼',
+    ahead_major:  'EARLY ▲ [CRITICAL]',
+    ahead_minor:  'EARLY ▲',
+    ontime:       'ON TIME ●',
+    neutral:      '—'
+  };
+  gel('dverd').textContent = running ? (labelMap[state] || '—') : '—';
 }
 
+/* ── TIMING LOOP ── */
 function startLeg(){
   if(legRunning) return;
   legRunning=true; 
@@ -1126,7 +1131,6 @@ function startLeg(){
   
   gel('sdot').className='sdot run';
   gel('stxt').textContent='RUNNING — '+(curIdx+1)+'/'+legs.length;
-  gel('live-legs-collapsible').classList.remove('open');
   
   renderChips(); 
   updateControlsState();
@@ -1136,52 +1140,78 @@ function startLeg(){
 
 function tick(){
   if(!legRunning) return;
-  const leg=legs[curIdx];
-  const tgtSecs=calcSecs(leg.distM,leg.spdKmh);
-  const tgtDistM=parseFloat(leg.distM);
-  const spdMs=parseFloat(leg.spdKmh)/3.6;
-  const elMs=performance.now()-legStartTs;
-  const elSec=elMs/1000;
-  const expDistM=spdMs*elSec;
+  const leg = legs[curIdx];
+  const tgtSecs = calcSecs(leg.distM,leg.spdKmh);
+  const tgtDistM = parseFloat(leg.distM);
+  const spdMs = parseFloat(leg.spdKmh)/3.6;
+  const elMs = performance.now()-legStartTs;
+  const elSec = elMs/1000;
+  const expDistM = spdMs*elSec;
 
-  let delta=0,state='neutral';
-  if(gpsDistM>5&&spdMs>0){
-    const idealTime=gpsDistM/spdMs; delta=elSec-idealTime;
-    state=Math.abs(delta)<0.3?'ontime':delta>0?'behind':'ahead';
+  let delta = 0, state = 'ontime', modeStr = 'TIME-BASED · ACQUIRING GPS…';
+  
+  if(gpsDistM > 5 && spdMs > 0){
+    const idealTime = gpsDistM / spdMs; 
+    delta = elSec - idealTime;
+    
+    // Evaluate cross-over points for strict 1.0s boundary colors
+    if (delta >= 1.0) {
+      state = 'behind_major';
+    } else if (delta > 0) {
+      state = 'behind_minor';
+    } else if (delta <= -1.0) {
+      state = 'ahead_major';
+    } else if (delta < 0) {
+      state = 'ahead_minor';
+    } else {
+      state = 'ontime';
+    }
+    
+    modeStr = (leg.linked && leg.atDistance ? 'GPS [@dist] · ' : 'GPS · ') + gpsFixN+' FIXES · ±'+(gpsAccM!=null?gpsAccM.toFixed(1):'?')+'m';
+  } else {
+    // Drop back to pure theoretical timeline delta tracking if GPS calculations aren't live
+    const timeDelta = elSec - tgtSecs;
+    if (timeDelta >= 1.0) state = 'behind_major';
+    else if (timeDelta > 0) state = 'behind_minor';
+    else if (timeDelta <= -1.0) state = 'ahead_major';
+    else if (timeDelta < 0) state = 'ahead_minor';
   }
-  setDelta(Math.abs(delta),state,true);
+  
+  gel('dmode').textContent = modeStr; 
+  setDelta(Math.abs(delta), state, true);
 
-  const gi=legGroupInfo(curIdx);
-  if(gi.size>1){
+  const gi = legGroupInfo(curIdx);
+  if(gi.size > 1){
     const currentSubProgressFraction = (gi.posInGroup / gi.size) + ((clamp(gpsDistM/tgtDistM, 0, 1)) / gi.size);
-    gel('subleg-fill').style.width=(currentSubProgressFraction*100).toFixed(1)+'%';
-    gel('subleg-info').textContent='Sub-leg '+(gi.posInGroup+1)+'/'+gi.size+' running';
+    gel('subleg-fill').style.width = (currentSubProgressFraction*100).toFixed(1)+'%';
+    gel('subleg-info').textContent = 'Sub-leg '+(gi.posInGroup+1)+'/'+gi.size+' running';
   }
 
-  const gpsKmh=gpsSpeedMs!=null?gpsSpeedMs*3.6:null;
-  const tgtKmh=parseFloat(leg.spdKmh);
+  const gpsKmh = gpsSpeedMs!=null?gpsSpeedMs*3.6:null;
+  const tgtKmh = parseFloat(leg.spdKmh);
   if(gpsKmh!=null){
-    const diff=gpsKmh-tgtKmh;
-    const spEl=gel('spd'); spEl.textContent=gpsKmh.toFixed(1);
-    spEl.className='sn'+(Math.abs(diff)<1?' good':diff>0?' over':'');
-    const df=gel('spd-diff');
+    const diff = gpsKmh-tgtKmh;
+    const spEl = gel('spd'); spEl.textContent = gpsKmh.toFixed(1);
+    spEl.className = 'sn' + (Math.abs(diff)<1 ? ' good' : diff>0 ? ' over' : '');
+    const df = gel('spd-diff');
     if(Math.abs(diff)<0.5){df.textContent='ON TARGET';df.className='sdiff z';}
     else if(diff>0){df.textContent='+'+diff.toFixed(1);df.className='sdiff p';}
     else{df.textContent=diff.toFixed(1);df.className='sdiff n';}
   } else { gel('spd').textContent='—'; gel('spd-diff').textContent=''; }
 
-  gel('t-el').textContent=fmtEl(elMs);
-  gel('t-rem').textContent=fmtMMSS(Math.max(0,tgtSecs-elSec));
-  gel('d-gps').textContent=km3(gpsDistM);
-  gel('d-exp').textContent=km3(Math.min(expDistM,tgtDistM));
+  gel('t-el').textContent = fmtEl(elMs);
+  gel('t-rem').textContent = fmtMMSS(Math.max(0,tgtSecs-elSec));
+  gel('d-gps').textContent = km3(gpsDistM);
+  gel('d-exp').textContent = km3(Math.min(expDistM,tgtDistM));
   
-  const gpsPct=clamp((gpsDistM/tgtDistM)*100,0,100);
-  const expPct=clamp((expDistM/tgtDistM)*100,0,100);
-  gel('pfill').style.width=gpsPct.toFixed(2)+'%';
-  gel('pexp').style.left=expPct.toFixed(2)+'%';
-  gel('ppct').textContent=gpsPct.toFixed(1)+'%';
+  const gpsPct = clamp((gpsDistM/tgtDistM)*100,0,100);
+  const expPct = clamp((expDistM/tgtDistM)*100,0,100);
+  gel('pfill').style.width = gpsPct.toFixed(2)+'%';
+  gel('pexp').style.left = expPct.toFixed(2)+'%';
+  gel('ppct').textContent = gpsPct.toFixed(1)+'%';
+  if(gpsAccM!=null) gel('spd-acc').textContent = gpsAccM.toFixed(1);
   
-  if(elSec>tgtSecs*4) stopLeg();
+  if(elSec > tgtSecs*4) stopLeg();
 }
 
 function stopLeg(){
@@ -1254,11 +1284,11 @@ function resetRally(){
   legRunning=false; autoAdvance=false;
   curIdx=-1; legResults=[]; resetLegGPS(); gpsSpeedMs=null;
   gel('as-banner').style.display='none';
-  gel('live-idle').style.display='flex'; gel('live-run').style.none;
-  gel('live-legs-collapsible').classList.add('open');
+  gel('live-idle').style.display='flex'; gel('live-run').style.display='none';
   buildResults();
 }
 
+/* ── RESULTS MATRIX AGGREGATOR ── */
 function buildResults(){
   const c=gel('res-content');
   const done=legResults.filter(r=>r!=null);
@@ -1301,7 +1331,7 @@ function buildResults(){
     </div>`;
 }
 
-/* ── DATA IO PROCESSING MATRICES ── */
+/* ── HIGH RES EXPORT FILE WRITERS ── */
 const EXPORT_VERSION = 1;
 
 function showFeedback(msg, isErr, autoClear){
@@ -1309,47 +1339,7 @@ function showFeedback(msg, isErr, autoClear){
   el.textContent = msg;
   el.className = 'io-feedback ' + (isErr ? 'err' : 'ok');
   el.style.display = 'block';
-  if(autoClear) setTimeout(()=>{ el.style.display='none'; }, 5000);
-}
-
-function processImportedPayload(raw) {
-  let imported;
-  if(Array.isArray(raw)){
-    imported = raw;
-  } else if(raw && Array.isArray(raw.legs)){
-    imported = raw.legs;
-  } else {
-    throw new Error('Unrecognised layout configuration. Expected an Array or {legs:[...]} wrapper.');
-  }
-
-  if(!imported.length) throw new Error('Target source contains zero track data sequences.');
-
-  imported.forEach((l, i) => {
-    if(l.distM === undefined && l.distance !== undefined) l.distM = l.distance;
-    if(l.spdKmh === undefined && l.speed !== undefined)   l.spdKmh = l.speed;
-    const d = parseFloat(l.distM), s = parseFloat(l.spdKmh);
-    if(isNaN(d) || isNaN(s) || d <= 0 || s <= 0){
-      throw new Error(`Leg ${i+1} ("${l.name||'unnamed'}") is missing metrics.`);
-    }
-  });
-
-  legs = imported.map(l => {
-    legId++;
-    return {
-      id:         legId,
-      name:       String(l.name   || ''),
-      distM:      String(l.distM  || l.distance || ''),
-      spdKmh:     String(l.spdKmh || l.speed    || ''),
-      linked:     !!l.linked,
-      atDistance: !!l.atDistance,
-      autoStart:  !!l.autoStart,
-      autoHH:     String(l.autoHH     || ''),
-      autoMM:     String(l.autoMM     || ''),
-      autoOffset: String(l.autoOffset || '0'),
-    };
-  });
-
-  renderLegs();
+  if(autoClear) setTimeout(()=>{ el.style.display='none'; }, 4000);
 }
 
 function exportLegs(){
@@ -1392,7 +1382,7 @@ function exportLegs(){
   document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(url), 5000);
 
-  showFeedback('✓ Exported ' + legs.length + ' stages.', false, true);
+  showFeedback('✓ Exported ' + legs.length + ' stage configuration(s) to JSON.', false, true);
 }
 
 function importLegs(input){
@@ -1403,8 +1393,45 @@ function importLegs(input){
   reader.onload = function(e){
     try{
       const raw = JSON.parse(e.target.result);
-      processImportedPayload(raw);
-      showFeedback('✓ File imported: ' + legs.length + ' stages parsed.', false, true);
+      let imported;
+      if(Array.isArray(raw)){
+        imported = raw;
+      } else if(raw && Array.isArray(raw.legs)){
+        imported = raw.legs;
+      } else {
+        throw new Error('Unrecognised format — expected array or wrapper.');
+      }
+
+      if(!imported.length) throw new Error('File contains no data.');
+
+      imported.forEach((l, i) => {
+        if(l.distM === undefined && l.distance !== undefined) l.distM = l.distance;
+        if(l.spdKmh === undefined && l.speed !== undefined)   l.spdKmh = l.speed;
+        const d = parseFloat(l.distM), s = parseFloat(l.spdKmh);
+        if(isNaN(d) || isNaN(s) || d <= 0 || s <= 0){
+          throw new Error(`Leg ${i+1} ("${l.name||'unnamed'}") is missing metrics.`);
+        }
+      });
+
+      legs = imported.map(l => {
+        legId++;
+        return {
+          id:         legId,
+          name:       String(l.name   || ''),
+          distM:      String(l.distM  || l.distance || ''),
+          spdKmh:     String(l.spdKmh || l.speed    || ''),
+          linked:     !!l.linked,
+          atDistance: !!l.atDistance,
+          autoStart:  !!l.autoStart,
+          autoHH:     String(l.autoHH     || ''),
+          autoMM:     String(l.autoMM     || ''),
+          autoOffset: String(l.autoOffset || '0'),
+        };
+      });
+
+      renderLegs();
+      showFeedback('✓ Imported ' + legs.length + ' stages.', false, true);
+
     } catch(err){
       showFeedback('⛔ Import failed: ' + err.message, true, false);
     }
@@ -1413,47 +1440,7 @@ function importLegs(input){
   reader.readAsText(file);
 }
 
-/* ── ASYNC NETWORK ENDPOINT JSON URL FETCH INGESTION ── */
-async function fetchLegsFromUrl() {
-  const urlInput = gel('import-url');
-  let targetUrl = urlInput.value.trim();
-  
-  if(!targetUrl) {
-    showFeedback('⚠ Please specify a valid web URL first.', true, true);
-    return;
-  }
-  
-  showFeedback('⏳ Synchronizing configuration from remote URL...', false, false);
-  
-  // Adaptive pattern conversion for cloud-encrypted public storage sharing links
-  if(targetUrl.includes('drive.proton.me/urls/')) {
-    console.warn("Proton Drive short-link context detected. Informing user regarding public download endpoint schema conversion logic.");
-    showFeedback('💡 Proton Drive link: Ensure you provide the raw share download stream or unencrypted JSON server file.', true, false);
-  }
-
-  try {
-    const response = await fetch(targetUrl, {
-      method: 'GET',
-      headers: { 'Accept': 'application/json' },
-      mode: 'cors' // Request browser enforcement of Cross-Origin Resource Sharing rules
-    });
-    
-    if(!response.ok) {
-      throw new Error(`HTTP network loop interrupt error. Server returned status code: ${response.status} (${response.statusText})`);
-    }
-    
-    const rawData = await response.json();
-    processImportedPayload(rawData);
-    showFeedback(`✓ Remote URL loaded: parsed ${legs.length} stage pathways successfully.`, false, true);
-    urlInput.value = ''; // Flush on success execution
-    
-  } catch(err) {
-    console.error("URL Ingestion Error Stack Trace:", err);
-    showFeedback(`⛔ Fetch failure: ${err.message}. Check origin endpoint permissions / CORS headers.`, true, false);
-  }
-}
-
-/* ── MAIN SEED DATA INITIALIZATION ── */
+/* ── SEED INITIALIZATION ── */
 legId=1;
 legs.push({id:1,name:'Stage 1',distM:'',spdKmh:'',linked:false,atDistance:false,autoStart:false,autoHH:'',autoMM:'',autoOffset:'0'});
 renderLegs();
