@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" id="theme-color-meta" content="#07090c">
-<title>RegRally GPS Pro v0.49</title>
+<title>RegRally GPS Pro v0.47</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ── THEME TOKENS ── */
@@ -119,6 +119,13 @@ body{
 .dot.ok {background:var(--ok); box-shadow:0 0 8px var(--ok);}
 .dot.err{background:var(--behind);box-shadow:0 0 8px var(--behind);}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.theme-btn{
+  background:var(--surf2);border:1px solid var(--border);color:var(--txt2);
+  font-size:18px;width:36px;height:36px;border-radius:4px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;flex-shrink:0;
+}
+.theme-btn:active{transform:scale(.93);}
 
 /* ── TABS ── */
 #tabs{flex-shrink:0;display:flex;background:var(--surf);border-bottom:1px solid var(--border);}
@@ -408,27 +415,14 @@ body{
 .sdiff{font-size:11px;font-weight:600;margin-top:2px;}
 .sdiff.p{color:var(--behind);}.sdiff.n{color:var(--ahead);}.sdiff.z{color:var(--ok);}
 
-/* Delta hero display structure with dynamic text coloring target variables */
+/* Delta hero */
 .delta{background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;position:relative;}
 .delta::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--dc,var(--border2));transition:background .4s;}
 [data-theme="dark"] .delta::before{box-shadow:0 0 12px var(--dc,transparent);}
 .delta-in{padding:14px 14px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;}
 .dlbl{font-size:11px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;margin-bottom:6px;text-align:center;}
-.drow{
-  display:flex;
-  align-items:baseline;
-  font-family:'DM Mono',monospace;
-  font-weight:700;
-  line-height:1;
-  color:var(--dc, var(--txt));
-  transition: color 0.3s ease;
-}
-[data-theme="dark"] .drow{text-shadow:0 0 20px color-mix(in srgb,var(--dc,transparent) 30%,transparent);}
-.dsign{font-size:36px;width:24px;text-align:center;margin-right:2px;font-weight:500;}
-.dint{font-size:68px;letter-spacing:-2px;}
-.ddec{font-size:38px;}
-.dunit{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--txt3);margin-top:2px;}
-
+.drow"><div class="dsign" id="dsign"></div><div class="dint" id="dint">0</div><div class="ddec" id="ddec">.0</div></div>
+.dunit">SECONDS</div>
 #subleg-wrap{width:100%}
 .subleg-bar{width:100%;margin-top:6px;background:var(--surf2);border:1px solid var(--border);border-radius:3px;height:6px;overflow:hidden;position:relative;}
 .subleg-fill{height:100%;background:var(--ok);transition:width .4s linear;}
@@ -509,7 +503,7 @@ body{
     <div class="hdr-clock" id="hdr-clock">00:00:00</div>
   </div>
   <div class="hdr-right">
-    <div class="app-version">v0.49</div>
+    <div class="app-version">v0.47</div>
     <div class="gps-badge-container">
       <div class="gps-badge-top">
         <div class="dot" id="dot"></div>
@@ -600,7 +594,7 @@ body{
     <div class="delta" id="delta" style="--dc:var(--border2)">
       <div class="delta-in">
         <div class="dlbl" id="dlbl">— SELECT LEG —</div>
-        <div class="drow" id="drow-hero"><div class="dsign" id="dsign"></div><div class="dint" id="dint">0</div><div class="ddec" id="ddec">.0</div></div>
+        <div class="drow"><div class="dsign" id="dsign"></div><div class="dint" id="dint">0</div><div class="ddec" id="ddec">.0</div></div>
         <div class="dunit">SECONDS</div>
         <div id="subleg-wrap" style="width:100%">
           <div class="subleg-bar"><div class="subleg-fill" id="subleg-fill" style="width:0%"></div></div>
@@ -1141,14 +1135,10 @@ function updateControlsState() {
   }
 }
 
-/* Restored deterministic layout engine syncing token arrays with variable style attributes */
 function setDelta(absSec,state,running){
   const c={behind:'var(--behind)',ahead:'var(--ahead)',ontime:'var(--ok)',neutral:'var(--border2)'};
   const col=c[state]||c.neutral;
-  
   gel('delta').style.setProperty('--dc',col);
-  gel('drow-hero').style.setProperty('--dc',col);
-  
   gel('dsign').textContent=running?(state==='behind'?'+':state==='ahead'?'−':''):'';
   gel('dint').textContent=Math.floor(absSec);
   gel('ddec').textContent='.'+Math.floor((absSec%1)*10);
@@ -1452,7 +1442,7 @@ function importLegs(input){
   reader.readAsText(file);
 }
 
-/* ── CORS-SAFE FETCH ENGINE W/ GOOGLE BYPASS ── */
+/* ── CORS-SAFE CLOUD FETCH ENGINE ── */
 async function fetchLegsFromUrl() {
   const urlInput = gel('import-url');
   let targetUrl = urlInput.value.trim();
@@ -1464,16 +1454,14 @@ async function fetchLegsFromUrl() {
   
   showFeedback('⏳ Synchronizing configuration from remote cloud node...', false, false);
   
-  // Rule A: Rewrite Proton Drive links
+  // Rule A: Rewrite Proton Drive public viewer URLs to their direct download links
   if(targetUrl.includes('drive.proton.me/urls/')) {
     targetUrl = targetUrl.replace('drive.proton.me/urls/', 'api.proton.me/drive/shares/') + '/api/v1/files/raw';
-    console.log(`[Link Engine] Proton Drive route: ${targetUrl}`);
+    console.log(`[Link Engine] Transformed Proton Drive link: ${targetUrl}`);
   }
   
-  // Rule B: Convert Google Drive links to use spreadsheet export endpoint to bypass blocks
-  let isGoogleDrive = false;
+  // Rule B: Rewrite Google Drive share viewer links into direct API download links
   if(targetUrl.includes('drive.google.com/')) {
-    isGoogleDrive = true;
     let fileId = '';
     const matchD = targetUrl.match(/\/file\/d\/([^\/]+)/);
     const matchId = targetUrl.match(/[?&]id=([^&]+)/);
@@ -1482,14 +1470,15 @@ async function fetchLegsFromUrl() {
     else if(matchId && matchId[1]) fileId = matchId[1];
     
     if(fileId) {
-      targetUrl = `https://docs.google.com/spreadsheet/ccc?key=${fileId}&output=json`;
-      console.log(`[Link Engine] Refactored Google Drive link: ${targetUrl}`);
+      targetUrl = `https://docs.google.com/uc?export=download&id=${fileId}`;
+      console.log(`[Link Engine] Transformed Google Drive link: ${targetUrl}`);
     } else {
       showFeedback('⛔ Could not parse Google Drive File ID. Ensure format matches /file/d/[ID]/view', true, false);
       return;
     }
   }
 
+  // Wrap link in a robust public proxy pool to clean cross-origin header rejections
   const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
 
   try {
@@ -1502,14 +1491,7 @@ async function fetchLegsFromUrl() {
       throw new Error(`HTTP network error. Server returned status: ${response.status}`);
     }
     
-    let rawText = await response.text();
-    
-    if(isGoogleDrive && rawText.startsWith('/*O_o*/')) {
-      rawText = rawText.replace('/*O_o*/\ngoogle.visualization.Query.setResponse(', '');
-      rawText = rawText.replace(/\);$/, '');
-    }
-
-    const rawData = JSON.parse(rawText);
+    const rawData = await response.json();
     processImportedPayload(rawData);
     showFeedback(`✓ Cloud source loaded: parsed ${legs.length} stages successfully.`, false, true);
     urlInput.value = '';

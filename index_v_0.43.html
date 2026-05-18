@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" id="theme-color-meta" content="#07090c">
-<title>RegRally GPS Pro v0.49</title>
+<title>RegRally GPS Pro v0.44</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ── THEME TOKENS ── */
@@ -119,6 +119,13 @@ body{
 .dot.ok {background:var(--ok); box-shadow:0 0 8px var(--ok);}
 .dot.err{background:var(--behind);box-shadow:0 0 8px var(--behind);}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.theme-btn{
+  background:var(--surf2);border:1px solid var(--border);color:var(--txt2);
+  font-size:18px;width:36px;height:36px;border-radius:4px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;flex-shrink:0;
+}
+.theme-btn:active{transform:scale(.93);}
 
 /* ── TABS ── */
 #tabs{flex-shrink:0;display:flex;background:var(--surf);border-bottom:1px solid var(--border);}
@@ -315,7 +322,7 @@ body{
 .li-icon{font-size:52px;}
 .li-title{font-size:20px;font-weight:700;color:var(--txt);}
 .li-body{font-size:14px;line-height:1.7;color:var(--txt2);}
-.li-gps{width:100%;max-width:320px;background:color-mix(in srgb,var(--ok) 8%,transparent);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--ok);line-height:1.5;font-weight:500;}
+.li-gps{width:100%;max-width:320px;background:color-mix(in srgb,var(--ok) 8%,transparent);border:1px solid color-mix(in srgb,var(--ok) 28%,transparent);padding:10px 14px;border-radius:6px;font-size:12px;color:var(--ok);line-height:1.5;font-weight:500;}
 .li-gps.bad{background:color-mix(in srgb,var(--behind) 8%,transparent);border-color:color-mix(in srgb,var(--behind) 28%,transparent);color:var(--behind);}
 
 /* ── LIVE RUN ── */
@@ -408,27 +415,14 @@ body{
 .sdiff{font-size:11px;font-weight:600;margin-top:2px;}
 .sdiff.p{color:var(--behind);}.sdiff.n{color:var(--ahead);}.sdiff.z{color:var(--ok);}
 
-/* Delta hero display structure with dynamic text coloring target variables */
+/* Delta hero */
 .delta{background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;position:relative;}
 .delta::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--dc,var(--border2));transition:background .4s;}
 [data-theme="dark"] .delta::before{box-shadow:0 0 12px var(--dc,transparent);}
 .delta-in{padding:14px 14px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;}
 .dlbl{font-size:11px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;margin-bottom:6px;text-align:center;}
-.drow{
-  display:flex;
-  align-items:baseline;
-  font-family:'DM Mono',monospace;
-  font-weight:700;
-  line-height:1;
-  color:var(--dc, var(--txt));
-  transition: color 0.3s ease;
-}
-[data-theme="dark"] .drow{text-shadow:0 0 20px color-mix(in srgb,var(--dc,transparent) 30%,transparent);}
-.dsign{font-size:36px;width:24px;text-align:center;margin-right:2px;font-weight:500;}
-.dint{font-size:68px;letter-spacing:-2px;}
-.ddec{font-size:38px;}
-.dunit{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--txt3);margin-top:2px;}
-
+.drow"><div class="dsign" id="dsign"></div><div class="dint" id="dint">0</div><div class="ddec" id="ddec">.0</div></div>
+.dunit">SECONDS</div>
 #subleg-wrap{width:100%}
 .subleg-bar{width:100%;margin-top:6px;background:var(--surf2);border:1px solid var(--border);border-radius:3px;height:6px;overflow:hidden;position:relative;}
 .subleg-fill{height:100%;background:var(--ok);transition:width .4s linear;}
@@ -509,7 +503,7 @@ body{
     <div class="hdr-clock" id="hdr-clock">00:00:00</div>
   </div>
   <div class="hdr-right">
-    <div class="app-version">v0.49</div>
+    <div class="app-version">v0.44</div>
     <div class="gps-badge-container">
       <div class="gps-badge-top">
         <div class="dot" id="dot"></div>
@@ -546,7 +540,7 @@ body{
     </div>
     
     <div class="io-url-row">
-      <input type="url" id="import-url" class="fi-url" placeholder="Paste Proton, Google Drive or JSON link..." autocomplete="off">
+      <input type="url" id="import-url" class="fi-url" placeholder="Paste configuration JSON URL here..." autocomplete="off">
       <button class="btn-url-fetch" onclick="fetchLegsFromUrl()">🔗 Fetch URL</button>
     </div>
     <div id="io-feedback" class="io-feedback" style="display:none"></div>
@@ -576,7 +570,7 @@ body{
     </div>
 
     <div class="collapsible-container open" id="live-legs-collapsible">
-      <div class="collapsible-trigger" onclick="toggleLiveLivePanel()">Stage Index Selector</div>
+      <div class="collapsible-trigger" onclick="toggleLiveLegsPanel()">Stage Index Selector</div>
       <div class="collapsible-content">
          <div class="chips" id="chips"></div>
       </div>
@@ -600,7 +594,7 @@ body{
     <div class="delta" id="delta" style="--dc:var(--border2)">
       <div class="delta-in">
         <div class="dlbl" id="dlbl">— SELECT LEG —</div>
-        <div class="drow" id="drow-hero"><div class="dsign" id="dsign"></div><div class="dint" id="dint">0</div><div class="ddec" id="ddec">.0</div></div>
+        <div class="drow"><div class="dsign" id="dsign"></div><div class="dint" id="dint">0</div><div class="ddec" id="ddec">.0</div></div>
         <div class="dunit">SECONDS</div>
         <div id="subleg-wrap" style="width:100%">
           <div class="subleg-bar"><div class="subleg-fill" id="subleg-fill" style="width:0%"></div></div>
@@ -618,7 +612,7 @@ body{
     <div class="drow2">
       <div class="dc2"><div class="dl">GPS Dist</div><div class="dv bl" id="d-gps">0.000</div><div class="du">km covered</div></div>
       <div class="dc2"><div class="dl">Expected</div><div class="dv" id="d-exp">0.000</div><div class="du">km at pace</div></div>
-      <div class="dc2"><div class="dv gn" id="d-tot">—</div><div class="du">km</div></div>
+      <div class="dc2"><div class="dl">Leg Total</div><div class="dv gn" id="d-tot">—</div><div class="du">km</div></div>
     </div>
 
     <div>
@@ -646,7 +640,7 @@ body{
 function gel(id){ return document.getElementById(id); }
 
 /* ── COLLAPSIBLE PANEL LOGIC ── */
-function toggleLiveLivePanel(){
+function toggleLiveLegsPanel(){
   gel('live-legs-collapsible').classList.toggle('open');
 }
 
@@ -711,13 +705,13 @@ function computeAutoStartDate(leg){
   if(d<=new Date()) d.setDate(d.getDate()+1);
   return d;
 }
-function autoStartLabel(leg){
+function autoStartLabel(leg);
   const d=computeAutoStartDate(leg);
   if(!d) return '';
   return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
 }
 
-/* ── GPS CORE SAMPLING ENGINE ── */
+/* ── GPS ENGINE ── */
 let watchId    = null;
 let lastPos    = null;
 let gpsSpeedMs = null;
@@ -768,6 +762,7 @@ function gpsSuccess(pos){
   
   const banner=gel('li-gps-status');
   if(banner){banner.className='li-gps';banner.textContent='✓ GPS '+q+' — ±'+c.accuracy.toFixed(1)+'m';}
+  try{gel('spd-acc').textContent=c.accuracy.toFixed(1);}catch(e){}
   updateGpsBtns('granted');
   const ov=gel('gps-overlay');
   ov.classList.add('hidden'); ov.style.display='none';
@@ -815,7 +810,6 @@ function doRequestGPS(){
 }
 
 function skipGPS(){
-  gpsGranted = false;
   if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null;}
   const ov=gel('gps-overlay');
   ov.classList.add('hidden'); ov.style.display='none';
@@ -828,36 +822,7 @@ function skipGPS(){
   if(b){b.className='li-gps bad';b.textContent='⚠ Running without GPS — time-only mode.';}
 }
 
-function showOvErr(){
-  gel('ov-ask').style.display='none';
-  Object.assign(gel('ov-err').style,{display:'flex',flexDirection:'column',alignItems:'center',gap:'14px',textAlign:'center'});
-}
-
-function updateGpsBtns(state){
-  const live=gel('btn-gps-live'),run=gel('btn-gps-run');
-  const hint=document.querySelector('.gps-hint'),ovBtn=gel('btn-allow-ov');
-  const map={
-    granted:    ['✓ GPS Active','✓ GPS Active','GPS active — real-time tracking on','✓ Active'],
-    denied:     ['⛔ Denied — Retry','⛔ Denied — Retry','Allow location in settings, then retry','🔄 Try Again'],
-    requesting: ['⏳ Requesting…','⏳ Requesting…',null,'⏳ Requesting…'],
-    unsupported:['⚠ Unavailable','⚠ Unavailable','GPS not supported by this device','⚠ Unavailable'],
-  };
-  const [lT,rT,hT,oT]=map[state]||map.denied;
-  if(live){live.textContent=lT;live.classList.toggle('granted',state==='granted');live.disabled=state==='requesting'||state==='granted';}
-  if(run){run.textContent=rT;run.classList.toggle('granted',state==='granted');run.disabled=state==='requesting'||state==='granted';run.style.display=state==='granted'?'none':'';}
-  if(hint&&hT) hint.textContent=hT;
-  if(ovBtn){ovBtn.textContent=oT;ovBtn.disabled=state==='requesting';}
-}
-
-/* ── TAB ROUTER ── */
-function showTab(name){
-  const names=['legs','live','res'];
-  document.querySelectorAll('.tb').forEach((b,i)=>b.classList.toggle('on',names[i]===name));
-  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
-  gel('pg-'+name).classList.add('on');
-}
-
-/* ── LEG CARD ARRAY MATRIX CONFIGURATIONS ── */
+/* ── CONFIGURATION MAPPERS ── */
 let legs  = [];
 let legId = 0;
 
@@ -1001,7 +966,7 @@ function renderLegs(){
   });
 }
 
-/* ── RALLY RUNTIME POINTERS ── */
+/* ── RALLY RUNTIME Pointers ── */
 let curIdx       = -1;
 let legRunning   = false;
 let legStartTs   = null;
@@ -1141,14 +1106,10 @@ function updateControlsState() {
   }
 }
 
-/* Restored deterministic layout engine syncing token arrays with variable style attributes */
 function setDelta(absSec,state,running){
   const c={behind:'var(--behind)',ahead:'var(--ahead)',ontime:'var(--ok)',neutral:'var(--border2)'};
   const col=c[state]||c.neutral;
-  
   gel('delta').style.setProperty('--dc',col);
-  gel('drow-hero').style.setProperty('--dc',col);
-  
   gel('dsign').textContent=running?(state==='behind'?'+':state==='ahead'?'−':''):'';
   gel('dint').textContent=Math.floor(absSec);
   gel('ddec').textContent='.'+Math.floor((absSec%1)*10);
@@ -1293,7 +1254,7 @@ function resetRally(){
   legRunning=false; autoAdvance=false;
   curIdx=-1; legResults=[]; resetLegGPS(); gpsSpeedMs=null;
   gel('as-banner').style.display='none';
-  gel('live-idle').style.display='flex'; gel('live-run').style.display='none';
+  gel('live-idle').style.display='flex'; gel('live-run').style.none;
   gel('live-legs-collapsible').classList.add('open');
   buildResults();
 }
@@ -1452,7 +1413,7 @@ function importLegs(input){
   reader.readAsText(file);
 }
 
-/* ── CORS-SAFE FETCH ENGINE W/ GOOGLE BYPASS ── */
+/* ── ASYNC NETWORK ENDPOINT JSON URL FETCH INGESTION ── */
 async function fetchLegsFromUrl() {
   const urlInput = gel('import-url');
   let targetUrl = urlInput.value.trim();
@@ -1462,61 +1423,33 @@ async function fetchLegsFromUrl() {
     return;
   }
   
-  showFeedback('⏳ Synchronizing configuration from remote cloud node...', false, false);
+  showFeedback('⏳ Synchronizing configuration from remote URL...', false, false);
   
-  // Rule A: Rewrite Proton Drive links
+  // Adaptive pattern conversion for cloud-encrypted public storage sharing links
   if(targetUrl.includes('drive.proton.me/urls/')) {
-    targetUrl = targetUrl.replace('drive.proton.me/urls/', 'api.proton.me/drive/shares/') + '/api/v1/files/raw';
-    console.log(`[Link Engine] Proton Drive route: ${targetUrl}`);
+    console.warn("Proton Drive short-link context detected. Informing user regarding public download endpoint schema conversion logic.");
+    showFeedback('💡 Proton Drive link: Ensure you provide the raw share download stream or unencrypted JSON server file.', true, false);
   }
-  
-  // Rule B: Convert Google Drive links to use spreadsheet export endpoint to bypass blocks
-  let isGoogleDrive = false;
-  if(targetUrl.includes('drive.google.com/')) {
-    isGoogleDrive = true;
-    let fileId = '';
-    const matchD = targetUrl.match(/\/file\/d\/([^\/]+)/);
-    const matchId = targetUrl.match(/[?&]id=([^&]+)/);
-    
-    if(matchD && matchD[1]) fileId = matchD[1];
-    else if(matchId && matchId[1]) fileId = matchId[1];
-    
-    if(fileId) {
-      targetUrl = `https://docs.google.com/spreadsheet/ccc?key=${fileId}&output=json`;
-      console.log(`[Link Engine] Refactored Google Drive link: ${targetUrl}`);
-    } else {
-      showFeedback('⛔ Could not parse Google Drive File ID. Ensure format matches /file/d/[ID]/view', true, false);
-      return;
-    }
-  }
-
-  const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
 
   try {
-    const response = await fetch(proxyUrl, {
+    const response = await fetch(targetUrl, {
       method: 'GET',
-      headers: { 'Accept': 'application/json' }
+      headers: { 'Accept': 'application/json' },
+      mode: 'cors' // Request browser enforcement of Cross-Origin Resource Sharing rules
     });
     
     if(!response.ok) {
-      throw new Error(`HTTP network error. Server returned status: ${response.status}`);
+      throw new Error(`HTTP network loop interrupt error. Server returned status code: ${response.status} (${response.statusText})`);
     }
     
-    let rawText = await response.text();
-    
-    if(isGoogleDrive && rawText.startsWith('/*O_o*/')) {
-      rawText = rawText.replace('/*O_o*/\ngoogle.visualization.Query.setResponse(', '');
-      rawText = rawText.replace(/\);$/, '');
-    }
-
-    const rawData = JSON.parse(rawText);
+    const rawData = await response.json();
     processImportedPayload(rawData);
-    showFeedback(`✓ Cloud source loaded: parsed ${legs.length} stages successfully.`, false, true);
-    urlInput.value = '';
+    showFeedback(`✓ Remote URL loaded: parsed ${legs.length} stage pathways successfully.`, false, true);
+    urlInput.value = ''; // Flush on success execution
     
   } catch(err) {
-    console.error("Link Ingestion Error Stack:", err);
-    showFeedback(`⛔ Fetch failure: ${err.message}. Verify that the Google Drive file is completely public ("Anyone with the link can view").`, true, false);
+    console.error("URL Ingestion Error Stack Trace:", err);
+    showFeedback(`⛔ Fetch failure: ${err.message}. Check origin endpoint permissions / CORS headers.`, true, false);
   }
 }
 
