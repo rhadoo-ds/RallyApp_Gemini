@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" id="theme-color-meta" content="#07090c">
-<title>RegRally GPS Pro</title>
+<title>RegRally GPS</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ── THEME TOKENS ── */
@@ -52,62 +52,16 @@ body{
   content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,var(--ahead) 30%,var(--ok) 70%,transparent);opacity:.5;
 }
-.hdr-clock-container { display: flex; flex-direction: column; }
-.hdr-clock{font-family:'DM Mono',monospace;font-size:24px;font-weight:700;letter-spacing:1px;color:var(--warn); line-height:1.1;}
-[data-theme="dark"] .hdr-clock{text-shadow:0 0 12px color-mix(in srgb,var(--warn) 40%,transparent);}
+.logo-name{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;letter-spacing:4px;color:var(--ahead);}
+[data-theme="dark"] .logo-name{text-shadow:0 0 16px color-mix(in srgb,var(--ahead) 50%,transparent);}
 .logo-sub{font-size:10px;letter-spacing:2px;color:var(--txt3);text-transform:uppercase;font-weight:500;margin-top:1px;}
-.hdr-right{display:flex;align-items:center;gap:10px;}
-
-.app-version{
-  font-family:'DM Mono',monospace;
-  font-size:11px;
-  font-weight:700;
-  color:var(--txt3);
-  background:var(--surf3);
-  padding:5px 8px;
-  border-radius:4px;
-  border:1px solid var(--border);
-  letter-spacing:0.5px;
+.hdr-right{display:flex;align-items:center;gap:8px;}
+.gps-badge{
+  display:flex;align-items:center;gap:7px;
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;
+  color:var(--txt3);background:var(--surf2);border:1px solid var(--border);
+  padding:5px 10px;border-radius:4px;min-width:100px;justify-content:center;
 }
-
-.gps-badge-container {
-  display: flex;
-  flex-direction: column;
-  background: var(--surf2);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 4px 8px;
-  min-width: 155px;
-  font-family: 'DM Mono', monospace;
-}
-.gps-badge-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-  border-bottom: 1px dashed var(--border);
-  padding-bottom: 3px;
-  margin-bottom: 3px;
-}
-.gps-status-text {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  color: var(--txt2);
-}
-.gps-badge-metrics {
-  display: flex;
-  justify-content: space-between;
-  font-size: 9px;
-  color: var(--txt3);
-  gap: 8px;
-  white-space: nowrap;
-}
-.gps-metric-live {
-  color: var(--txt);
-  font-weight: 500;
-}
-
 .dot{width:8px;height:8px;border-radius:50%;background:var(--txt3);flex-shrink:0;transition:all .4s;}
 .dot.acq{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:blink 1s infinite;}
 .dot.ok {background:var(--ok); box-shadow:0 0 8px var(--ok);}
@@ -183,7 +137,7 @@ body{
 .ldel{background:none;border:none;color:var(--txt3);font-size:18px;cursor:pointer;padding:2px 5px;line-height:1;transition:color .2s;}
 .ldel:active{color:var(--behind);}
 
-/* Option rows */
+/* Option rows (link + auto-start) */
 .lopt-row{
   display:flex;align-items:center;gap:10px;
   padding:7px 10px;background:var(--surf3);
@@ -197,20 +151,8 @@ body{
 .badge-linked{color:var(--ok);background:color-mix(in srgb,var(--ok) 10%,transparent);border:1px solid color-mix(in srgb,var(--ok) 25%,transparent);}
 .badge-auto{color:var(--warn);background:color-mix(in srgb,var(--warn) 10%,transparent);border:1px solid color-mix(in srgb,var(--warn) 25%,transparent);}
 
-.lsub-options-row {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 5px 10px 5px 32px;
-  background: var(--surf3);
-  border-bottom: 1px solid var(--border);
-  font-size: 12px;
-  color: var(--txt2);
-}
-.lsub-options-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
-.lsub-options-row input[type=checkbox] { accent-color: var(--ahead); width: 14px; height: 14px; }
-
 /* Auto-start time picker row */
+/* Auto-start time picker row — single compact row */
 .ltime-row{
   display:flex;align-items:center;gap:8px;
   padding:7px 10px;background:var(--surf3);
@@ -338,8 +280,7 @@ body{
 .sn.over{color:var(--behind);}.sn.good{color:var(--ok);}.sn.near{color:var(--warn);}
 .su{font-size:10px;font-weight:600;color:var(--txt3);}
 .sdiv{width:1px;background:var(--border);height:44px;margin:0 8px;}
-
-/* Target speed block */
+/* Target speed block — highlighted */
 .tgt-block{
   display:flex;flex-direction:column;align-items:center;gap:2px;
   background:color-mix(in srgb,var(--warn) 10%,transparent);
@@ -352,24 +293,20 @@ body{
 .sdiff{font-size:11px;font-weight:600;margin-top:2px;}
 .sdiff.p{color:var(--behind);}.sdiff.n{color:var(--ahead);}.sdiff.z{color:var(--ok);}
 
-/* ── DELTA HERO PANEL (REFACTORED FOR CONDITIONAL COLOR MATRIX) ── */
+/* Delta hero */
 .delta{background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;position:relative;}
-.delta::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--dc,var(--border2));transition:background .25s;}
+.delta::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--dc,var(--border2));transition:background .4s;}
 [data-theme="dark"] .delta::before{box-shadow:0 0 12px var(--dc,transparent);}
 .delta-in{padding:14px 14px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;}
 .dlbl{font-size:11px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;margin-bottom:6px;text-align:center;}
-
-/* Enforce DM Mono across all text nodes inside hero delta string container */
-.drow{display:flex;align-items:flex-start;justify-content:center;line-height:1; font-family:'DM Mono',monospace;}
-.dsign{font-size:28px;font-weight:500;color:var(--dc,var(--txt3));transition:color .25s;margin-top:8px;margin-right:2px;}
-.dint{font-size:88px;font-weight:500;line-height:.9;color:var(--dc,var(--txt));letter-spacing:-4px;transition:color .25s;}
+.drow{display:flex;align-items:flex-start;justify-content:center;line-height:1;}
+.dsign{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:var(--dc,var(--txt3));transition:color .4s;margin-top:8px;margin-right:2px;}
+.dint{font-family:'DM Mono',monospace;font-size:88px;font-weight:500;line-height:.9;color:var(--dc,var(--txt));letter-spacing:-4px;transition:color .4s;}
 [data-theme="dark"] .dint{text-shadow:0 0 40px var(--dc,transparent);}
-.ddec{font-size:42px;font-weight:400;line-height:.9;letter-spacing:-1px;color:var(--dc,var(--txt));transition:color .25s;align-self:flex-end;margin-bottom:6px;}
-
+.ddec{font-family:'DM Mono',monospace;font-size:42px;font-weight:400;line-height:.9;letter-spacing:-1px;color:var(--dc,var(--txt));transition:color .4s;align-self:flex-end;margin-bottom:6px;}
 .dunit{font-size:11px;font-weight:600;letter-spacing:3px;color:var(--txt3);text-transform:uppercase;margin-top:6px;}
-.dverd{font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dc,var(--txt3));transition:color .25s;margin-top:2px;}
+.dverd{font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dc,var(--txt3));transition:color .4s;margin-top:2px;}
 .dmode{font-size:10px;color:var(--txt3);background:var(--surf2);padding:3px 9px;border-radius:3px;margin-top:6px;text-align:center;font-weight:500;}
-#subleg-wrap{width:100%}
 .subleg-bar{width:100%;margin-top:6px;background:var(--surf2);border:1px solid var(--border);border-radius:3px;height:6px;overflow:hidden;position:relative;}
 .subleg-fill{height:100%;background:var(--ok);transition:width .4s linear;}
 .subleg-info{font-size:10px;font-weight:600;color:var(--txt3);margin-top:3px;}
@@ -402,15 +339,12 @@ body{
 .rv{font-family:'DM Mono',monospace;font-size:11px;color:var(--txt3);}
 .rv.live{color:var(--txt);}
 
-/* Controls Layout */
-.ctrlg-three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-.bc{font-weight:700;font-size:13px;padding:15px 8px;border-radius:8px;cursor:pointer;border:none;transition:all .2s; text-align:center;}
+/* Controls */
+.ctrlg{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.bc{font-weight:700;font-size:13px;padding:15px 8px;border-radius:8px;cursor:pointer;border:none;transition:all .2s;}
 .bc:active{transform:scale(.97);opacity:.9;}
-.bgo{background:var(--ok);color:#fff;}
-.bstop{background:var(--behind);color:#fff;}
-.bnext{background:var(--ahead);color:#fff;}
-.brst{background:var(--surf2);color:var(--txt2);border:1px solid var(--border);}
-.bc:disabled{opacity:0.3; cursor:not-allowed;}
+.bgo{background:var(--ok);color:#fff;}.bstop{background:var(--behind);color:#fff;}
+.bnext{background:var(--ahead);color:#fff;}.brst{background:var(--surf2);color:var(--txt2);border:1px solid var(--border);}
 
 /* Results */
 .rtable{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
@@ -428,6 +362,7 @@ body{
 </head>
 <body>
 
+<!-- GPS OVERLAY -->
 <div id="gps-overlay">
   <div id="ov-ask" style="display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;">
     <div class="ov-icon">📡</div>
@@ -451,39 +386,32 @@ body{
   </div>
 </div>
 
+<!-- HEADER -->
 <div id="hdr">
-  <div class="hdr-clock-container">
-    <div class="hdr-clock" id="hdr-clock">00:00:00</div>
+  <div>
+    <div class="logo-name">REGRALLY</div>
     <div class="logo-sub">Regularity Timer · GPS</div>
   </div>
   <div class="hdr-right">
-    <div class="app-version">v0.42</div>
-    <div class="gps-badge-container">
-      <div class="gps-badge-top">
-        <div class="dot" id="dot"></div>
-        <span class="gps-status-text" id="gtxt">NO GPS</span>
-      </div>
-      <div class="gps-badge-metrics">
-        <span>Pr: <span class="gps-metric-live" id="hdr-gps-acc">—</span></span>
-        <span>Sp: <span class="gps-metric-live" id="hdr-gps-spd">—</span></span>
-        <span>Hz: <span class="gps-metric-live" id="hdr-gps-hz">—</span></span>
-      </div>
-    </div>
+    <div class="gps-badge"><div class="dot" id="dot"></div><span id="gtxt">NO GPS</span></div>
     <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">☀️</button>
   </div>
 </div>
 
+<!-- TABS -->
 <div id="tabs">
   <button class="tb on" onclick="showTab('legs')">⚙ Legs</button>
   <button class="tb"    onclick="showTab('live')">▶ Live</button>
   <button class="tb"    onclick="showTab('res')">≡ Results</button>
 </div>
 
+<!-- LEGS PAGE -->
 <div class="pg on" id="pg-legs">
   <div class="sec-lbl">Rally Configuration</div>
   <div id="legs-list"></div>
   <button class="btn-add" onclick="addLeg()">＋ Add Leg</button>
 
+  <!-- Export / Import -->
   <div class="io-section">
     <div class="io-title">Export / Import</div>
     <div class="io-row">
@@ -498,6 +426,7 @@ body{
   <button class="btn-launch" onclick="launch()">▶ Launch Rally</button>
 </div>
 
+<!-- LIVE PAGE -->
 <div class="pg" id="pg-live">
   <div id="live-idle">
     <div class="li-icon">🏁</div>
@@ -511,6 +440,7 @@ body{
   <div id="live-run">
     <div class="sbar"><div class="sdot" id="sdot"></div><span id="stxt">STANDBY</span></div>
 
+    <!-- Auto-start countdown banner (hidden by default) -->
     <div class="autostart-banner" id="as-banner" style="display:none">
       <div class="ab-label" id="as-label">⏱ Auto-start in</div>
       <div class="ab-clock" id="as-clock">—</div>
@@ -540,7 +470,7 @@ body{
         <div class="dunit">SECONDS</div>
         <div class="dverd" id="dverd">WAITING</div>
         <div class="dmode" id="dmode">AWAITING GPS</div>
-        <div id="subleg-wrap" style="width:100%">
+        <div id="subleg-wrap" style="display:none;width:100%">
           <div class="subleg-bar"><div class="subleg-fill" id="subleg-fill" style="width:0%"></div></div>
           <div class="subleg-info" id="subleg-info"></div>
         </div>
@@ -571,37 +501,31 @@ body{
       <div class="rc"><div class="rl">Altitude</div><div class="rv live" id="r-alt">—m</div></div>
     </div>
 
-    <div class="ctrlg-three">
-      <button class="bc bgo"   id="btn-go"   onclick="startLeg()">▶ Start</button>
-      <button class="bc bstop" id="btn-stop" onclick="stopLeg()">■ Stop</button>
-      <button class="bc bnext" id="btn-next" onclick="nextLeg()">Next ▶</button>
-    </div>
-    <div style="display:flex; justify-content:center; margin-top:-2px;">
-       <button class="bc brst" style="width:100%; max-width:180px; padding:8px 4px; font-size:11px;" onclick="resetRally()">↺ Reset Rally</button>
+    <div class="ctrlg">
+      <button class="bc bgo"   id="btn-go"   onclick="startLeg()">▶ Start Leg</button>
+      <button class="bc brst"                onclick="resetRally()">↺ Reset</button>
+      <button class="bc bstop" id="btn-stop" onclick="stopLeg()"  style="display:none">■ Stop</button>
+      <button class="bc bnext" id="btn-next" onclick="nextLeg()"  style="display:none">Next ▶</button>
     </div>
   </div>
 </div>
 
+<!-- RESULTS PAGE -->
 <div class="pg" id="pg-res">
   <div class="sec-lbl">Stage Results</div>
   <div id="res-content"><div class="empty-msg">No completed legs yet</div></div>
 </div>
 
 <script>
+/* ══════════════════════════════════════════════════
+   $ must be declared FIRST — before any other code
+   that might call it, including theme init.
+══════════════════════════════════════════════════ */
 function gel(id){ return document.getElementById(id); }
 
-/* ── LIVE SYSTEM CLOCK ── */
-function updateSystemClock(){
-  const now = new Date();
-  const hrs = String(now.getHours()).padStart(2, '0');
-  const mins = String(now.getMinutes()).padStart(2, '0');
-  const secs = String(now.getSeconds()).padStart(2, '0');
-  gel('hdr-clock').textContent = `${hrs}:${mins}:${secs}`;
-}
-setInterval(updateSystemClock, 50);
-updateSystemClock();
-
-/* ── THEME ── */
+/* ══════════════════════════════════════════════════
+   THEME
+══════════════════════════════════════════════════ */
 let theme = localStorage.getItem('rr-theme') || 'dark';
 function applyTheme(){
   document.documentElement.setAttribute('data-theme', theme);
@@ -615,7 +539,9 @@ function toggleTheme(){
 }
 applyTheme();
 
-/* ── UTILS ── */
+/* ══════════════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════════════ */
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
 
 function calcSecs(distM, spdKmh){
@@ -640,6 +566,7 @@ function fmtEl(ms){
 }
 function km3(m){ return (m/1000).toFixed(3); }
 
+// Parse "HH:MM" + offsetMins → absolute Date (today or tomorrow if past)
 function computeAutoStartDate(leg){
   if(!leg.autoStart||!leg.autoHH||!leg.autoMM) return null;
   const h=parseInt(leg.autoHH,10), m=parseInt(leg.autoMM,10);
@@ -657,7 +584,9 @@ function autoStartLabel(leg){
   return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
 }
 
-/* ── GPS ENGINE ── */
+/* ══════════════════════════════════════════════════
+   GPS
+══════════════════════════════════════════════════ */
 let watchId    = null;
 let lastPos    = null;
 let gpsSpeedMs = null;
@@ -665,7 +594,6 @@ let gpsAccM    = null;
 let gpsDistM   = 0;
 let gpsFixN    = 0;
 let gpsGranted = false;
-let lastFixTime = null;
 
 function haversine(la1,lo1,la2,lo2){
   const R=6371000,t=Math.PI/180;
@@ -677,34 +605,15 @@ function haversine(la1,lo1,la2,lo2){
 function gpsSuccess(pos){
   gpsGranted = true;
   const c = pos.coords;
-  const currentTimeStamp = performance.now();
-  
   gpsAccM    = c.accuracy;
   gpsSpeedMs = (c.speed!=null&&c.speed>=0)?c.speed:null;
-  
   if(legRunning && lastPos){
     const d = haversine(lastPos.coords.latitude,lastPos.coords.longitude,c.latitude,c.longitude);
     if(d>=0&&d<200){ gpsDistM+=d; gpsFixN++; }
   }
-  
-  if(lastFixTime != null){
-     const deltaMs = currentTimeStamp - lastFixTime;
-     if(deltaMs > 0){
-        const calculatedHz = 1000 / deltaMs;
-        gel('hdr-gps-hz').textContent = calculatedHz.toFixed(1) + 'Hz';
-     }
-  } else {
-     gel('hdr-gps-hz').textContent = '1.0Hz';
-  }
-  lastFixTime = currentTimeStamp;
   lastPos = pos;
-  
   const q=c.accuracy<6?'LOCKED ✓':c.accuracy<16?'GOOD':c.accuracy<40?'FAIR':'POOR';
   setDot('ok',q);
-  
-  gel('hdr-gps-acc').textContent = '±' + c.accuracy.toFixed(0) + 'm';
-  gel('hdr-gps-spd').textContent = gpsSpeedMs != null ? (gpsSpeedMs * 3.6).toFixed(0) + 'k' : '0k';
-  
   const banner=gel('li-gps-status');
   if(banner){banner.className='li-gps';banner.textContent='✓ GPS '+q+' — ±'+c.accuracy.toFixed(1)+'m';}
   try{gel('r-lat').textContent=c.latitude.toFixed(6);}catch(e){}
@@ -715,16 +624,6 @@ function gpsSuccess(pos){
   updateGpsBtns('granted');
   const ov=gel('gps-overlay');
   ov.classList.add('hidden'); ov.style.display='none';
-
-  if(legRunning && legs[curIdx]){
-    const activeLeg = legs[curIdx];
-    if(activeLeg.linked && activeLeg.atDistance){
-      const targetLimitM = parseFloat(activeLeg.distM);
-      if(!isNaN(targetLimitM) && targetLimitM > 0 && gpsDistM >= targetLimitM){
-        stopLeg(); 
-      }
-    }
-  }
 }
 
 function gpsError(err){
@@ -733,9 +632,6 @@ function gpsError(err){
     gpsGranted=false;
     setDot('err','DENIED');
     updateGpsBtns('denied');
-    gel('hdr-gps-acc').textContent = '—';
-    gel('hdr-gps-spd').textContent = '—';
-    gel('hdr-gps-hz').textContent = '—';
     const banner=gel('li-gps-status');
     if(banner){banner.className='li-gps bad';banner.textContent='⚠ GPS denied — check location settings.';}
     if(!gel('gps-overlay').classList.contains('hidden')) showOvErr();
@@ -762,9 +658,6 @@ function skipGPS(){
   const ov=gel('gps-overlay');
   ov.classList.add('hidden'); ov.style.display='none';
   setDot('','NO GPS');
-  gel('hdr-gps-acc').textContent = '—';
-  gel('hdr-gps-spd').textContent = '—';
-  gel('hdr-gps-hz').textContent = '—';
   const b=gel('li-gps-status');
   if(b){b.className='li-gps bad';b.textContent='⚠ Running without GPS — time-only mode.';}
 }
@@ -790,7 +683,9 @@ function updateGpsBtns(state){
   if(ovBtn){ovBtn.textContent=oT;ovBtn.disabled=state==='requesting';}
 }
 
-/* ── TAB ROUTER ── */
+/* ══════════════════════════════════════════════════
+   TAB ROUTER
+══════════════════════════════════════════════════ */
 function showTab(name){
   const names=['legs','live','res'];
   document.querySelectorAll('.tb').forEach((b,i)=>b.classList.toggle('on',names[i]===name));
@@ -798,13 +693,19 @@ function showTab(name){
   gel('pg-'+name).classList.add('on');
 }
 
-/* ── LEG CONFIGURATION SETUP ── */
+/* ══════════════════════════════════════════════════
+   LEG SETUP
+   Each leg: { id, name, distM, spdKmh, linked, autoStart, autoTime }
+   linked   — auto-starts immediately after previous leg
+   autoStart — starts at a scheduled clock time (only for first of group)
+   autoTime  — "HH:MM" string
+══════════════════════════════════════════════════ */
 let legs  = [];
 let legId = 0;
 
 function addLeg(){
   legId++;
-  legs.push({id:legId,name:'',distM:'',spdKmh:'',linked:false,atDistance:false,autoStart:false,autoHH:'',autoMM:'',autoOffset:'0'});
+  legs.push({id:legId,name:'',distM:'',spdKmh:'',linked:false,autoStart:false,autoHH:'',autoMM:'',autoOffset:'0'});
   renderLegs();
 }
 function delLeg(id){ legs=legs.filter(l=>l.id!==id); renderLegs(); }
@@ -814,6 +715,7 @@ function updLeg(id,field,val){
   if(field==='linked'||field==='autoStart'){
     renderLegs();
   } else if(field==='autoHH'||field==='autoMM'||field==='autoOffset'){
+    // Update computed start-time label in-place — no full re-render (keeps keyboard open)
     refreshAutoLabel(id);
   } else {
     refreshTime(id);
@@ -829,11 +731,13 @@ function refreshTime(id){
 function refreshAutoLabel(id){
   const l=legs.find(l=>l.id===id); if(!l) return;
   const absLabel=autoStartLabel(l);
+  // Update the "→ Starts at HH:MM" span without touching the inputs
   const el=gel('al-'+id);
   if(el){
     el.textContent=absLabel?'→ Starts at '+absLabel:'';
     el.style.display=absLabel?'':'none';
   }
+  // Also update the badge in the checkbox row
   const badge=gel('ab-'+id);
   if(badge){
     badge.textContent=absLabel?'⏰ '+absLabel:'';
@@ -849,6 +753,7 @@ function legGroupInfo(idx){
   return{start,end,size:end-start+1,posInGroup:idx-start};
 }
 
+// Is this leg the first in its group?
 function isGroupFirst(idx){ return !legs[idx].linked || idx===0; }
 
 function renderLegs(){
@@ -862,10 +767,10 @@ function renderLegs(){
     const isLinked=leg.linked&&canLink;
     const gi=legGroupInfo(idx);
     const groupBadge=gi.size>1?`<span class="lopt-badge badge-linked">SUB ${gi.posInGroup+1}/${gi.size}</span>`:'';
+    // Auto-start only available on first leg of a group
     const canAutoStart=isGroupFirst(idx);
     const div=document.createElement('div');
     div.className='lcard'+(isLinked?' linked-card':'');
-    
     let html=`
       <div class="lhdr">
         <span class="lbadge">LEG ${String(idx+1).padStart(2,'0')}</span>
@@ -873,24 +778,15 @@ function renderLegs(){
           oninput="updLeg(${leg.id},'name',this.value)">
         <button class="ldel" onclick="delLeg(${leg.id})">✕</button>
       </div>`;
-      
+    // Linked checkbox row
     if(canLink){
       html+=`<label class="lopt-row">
         <input type="checkbox" ${isLinked?'checked':''} onchange="updLeg(${leg.id},'linked',this.checked)">
         <span style="flex:1">🔗 Auto-start (linked to previous leg)</span>
         ${groupBadge}
       </label>`;
-      
-      if(isLinked){
-         html+=`<div class="lsub-options-row">
-            <label>
-               <input type="checkbox" ${leg.atDistance?'checked':''} onchange="updLeg(${leg.id},'atDistance',this.checked)">
-               <span>🏁 @distance (Trigger automatically on distance match)</span>
-            </label>
-         </div>`;
-      }
     }
-    
+    // Auto-start by time (only for first leg of group)
     if(canAutoStart){
       const absLabel = autoStartLabel(leg);
       const scheduledBadge = leg.autoStart
@@ -944,20 +840,29 @@ function renderLegs(){
   });
 }
 
-/* ── RALLY STATE ENGINE ── */
+/* ══════════════════════════════════════════════════
+   RALLY STATE
+══════════════════════════════════════════════════ */
 let curIdx       = -1;
 let legRunning   = false;
 let legStartTs   = null;
 let legTimer     = null;
 let legResults   = [];
 let autoAdvance  = false;
-let asTimer      = null;   
-let asTarget     = null;   
+let asTimer      = null;   // auto-start countdown interval
+let asTarget     = null;   // Date when leg should auto-start
 
 function resetLegGPS(){
+  // Reset accumulated distance counters for the new leg
+  // but keep lastPos so the NEXT GPS fix immediately starts accumulating distance
+  // (avoids the "ACQUIRING GPS…" flash between legs)
   gpsDistM=0; gpsFixN=0;
+  // lastPos intentionally NOT cleared here — GPS watch keeps running
 }
 
+/* ══════════════════════════════════════════════════
+   LAUNCH
+══════════════════════════════════════════════════ */
 function launch(){
   const valid=legs.filter(l=>calcSecs(l.distM,l.spdKmh)!=null);
   if(!valid.length){alert('Add at least one complete leg first.');return;}
@@ -971,9 +876,13 @@ function launch(){
   const lr=gel('live-run'); lr.style.display='flex'; lr.style.flexDirection='column';
   gel('btn-gps-run').style.display=gpsGranted?'none':'';
   renderChips(); loadLeg(0);
+  // Kick off auto-start for leg 0 if configured
   scheduleAutoStart(0);
 }
 
+/* ══════════════════════════════════════════════════
+   AUTO-START SCHEDULER
+══════════════════════════════════════════════════ */
 function fmtCountdown(ms){
   if(ms<=0) return '00:00';
   const s=Math.floor(ms/1000),m=Math.floor(s/60),sec=s%60;
@@ -1017,12 +926,14 @@ function abortAutoStart(){
   gel('stxt').textContent='STANDBY — LEG '+(curIdx+1)+'/'+legs.length;
 }
 
+/* ══════════════════════════════════════════════════
+   LIVE LEG UI
+══════════════════════════════════════════════════ */
 function renderChips(){
   gel('chips').innerHTML=legs.map((leg,i)=>{
     const done=legResults[i]!=null,active=i===curIdx,running=active&&legRunning;
     const isAuto=running&&autoAdvance,linked=leg.linked&&i>0;
-    const isDistLabel = (linked && leg.atDistance) ? ' 🎯' : '';
-    const name=(leg.name||'Leg '+(i+1)) + isDistLabel;
+    const name=leg.name||'Leg '+(i+1);
     return`<div class="chip ${isAuto?'auto':active?'cur':''} ${done?'done':''} ${linked?'linked-chip':''}"
       onclick="jumpLeg(${i})">${name}</div>`;
   }).join('');
@@ -1037,15 +948,12 @@ function loadLeg(idx){
   const name=(leg.name||'Leg '+(idx+1)).toUpperCase();
   const distKm=(parseFloat(leg.distM)/1000).toFixed(3);
   const spdDisp=parseFloat(leg.spdKmh).toFixed(2);
-  
-  let labelModeSuffix = (leg.linked && leg.atDistance) ? ' [@dist]' : '';
-  let lbl=name+' · '+distKm+' km @ '+spdDisp+' km/h' + labelModeSuffix;
+  let lbl=name+' · '+distKm+' km @ '+spdDisp+' km/h';
   if(gi.size>1) lbl=`[${gi.posInGroup+1}/${gi.size}] `+lbl;
   gel('dlbl').textContent=lbl;
-  
   setDelta(0,'neutral',false);
   gel('dverd').textContent='READY';
-  gel('dmode').textContent=leg.linked && leg.atDistance ? 'AUTO DETECT BOUNDARY (@distance)' : 'AWAITING GPS DISTANCE';
+  gel('dmode').textContent='AWAITING GPS DISTANCE';
   gel('t-tgt').textContent=fmtMMSSdd(secs);
   gel('t-el').textContent='0:00.0';
   gel('t-rem').textContent=fmtMMSS(secs);
@@ -1054,187 +962,114 @@ function loadLeg(idx){
   gel('pfill').style.width='0%'; gel('pexp').style.left='0%'; gel('ppct').textContent='0.0%';
   gel('spd-tgt').textContent=spdDisp;
   gel('spd-diff').textContent=''; gel('spd-diff').className='sdiff';
-  
   if(gi.size>1){
-    gel('subleg-info').textContent='Sub-leg '+(gi.posInGroup+1)+' of '+gi.size;
+    gel('subleg-wrap').style.display='';
     gel('subleg-fill').style.width=(gi.posInGroup/gi.size*100).toFixed(1)+'%';
-  } else {
-    gel('subleg-info').textContent='Single Standalone Stage';
-    gel('subleg-fill').style.width='0%';
-  }
-  
+    gel('subleg-info').textContent='Sub-leg '+(gi.posInGroup+1)+' of '+gi.size;
+  } else { gel('subleg-wrap').style.display='none'; }
+  gel('btn-go').style.display=''; gel('btn-stop').style.display='none'; gel('btn-next').style.display='none';
   gel('sdot').className='sdot';
   gel('stxt').textContent='STANDBY — '+(idx+1)+'/'+legs.length;
-  
-  updateControlsState();
 }
 
-function updateControlsState() {
-  const goBtn = gel('btn-go');
-  const stopBtn = gel('btn-stop');
-  const nextBtn = gel('btn-next');
-  
-  if(!legRunning) {
-    goBtn.disabled = false;
-    stopBtn.disabled = true;
-    nextBtn.disabled = (curIdx + 1 >= legs.length);
-  } else {
-    goBtn.disabled = true;
-    stopBtn.disabled = false;
-    nextBtn.disabled = false;
-  }
-}
-
-/* ── REFACTORED STATE AND STYLE MATRIX ROUTER FOR THE HERO COUNTER ── */
 function setDelta(absSec,state,running){
-  let col = 'var(--border2)'; // Default Standby / Neutral state
-  
-  if(running){
-    // High-contrast color threshold evaluation matching user delta specifications
-    if (state === 'behind_major') {
-      col = 'var(--behind)'; // Greater than +1.0 second variance -> Strict Red
-    } else if (state === 'ahead_major') {
-      col = 'var(--ahead)';  // Greater than -1.0 second variance -> Strict Blue
-    } else {
-      col = 'var(--ok)';     // Safe tracking state zone (Within +/- 1.0s boundaries) -> Green
-    }
-  }
-
-  // Inject structural CSS color definitions down to the container variables
-  gel('delta').style.setProperty('--dc', col);
-  
-  // Format math boundary signs explicitly based on delta standing
-  gel('dsign').textContent = running ? (state.startsWith('behind') ? '+' : state.startsWith('ahead') ? '−' : '') : '';
-  gel('dint').textContent = Math.floor(absSec);
-  gel('ddec').textContent = '.' + Math.floor((absSec % 1) * 10);
-  
-  const labelMap = {
-    behind_major: 'LATE ▼ [CRITICAL]',
-    behind_minor: 'LATE ▼',
-    ahead_major:  'EARLY ▲ [CRITICAL]',
-    ahead_minor:  'EARLY ▲',
-    ontime:       'ON TIME ●',
-    neutral:      '—'
-  };
-  gel('dverd').textContent = running ? (labelMap[state] || '—') : '—';
+  const c={behind:'var(--behind)',ahead:'var(--ahead)',ontime:'var(--ok)',neutral:'var(--border2)'};
+  const col=c[state]||c.neutral;
+  gel('delta').style.setProperty('--dc',col);
+  gel('dsign').textContent=running?(state==='behind'?'+':state==='ahead'?'−':''):'';
+  gel('dint').textContent=Math.floor(absSec);
+  gel('ddec').textContent='.'+Math.floor((absSec%1)*10);
+  const v={behind:'LATE ▼',ahead:'EARLY ▲',ontime:'ON TIME ●',neutral:'—'};
+  gel('dverd').textContent=running?(v[state]||'—'):'—';
 }
 
-/* ── TIMING LOOP ── */
+/* ══════════════════════════════════════════════════
+   TIMING LOOP
+══════════════════════════════════════════════════ */
 function startLeg(){
-  if(legRunning) return;
-  legRunning=true; 
-  legStartTs=performance.now();
-  resetLegGPS(); 
-  autoAdvance=false;
-  clearAutoStart(); 
-  gel('as-banner').style.display='none';
-  
+  legRunning=true; legStartTs=performance.now();
+  resetLegGPS(); autoAdvance=false;
+  clearAutoStart(); gel('as-banner').style.display='none';
+  gel('btn-go').style.display='none';
+  gel('btn-next').style.display='none';
+  // Label Stop button based on whether next leg is a linked sub-leg
+  const nextIsLinked = curIdx+1 < legs.length && legs[curIdx+1].linked;
+  const stopBtn = gel('btn-stop');
+  stopBtn.textContent = nextIsLinked ? 'Next Sub-leg ▶' : '■ Stop';
+  stopBtn.style.display='';
   gel('sdot').className='sdot run';
   gel('stxt').textContent='RUNNING — '+(curIdx+1)+'/'+legs.length;
-  
-  renderChips(); 
-  updateControlsState();
-  clearInterval(legTimer); 
-  legTimer=setInterval(tick,100);
+  renderChips(); clearInterval(legTimer); legTimer=setInterval(tick,100);
 }
 
 function tick(){
   if(!legRunning) return;
-  const leg = legs[curIdx];
-  const tgtSecs = calcSecs(leg.distM,leg.spdKmh);
-  const tgtDistM = parseFloat(leg.distM);
-  const spdMs = parseFloat(leg.spdKmh)/3.6;
-  const elMs = performance.now()-legStartTs;
-  const elSec = elMs/1000;
-  const expDistM = spdMs*elSec;
+  const leg=legs[curIdx];
+  const tgtSecs=calcSecs(leg.distM,leg.spdKmh);
+  const tgtDistM=parseFloat(leg.distM);
+  const spdMs=parseFloat(leg.spdKmh)/3.6;
+  const elMs=performance.now()-legStartTs;
+  const elSec=elMs/1000;
+  const expDistM=spdMs*elSec;
 
-  let delta = 0, state = 'ontime', modeStr = 'TIME-BASED · ACQUIRING GPS…';
-  
-  if(gpsDistM > 5 && spdMs > 0){
-    const idealTime = gpsDistM / spdMs; 
-    delta = elSec - idealTime;
-    
-    // Evaluate cross-over points for strict 1.0s boundary colors
-    if (delta >= 1.0) {
-      state = 'behind_major';
-    } else if (delta > 0) {
-      state = 'behind_minor';
-    } else if (delta <= -1.0) {
-      state = 'ahead_major';
-    } else if (delta < 0) {
-      state = 'ahead_minor';
-    } else {
-      state = 'ontime';
-    }
-    
-    modeStr = (leg.linked && leg.atDistance ? 'GPS [@dist] · ' : 'GPS · ') + gpsFixN+' FIXES · ±'+(gpsAccM!=null?gpsAccM.toFixed(1):'?')+'m';
-  } else {
-    // Drop back to pure theoretical timeline delta tracking if GPS calculations aren't live
-    const timeDelta = elSec - tgtSecs;
-    if (timeDelta >= 1.0) state = 'behind_major';
-    else if (timeDelta > 0) state = 'behind_minor';
-    else if (timeDelta <= -1.0) state = 'ahead_major';
-    else if (timeDelta < 0) state = 'ahead_minor';
+  let delta=0,state='neutral',modeStr='TIME-BASED · ACQUIRING GPS…';
+  if(gpsDistM>5&&spdMs>0){
+    const idealTime=gpsDistM/spdMs; delta=elSec-idealTime;
+    state=Math.abs(delta)<0.3?'ontime':delta>0?'behind':'ahead';
+    modeStr='GPS · '+gpsFixN+' FIXES · ±'+(gpsAccM!=null?gpsAccM.toFixed(1):'?')+'m';
   }
-  
-  gel('dmode').textContent = modeStr; 
-  setDelta(Math.abs(delta), state, true);
+  gel('dmode').textContent=modeStr; setDelta(Math.abs(delta),state,true);
 
-  const gi = legGroupInfo(curIdx);
-  if(gi.size > 1){
-    const currentSubProgressFraction = (gi.posInGroup / gi.size) + ((clamp(gpsDistM/tgtDistM, 0, 1)) / gi.size);
-    gel('subleg-fill').style.width = (currentSubProgressFraction*100).toFixed(1)+'%';
-    gel('subleg-info').textContent = 'Sub-leg '+(gi.posInGroup+1)+'/'+gi.size+' running';
+  // Sub-leg group progress
+  const gi=legGroupInfo(curIdx);
+  if(gi.size>1){
+    gel('subleg-wrap').style.display='';
+    gel('subleg-fill').style.width=(gi.posInGroup/gi.size*100).toFixed(1)+'%';
+    gel('subleg-info').textContent='Sub-leg '+(gi.posInGroup+1)+'/'+gi.size+' running';
   }
 
-  const gpsKmh = gpsSpeedMs!=null?gpsSpeedMs*3.6:null;
-  const tgtKmh = parseFloat(leg.spdKmh);
+  // GPS speed
+  const gpsKmh=gpsSpeedMs!=null?gpsSpeedMs*3.6:null;
+  const tgtKmh=parseFloat(leg.spdKmh);
   if(gpsKmh!=null){
-    const diff = gpsKmh-tgtKmh;
-    const spEl = gel('spd'); spEl.textContent = gpsKmh.toFixed(1);
-    spEl.className = 'sn' + (Math.abs(diff)<1 ? ' good' : diff>0 ? ' over' : '');
-    const df = gel('spd-diff');
+    const diff=gpsKmh-tgtKmh;
+    const spEl=gel('spd'); spEl.textContent=gpsKmh.toFixed(1);
+    spEl.className='sn'+(Math.abs(diff)<1?' good':diff>0?' over':'');
+    const df=gel('spd-diff');
     if(Math.abs(diff)<0.5){df.textContent='ON TARGET';df.className='sdiff z';}
     else if(diff>0){df.textContent='+'+diff.toFixed(1);df.className='sdiff p';}
     else{df.textContent=diff.toFixed(1);df.className='sdiff n';}
   } else { gel('spd').textContent='—'; gel('spd-diff').textContent=''; }
 
-  gel('t-el').textContent = fmtEl(elMs);
-  gel('t-rem').textContent = fmtMMSS(Math.max(0,tgtSecs-elSec));
-  gel('d-gps').textContent = km3(gpsDistM);
-  gel('d-exp').textContent = km3(Math.min(expDistM,tgtDistM));
-  
-  const gpsPct = clamp((gpsDistM/tgtDistM)*100,0,100);
-  const expPct = clamp((expDistM/tgtDistM)*100,0,100);
-  gel('pfill').style.width = gpsPct.toFixed(2)+'%';
-  gel('pexp').style.left = expPct.toFixed(2)+'%';
-  gel('ppct').textContent = gpsPct.toFixed(1)+'%';
-  if(gpsAccM!=null) gel('spd-acc').textContent = gpsAccM.toFixed(1);
-  
-  if(elSec > tgtSecs*4) stopLeg();
+  gel('t-el').textContent=fmtEl(elMs);
+  gel('t-rem').textContent=fmtMMSS(Math.max(0,tgtSecs-elSec));
+  gel('d-gps').textContent=km3(gpsDistM);
+  gel('d-exp').textContent=km3(Math.min(expDistM,tgtDistM));
+  const gpsPct=clamp((gpsDistM/tgtDistM)*100,0,100);
+  const expPct=clamp((expDistM/tgtDistM)*100,0,100);
+  gel('pfill').style.width=gpsPct.toFixed(2)+'%';
+  gel('pexp').style.left=expPct.toFixed(2)+'%';
+  gel('ppct').textContent=gpsPct.toFixed(1)+'%';
+  if(gpsAccM!=null) gel('spd-acc').textContent=gpsAccM.toFixed(1);
+  if(elSec>tgtSecs*4) stopLeg();
 }
 
 function stopLeg(){
-  const wasRunning = legRunning;
-  clearInterval(legTimer); 
-  legRunning=false;
-  
+  if(!legRunning) return;
+  clearInterval(legTimer); legRunning=false;
   const leg=legs[curIdx];
   const tgtSecs=calcSecs(leg.distM,leg.spdKmh);
-  const elSec=wasRunning ? ((performance.now()-legStartTs)/1000) : 0;
+  const elSec=(performance.now()-legStartTs)/1000;
   const spdMs=parseFloat(leg.spdKmh)/3.6;
   const delta=gpsDistM>5&&spdMs>0?elSec-(gpsDistM/spdMs):elSec-tgtSecs;
-  
   legResults[curIdx]={leg:{...leg},tgtSecs,elSec,gpsDistM,gpsFixN,delta};
   buildResults();
 
   const nextIdx=curIdx+1;
   if(nextIdx<legs.length&&legs[nextIdx].linked){
-    autoAdvance=true; 
-    curIdx=nextIdx; 
-    resetLegGPS();
-    renderChips(); 
-    loadLeg(curIdx);
+    // Auto-advance to linked sub-leg
+    autoAdvance=true; curIdx=nextIdx; resetLegGPS();
+    renderChips(); loadLeg(curIdx);
     gel('sdot').className='sdot auto';
     gel('stxt').textContent='AUTO-START → LEG '+(curIdx+1)+'/'+legs.length;
     setTimeout(()=>{ if(!legRunning){startLeg();autoAdvance=false;} },800);
@@ -1242,41 +1077,26 @@ function stopLeg(){
     autoAdvance=false;
     gel('sdot').className='sdot done';
     gel('stxt').textContent='FINISHED — LEG '+(curIdx+1);
-    renderChips();
-    updateControlsState();
-    
+    gel('btn-stop').style.display='none'; gel('btn-go').style.display='none';
     if(nextIdx<legs.length){
+      // Load the next leg UI immediately so target speed/time are correct
       loadLeg(nextIdx);
+      // Override the status text that loadLeg resets
       gel('sdot').className='sdot done';
-      gel('stxt').textContent='FINISHED — LEG '+nextIdx+' · STANDBY NEXT: '+(nextIdx+1)+'/'+legs.length;
+      gel('stxt').textContent='FINISHED — LEG '+(curIdx+1)+' · NEXT: '+(nextIdx+1)+'/'+legs.length;
+      gel('btn-go').style.display='none';
+      gel('btn-next').style.display='';
       scheduleAutoStart(nextIdx);
     }
+    renderChips();
   }
 }
 
 function nextLeg(){
-  clearAutoStart(); 
-  gel('as-banner').style.display='none';
-  if(legRunning){
-     clearInterval(legTimer);
-     legRunning=false;
-     const leg=legs[curIdx];
-     const tgtSecs=calcSecs(leg.distM,leg.spdKmh);
-     const elSec=(performance.now()-legStartTs)/1000;
-     const spdMs=parseFloat(leg.spdKmh)/3.6;
-     const delta=gpsDistM>5&&spdMs>0?elSec-(gpsDistM/spdMs):elSec-tgtSecs;
-     legResults[curIdx]={leg:{...leg},tgtSecs,elSec,gpsDistM,gpsFixN,delta};
-     buildResults();
-  }
-  
-  if(curIdx+1 < legs.length){
-     curIdx++; 
-     resetLegGPS(); 
-     autoAdvance=false;
-     renderChips(); 
-     loadLeg(curIdx);
-     scheduleAutoStart(curIdx);
-  }
+  clearAutoStart(); gel('as-banner').style.display='none';
+  curIdx++; resetLegGPS(); autoAdvance=false;
+  renderChips(); loadLeg(curIdx);
+  scheduleAutoStart(curIdx);
 }
 
 function resetRally(){
@@ -1288,7 +1108,9 @@ function resetRally(){
   buildResults();
 }
 
-/* ── RESULTS MATRIX AGGREGATOR ── */
+/* ══════════════════════════════════════════════════
+   RESULTS
+══════════════════════════════════════════════════ */
 function buildResults(){
   const c=gel('res-content');
   const done=legResults.filter(r=>r!=null);
@@ -1298,6 +1120,7 @@ function buildResults(){
     const r=legResults[i]; if(!r) return;
     tot+=r.delta;
     realPenalty+=Math.abs(r.delta);
+    // Build sign and absolute value separately — never rely on toFixed() for sign display
     const absDelta = Math.abs(r.delta);
     const sign  = r.delta > 0.0005 ? '+' : r.delta < -0.0005 ? '−' : '±';
     const cls   = absDelta < 0.3 ? 'cok' : r.delta > 0 ? 'cbeh' : 'cahd';
@@ -1331,7 +1154,10 @@ function buildResults(){
     </div>`;
 }
 
-/* ── HIGH RES EXPORT FILE WRITERS ── */
+/* ══════════════════════════════════════════════════
+   EXPORT / IMPORT
+══════════════════════════════════════════════════ */
+
 const EXPORT_VERSION = 1;
 
 function showFeedback(msg, isErr, autoClear){
@@ -1353,7 +1179,6 @@ function exportLegs(){
       distM:      l.distM,
       spdKmh:     l.spdKmh,
       linked:     l.linked,
-      atDistance: l.atDistance,
       autoStart:  l.autoStart,
       autoHH:     l.autoHH,
       autoMM:     l.autoMM,
@@ -1365,24 +1190,17 @@ function exportLegs(){
   const blob = new Blob([json], { type: 'application/json' });
   const url  = URL.createObjectURL(blob);
 
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const hrs = String(now.getHours()).padStart(2, '0');
-  const mins = String(now.getMinutes()).padStart(2, '0');
-  const secs = String(now.getSeconds()).padStart(2, '0');
-  const timestampString = `${year}${month}${day}-${hrs}${mins}${secs}`;
-
+  // Build a filename like "regrally-2025-05-17.json"
+  const datePart = new Date().toISOString().slice(0,10);
   const a = document.createElement('a');
   a.href     = url;
-  a.download = `regrally-${timestampString}.json`;
+  a.download = 'regrally-' + datePart + '.json';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(url), 5000);
 
-  showFeedback('✓ Exported ' + legs.length + ' stage configuration(s) to JSON.', false, true);
+  showFeedback('✓ Exported ' + legs.length + ' leg' + (legs.length>1?'s':'') + ' to JSON.', false, true);
 }
 
 function importLegs(input){
@@ -1393,26 +1211,30 @@ function importLegs(input){
   reader.onload = function(e){
     try{
       const raw = JSON.parse(e.target.result);
+
+      // Accept both a plain array of legs OR our versioned wrapper object
       let imported;
       if(Array.isArray(raw)){
         imported = raw;
       } else if(raw && Array.isArray(raw.legs)){
         imported = raw.legs;
       } else {
-        throw new Error('Unrecognised format — expected array or wrapper.');
+        throw new Error('Unrecognised format — expected a JSON array or {legs:[…]} object.');
       }
 
-      if(!imported.length) throw new Error('File contains no data.');
+      if(!imported.length) throw new Error('File contains no legs.');
 
+      // Validate each leg has the minimum required fields
       imported.forEach((l, i) => {
         if(l.distM === undefined && l.distance !== undefined) l.distM = l.distance;
         if(l.spdKmh === undefined && l.speed !== undefined)   l.spdKmh = l.speed;
         const d = parseFloat(l.distM), s = parseFloat(l.spdKmh);
         if(isNaN(d) || isNaN(s) || d <= 0 || s <= 0){
-          throw new Error(`Leg ${i+1} ("${l.name||'unnamed'}") is missing metrics.`);
+          throw new Error(`Leg ${i+1} ("${l.name||'unnamed'}") is missing valid distance or speed.`);
         }
       });
 
+      // Replace current legs
       legs = imported.map(l => {
         legId++;
         return {
@@ -1421,7 +1243,6 @@ function importLegs(input){
           distM:      String(l.distM  || l.distance || ''),
           spdKmh:     String(l.spdKmh || l.speed    || ''),
           linked:     !!l.linked,
-          atDistance: !!l.atDistance,
           autoStart:  !!l.autoStart,
           autoHH:     String(l.autoHH     || ''),
           autoMM:     String(l.autoMM     || ''),
@@ -1430,19 +1251,29 @@ function importLegs(input){
       });
 
       renderLegs();
-      showFeedback('✓ Imported ' + legs.length + ' stages.', false, true);
+      showFeedback('✓ Imported ' + legs.length + ' leg' + (legs.length>1?'s':'') + ' successfully.', false, true);
 
     } catch(err){
       showFeedback('⛔ Import failed: ' + err.message, true, false);
     }
+
+    // Reset file input so same file can be re-imported if needed
     input.value = '';
   };
+
+  reader.onerror = function(){
+    showFeedback('⛔ Could not read file.', true, false);
+    input.value = '';
+  };
+
   reader.readAsText(file);
 }
 
-/* ── SEED INITIALIZATION ── */
+/* ══════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════ */
 legId=1;
-legs.push({id:1,name:'Stage 1',distM:'',spdKmh:'',linked:false,atDistance:false,autoStart:false,autoHH:'',autoMM:'',autoOffset:'0'});
+legs.push({id:1,name:'Stage 1',distM:'',spdKmh:'',linked:false,autoStart:false,autoHH:'',autoMM:'',autoOffset:'0'});
 renderLegs();
 </script>
 </body>

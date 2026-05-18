@@ -70,6 +70,7 @@ body{
   letter-spacing:0.5px;
 }
 
+/* Redesigned Multi-Telemetry GPS Status Badge */
 .gps-badge-container {
   display: flex;
   flex-direction: column;
@@ -210,7 +211,7 @@ body{
 .lsub-options-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
 .lsub-options-row input[type=checkbox] { accent-color: var(--ahead); width: 14px; height: 14px; }
 
-/* Auto-start time picker row */
+/* Auto-start time picker row — single compact row */
 .ltime-row{
   display:flex;align-items:center;gap:8px;
   padding:7px 10px;background:var(--surf3);
@@ -338,8 +339,7 @@ body{
 .sn.over{color:var(--behind);}.sn.good{color:var(--ok);}.sn.near{color:var(--warn);}
 .su{font-size:10px;font-weight:600;color:var(--txt3);}
 .sdiv{width:1px;background:var(--border);height:44px;margin:0 8px;}
-
-/* Target speed block */
+/* Target speed block — highlighted */
 .tgt-block{
   display:flex;flex-direction:column;align-items:center;gap:2px;
   background:color-mix(in srgb,var(--warn) 10%,transparent);
@@ -352,23 +352,16 @@ body{
 .sdiff{font-size:11px;font-weight:600;margin-top:2px;}
 .sdiff.p{color:var(--behind);}.sdiff.n{color:var(--ahead);}.sdiff.z{color:var(--ok);}
 
-/* ── DELTA HERO PANEL (REFACTORED FOR CONDITIONAL COLOR MATRIX) ── */
+/* Delta hero */
 .delta{background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;position:relative;}
-.delta::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--dc,var(--border2));transition:background .25s;}
+.delta::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--dc,var(--border2));transition:background .4s;}
 [data-theme="dark"] .delta::before{box-shadow:0 0 12px var(--dc,transparent);}
 .delta-in{padding:14px 14px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;}
 .dlbl{font-size:11px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;margin-bottom:6px;text-align:center;}
-
-/* Enforce DM Mono across all text nodes inside hero delta string container */
-.drow{display:flex;align-items:flex-start;justify-content:center;line-height:1; font-family:'DM Mono',monospace;}
-.dsign{font-size:28px;font-weight:500;color:var(--dc,var(--txt3));transition:color .25s;margin-top:8px;margin-right:2px;}
-.dint{font-size:88px;font-weight:500;line-height:.9;color:var(--dc,var(--txt));letter-spacing:-4px;transition:color .25s;}
-[data-theme="dark"] .dint{text-shadow:0 0 40px var(--dc,transparent);}
-.ddec{font-size:42px;font-weight:400;line-height:.9;letter-spacing:-1px;color:var(--dc,var(--txt));transition:color .25s;align-self:flex-end;margin-bottom:6px;}
-
-.dunit{font-size:11px;font-weight:600;letter-spacing:3px;color:var(--txt3);text-transform:uppercase;margin-top:6px;}
-.dverd{font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dc,var(--txt3));transition:color .25s;margin-top:2px;}
-.dmode{font-size:10px;color:var(--txt3);background:var(--surf2);padding:3px 9px;border-radius:3px;margin-top:6px;text-align:center;font-weight:500;}
+.drow"><div class="dsign" id="dsign"></div><div class="dint" id="dint">0</div><div class="ddec" id="ddec">.0</div></div>
+.dunit">SECONDS</div>
+.dverd" id="dverd">WAITING</div>
+.dmode" id="dmode">AWAITING GPS</div>
 #subleg-wrap{width:100%}
 .subleg-bar{width:100%;margin-top:6px;background:var(--surf2);border:1px solid var(--border);border-radius:3px;height:6px;overflow:hidden;position:relative;}
 .subleg-fill{height:100%;background:var(--ok);transition:width .4s linear;}
@@ -402,7 +395,7 @@ body{
 .rv{font-family:'DM Mono',monospace;font-size:11px;color:var(--txt3);}
 .rv.live{color:var(--txt);}
 
-/* Controls Layout */
+/* Controls Layout: 3 Columns fixed size */
 .ctrlg-three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
 .bc{font-weight:700;font-size:13px;padding:15px 8px;border-radius:8px;cursor:pointer;border:none;transition:all .2s; text-align:center;}
 .bc:active{transform:scale(.97);opacity:.9;}
@@ -457,7 +450,7 @@ body{
     <div class="logo-sub">Regularity Timer · GPS</div>
   </div>
   <div class="hdr-right">
-    <div class="app-version">v0.42</div>
+    <div class="app-version">v0.41</div>
     <div class="gps-badge-container">
       <div class="gps-badge-top">
         <div class="dot" id="dot"></div>
@@ -590,7 +583,9 @@ body{
 <script>
 function gel(id){ return document.getElementById(id); }
 
-/* ── LIVE SYSTEM CLOCK ── */
+/* ══════════════════════════════════════════════════
+   LIVE SYSTEM CLOCK
+══════════════════════════════════════════════════ */
 function updateSystemClock(){
   const now = new Date();
   const hrs = String(now.getHours()).padStart(2, '0');
@@ -601,7 +596,9 @@ function updateSystemClock(){
 setInterval(updateSystemClock, 50);
 updateSystemClock();
 
-/* ── THEME ── */
+/* ══════════════════════════════════════════════════
+   THEME
+══════════════════════════════════════════════════ */
 let theme = localStorage.getItem('rr-theme') || 'dark';
 function applyTheme(){
   document.documentElement.setAttribute('data-theme', theme);
@@ -615,7 +612,9 @@ function toggleTheme(){
 }
 applyTheme();
 
-/* ── UTILS ── */
+/* ══════════════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════════════ */
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
 
 function calcSecs(distM, spdKmh){
@@ -657,7 +656,9 @@ function autoStartLabel(leg){
   return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
 }
 
-/* ── GPS ENGINE ── */
+/* ══════════════════════════════════════════════════
+   GPS ENGINE WITH HIGH-DENSITY SAMPLING ANALYSIS
+══════════════════════════════════════════════════ */
 let watchId    = null;
 let lastPos    = null;
 let gpsSpeedMs = null;
@@ -665,7 +666,7 @@ let gpsAccM    = null;
 let gpsDistM   = 0;
 let gpsFixN    = 0;
 let gpsGranted = false;
-let lastFixTime = null;
+let lastFixTime = null; // Stored timestamp to track hardware loop interval
 
 function haversine(la1,lo1,la2,lo2){
   const R=6371000,t=Math.PI/180;
@@ -687,6 +688,7 @@ function gpsSuccess(pos){
     if(d>=0&&d<200){ gpsDistM+=d; gpsFixN++; }
   }
   
+  // Dynamic refresh loop polling interval assessment
   if(lastFixTime != null){
      const deltaMs = currentTimeStamp - lastFixTime;
      if(deltaMs > 0){
@@ -702,6 +704,7 @@ function gpsSuccess(pos){
   const q=c.accuracy<6?'LOCKED ✓':c.accuracy<16?'GOOD':c.accuracy<40?'FAIR':'POOR';
   setDot('ok',q);
   
+  // Push live telemetry into header console array layout
   gel('hdr-gps-acc').textContent = '±' + c.accuracy.toFixed(0) + 'm';
   gel('hdr-gps-spd').textContent = gpsSpeedMs != null ? (gpsSpeedMs * 3.6).toFixed(0) + 'k' : '0k';
   
@@ -716,6 +719,7 @@ function gpsSuccess(pos){
   const ov=gel('gps-overlay');
   ov.classList.add('hidden'); ov.style.display='none';
 
+  // Live @distance trigger checks
   if(legRunning && legs[curIdx]){
     const activeLeg = legs[curIdx];
     if(activeLeg.linked && activeLeg.atDistance){
@@ -737,7 +741,7 @@ function gpsError(err){
     gel('hdr-gps-spd').textContent = '—';
     gel('hdr-gps-hz').textContent = '—';
     const banner=gel('li-gps-status');
-    if(banner){banner.className='li-gps bad';banner.textContent='⚠ GPS denied — check location settings.';}
+    if(b){banner.className='li-gps bad';banner.textContent='⚠ GPS denied — check location settings.';}
     if(!gel('gps-overlay').classList.contains('hidden')) showOvErr();
   } else {
     setDot('acq','RETRYING…');
@@ -798,7 +802,7 @@ function showTab(name){
   gel('pg-'+name).classList.add('on');
 }
 
-/* ── LEG CONFIGURATION SETUP ── */
+/* ── LEG SETUP CONFIGURATION MATRICES ── */
 let legs  = [];
 let legId = 0;
 
@@ -944,7 +948,7 @@ function renderLegs(){
   });
 }
 
-/* ── RALLY STATE ENGINE ── */
+/* ── RALLY STATE PARAMETERS ── */
 let curIdx       = -1;
 let legRunning   = false;
 let legStartTs   = null;
@@ -958,6 +962,7 @@ function resetLegGPS(){
   gpsDistM=0; gpsFixN=0;
 }
 
+/* ── LAUNCH MECHANICS ── */
 function launch(){
   const valid=legs.filter(l=>calcSecs(l.distM,l.spdKmh)!=null);
   if(!valid.length){alert('Add at least one complete leg first.');return;}
@@ -974,6 +979,7 @@ function launch(){
   scheduleAutoStart(0);
 }
 
+/* ── AUTOSTART SEQUENCERS ── */
 function fmtCountdown(ms){
   if(ms<=0) return '00:00';
   const s=Math.floor(ms/1000),m=Math.floor(s/60),sec=s%60;
@@ -1017,6 +1023,7 @@ function abortAutoStart(){
   gel('stxt').textContent='STANDBY — LEG '+(curIdx+1)+'/'+legs.length;
 }
 
+/* ── LIVE DATA RENDERERS ── */
 function renderChips(){
   gel('chips').innerHTML=legs.map((leg,i)=>{
     const done=legResults[i]!=null,active=i===curIdx,running=active&&legRunning;
@@ -1085,41 +1092,18 @@ function updateControlsState() {
   }
 }
 
-/* ── REFACTORED STATE AND STYLE MATRIX ROUTER FOR THE HERO COUNTER ── */
 function setDelta(absSec,state,running){
-  let col = 'var(--border2)'; // Default Standby / Neutral state
-  
-  if(running){
-    // High-contrast color threshold evaluation matching user delta specifications
-    if (state === 'behind_major') {
-      col = 'var(--behind)'; // Greater than +1.0 second variance -> Strict Red
-    } else if (state === 'ahead_major') {
-      col = 'var(--ahead)';  // Greater than -1.0 second variance -> Strict Blue
-    } else {
-      col = 'var(--ok)';     // Safe tracking state zone (Within +/- 1.0s boundaries) -> Green
-    }
-  }
-
-  // Inject structural CSS color definitions down to the container variables
-  gel('delta').style.setProperty('--dc', col);
-  
-  // Format math boundary signs explicitly based on delta standing
-  gel('dsign').textContent = running ? (state.startsWith('behind') ? '+' : state.startsWith('ahead') ? '−' : '') : '';
-  gel('dint').textContent = Math.floor(absSec);
-  gel('ddec').textContent = '.' + Math.floor((absSec % 1) * 10);
-  
-  const labelMap = {
-    behind_major: 'LATE ▼ [CRITICAL]',
-    behind_minor: 'LATE ▼',
-    ahead_major:  'EARLY ▲ [CRITICAL]',
-    ahead_minor:  'EARLY ▲',
-    ontime:       'ON TIME ●',
-    neutral:      '—'
-  };
-  gel('dverd').textContent = running ? (labelMap[state] || '—') : '—';
+  const c={behind:'var(--behind)',ahead:'var(--ahead)',ontime:'var(--ok)',neutral:'var(--border2)'};
+  const col=c[state]||c.neutral;
+  gel('delta').style.setProperty('--dc',col);
+  gel('dsign').textContent=running?(state==='behind'?'+':state==='ahead'?'−':''):'';
+  gel('dint').textContent=Math.floor(absSec);
+  gel('ddec').textContent='.'+Math.floor((absSec%1)*10);
+  const v={behind:'LATE ▼',ahead:'EARLY ▲',ontime:'ON TIME ●',neutral:'—'};
+  gel('dverd').textContent=running?(v[state]||'—'):'—';
 }
 
-/* ── TIMING LOOP ── */
+/* ── TIMING EXECUTION LOOPS ── */
 function startLeg(){
   if(legRunning) return;
   legRunning=true; 
@@ -1140,78 +1124,54 @@ function startLeg(){
 
 function tick(){
   if(!legRunning) return;
-  const leg = legs[curIdx];
-  const tgtSecs = calcSecs(leg.distM,leg.spdKmh);
-  const tgtDistM = parseFloat(leg.distM);
-  const spdMs = parseFloat(leg.spdKmh)/3.6;
-  const elMs = performance.now()-legStartTs;
-  const elSec = elMs/1000;
-  const expDistM = spdMs*elSec;
+  const leg=legs[curIdx];
+  const tgtSecs=calcSecs(leg.distM,leg.spdKmh);
+  const tgtDistM=parseFloat(leg.distM);
+  const spdMs=parseFloat(leg.spdKmh)/3.6;
+  const elMs=performance.now()-legStartTs;
+  const elSec=elMs/1000;
+  const expDistM=spdMs*elSec;
 
-  let delta = 0, state = 'ontime', modeStr = 'TIME-BASED · ACQUIRING GPS…';
-  
-  if(gpsDistM > 5 && spdMs > 0){
-    const idealTime = gpsDistM / spdMs; 
-    delta = elSec - idealTime;
-    
-    // Evaluate cross-over points for strict 1.0s boundary colors
-    if (delta >= 1.0) {
-      state = 'behind_major';
-    } else if (delta > 0) {
-      state = 'behind_minor';
-    } else if (delta <= -1.0) {
-      state = 'ahead_major';
-    } else if (delta < 0) {
-      state = 'ahead_minor';
-    } else {
-      state = 'ontime';
-    }
-    
-    modeStr = (leg.linked && leg.atDistance ? 'GPS [@dist] · ' : 'GPS · ') + gpsFixN+' FIXES · ±'+(gpsAccM!=null?gpsAccM.toFixed(1):'?')+'m';
-  } else {
-    // Drop back to pure theoretical timeline delta tracking if GPS calculations aren't live
-    const timeDelta = elSec - tgtSecs;
-    if (timeDelta >= 1.0) state = 'behind_major';
-    else if (timeDelta > 0) state = 'behind_minor';
-    else if (timeDelta <= -1.0) state = 'ahead_major';
-    else if (timeDelta < 0) state = 'ahead_minor';
+  let delta=0,state='neutral',modeStr='TIME-BASED · ACQUIRING GPS…';
+  if(gpsDistM>5&&spdMs>0){
+    const idealTime=gpsDistM/spdMs; delta=elSec-idealTime;
+    state=Math.abs(delta)<0.3?'ontime':delta>0?'behind':'ahead';
+    modeStr=(leg.linked && leg.atDistance ? 'GPS [@dist] · ' : 'GPS · ') + gpsFixN+' FIXES · ±'+(gpsAccM!=null?gpsAccM.toFixed(1):'?')+'m';
   }
-  
-  gel('dmode').textContent = modeStr; 
-  setDelta(Math.abs(delta), state, true);
+  gel('dmode').textContent=modeStr; setDelta(Math.abs(delta),state,true);
 
-  const gi = legGroupInfo(curIdx);
-  if(gi.size > 1){
+  const gi=legGroupInfo(curIdx);
+  if(gi.size>1){
     const currentSubProgressFraction = (gi.posInGroup / gi.size) + ((clamp(gpsDistM/tgtDistM, 0, 1)) / gi.size);
-    gel('subleg-fill').style.width = (currentSubProgressFraction*100).toFixed(1)+'%';
-    gel('subleg-info').textContent = 'Sub-leg '+(gi.posInGroup+1)+'/'+gi.size+' running';
+    gel('subleg-fill').style.width=(currentSubProgressFraction*100).toFixed(1)+'%';
+    gel('subleg-info').textContent='Sub-leg '+(gi.posInGroup+1)+'/'+gi.size+' running';
   }
 
-  const gpsKmh = gpsSpeedMs!=null?gpsSpeedMs*3.6:null;
-  const tgtKmh = parseFloat(leg.spdKmh);
+  const gpsKmh=gpsSpeedMs!=null?gpsSpeedMs*3.6:null;
+  const tgtKmh=parseFloat(leg.spdKmh);
   if(gpsKmh!=null){
-    const diff = gpsKmh-tgtKmh;
-    const spEl = gel('spd'); spEl.textContent = gpsKmh.toFixed(1);
-    spEl.className = 'sn' + (Math.abs(diff)<1 ? ' good' : diff>0 ? ' over' : '');
-    const df = gel('spd-diff');
+    const diff=gpsKmh-tgtKmh;
+    const spEl=gel('spd'); spEl.textContent=gpsKmh.toFixed(1);
+    spEl.className='sn'+(Math.abs(diff)<1?' good':diff>0?' over':'');
+    const df=gel('spd-diff');
     if(Math.abs(diff)<0.5){df.textContent='ON TARGET';df.className='sdiff z';}
     else if(diff>0){df.textContent='+'+diff.toFixed(1);df.className='sdiff p';}
     else{df.textContent=diff.toFixed(1);df.className='sdiff n';}
   } else { gel('spd').textContent='—'; gel('spd-diff').textContent=''; }
 
-  gel('t-el').textContent = fmtEl(elMs);
-  gel('t-rem').textContent = fmtMMSS(Math.max(0,tgtSecs-elSec));
-  gel('d-gps').textContent = km3(gpsDistM);
-  gel('d-exp').textContent = km3(Math.min(expDistM,tgtDistM));
+  gel('t-el').textContent=fmtEl(elMs);
+  gel('t-rem').textContent=fmtMMSS(Math.max(0,tgtSecs-elSec));
+  gel('d-gps').textContent=km3(gpsDistM);
+  gel('d-exp').textContent=km3(Math.min(expDistM,tgtDistM));
   
-  const gpsPct = clamp((gpsDistM/tgtDistM)*100,0,100);
-  const expPct = clamp((expDistM/tgtDistM)*100,0,100);
-  gel('pfill').style.width = gpsPct.toFixed(2)+'%';
-  gel('pexp').style.left = expPct.toFixed(2)+'%';
-  gel('ppct').textContent = gpsPct.toFixed(1)+'%';
-  if(gpsAccM!=null) gel('spd-acc').textContent = gpsAccM.toFixed(1);
+  const gpsPct=clamp((gpsDistM/tgtDistM)*100,0,100);
+  const expPct=clamp((expDistM/tgtDistM)*100,0,100);
+  gel('pfill').style.width=gpsPct.toFixed(2)+'%';
+  gel('pexp').style.left=expPct.toFixed(2)+'%';
+  gel('ppct').textContent=gpsPct.toFixed(1)+'%';
+  if(gpsAccM!=null) gel('spd-acc').textContent=gpsAccM.toFixed(1);
   
-  if(elSec > tgtSecs*4) stopLeg();
+  if(elSec>tgtSecs*4) stopLeg();
 }
 
 function stopLeg(){
@@ -1365,6 +1325,7 @@ function exportLegs(){
   const blob = new Blob([json], { type: 'application/json' });
   const url  = URL.createObjectURL(blob);
 
+  // Precision localized file string formatter down to the second
   const now = new Date();
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -1382,7 +1343,7 @@ function exportLegs(){
   document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(url), 5000);
 
-  showFeedback('✓ Exported ' + legs.length + ' stage configuration(s) to JSON.', false, true);
+  showFeedback('✓ Exported ' + legs.length + ' leg' + (legs.length>1?'s':'') + ' to JSON.', false, true);
 }
 
 function importLegs(input){
@@ -1399,7 +1360,7 @@ function importLegs(input){
       } else if(raw && Array.isArray(raw.legs)){
         imported = raw.legs;
       } else {
-        throw new Error('Unrecognised format — expected array or wrapper.');
+        throw new Error('Unrecognised format — expected array or root wrapper.');
       }
 
       if(!imported.length) throw new Error('File contains no data.');
@@ -1440,7 +1401,7 @@ function importLegs(input){
   reader.readAsText(file);
 }
 
-/* ── SEED INITIALIZATION ── */
+/* ── MATRIX SEED INITIALIZATION ── */
 legId=1;
 legs.push({id:1,name:'Stage 1',distM:'',spdKmh:'',linked:false,atDistance:false,autoStart:false,autoHH:'',autoMM:'',autoOffset:'0'});
 renderLegs();
