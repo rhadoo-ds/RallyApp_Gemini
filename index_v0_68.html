@@ -327,27 +327,30 @@ body{
 #live-run{display:none;flex-direction:column;gap:9px;}
 /* ── STAGE INFO BAR (replaces STANDBY) ── */
 .sbar{
-  overflow-x:auto;
-  overflow-y:visible;
+  overflow-x:auto;overflow-y:visible;
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
   border-bottom:1px solid var(--border);
   padding-bottom:8px;
   display:flex;
-  flex-direction:row;
-  align-items:center;
-  gap:10px;
-  white-space:nowrap;
+  flex-direction:column;
+  gap:3px;
 }
 .sbar::-webkit-scrollbar{display:none;}
-.sbar-sep{width:1px;height:20px;background:var(--border);flex-shrink:0;}
+.sbar-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  white-space:nowrap;
+  min-width:max-content;
+}
 .sbar-badge{
   font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
   flex-shrink:0;padding:2px 6px;border-radius:3px;
 }
 .sbar-badge.cur{color:var(--bg);background:#fff;}
 .sbar-badge.nxt{color:var(--txt3);background:var(--surf3);border:1px solid var(--border);}
-.sbar-text{font-size:19.8px;font-weight:700;letter-spacing:-.3px;flex-shrink:0;}
+.sbar-text{font-size:22px;font-weight:700;letter-spacing:-.3px;}
 .sbar-text.cur{color:#fff;}
 .sbar-text.nxt{color:var(--txt3);}
 .sdot{width:8px;height:8px;border-radius:50%;background:var(--txt3);flex-shrink:0;transition:all .3s;}
@@ -446,8 +449,8 @@ body{
 .delta::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--dc,var(--border2));transition:background .4s;}
 [data-theme="dark"] .delta::before{box-shadow:0 0 12px var(--dc,transparent);}
 .delta-in{padding:14px 14px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;}
-.dlbl{font-size:22px;font-weight:700;letter-spacing:0px;color:#fff;margin-bottom:1px;text-align:center;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
-.dlbl-sub{font-size:13px;font-weight:600;color:#fff;opacity:.85;text-align:center;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;letter-spacing:.1px;}
+.dlbl{font-size:22px;font-weight:700;letter-spacing:0px;color:#fff;margin-bottom:2px;text-align:center;line-height:1.2;}
+.dlbl-sub{font-size:13px;font-weight:500;color:#fff;opacity:.8;text-align:center;margin-bottom:6px;letter-spacing:.2px;}
 /* Two-column hero: seconds left, delta-dist right */
 .dhero-cols{display:flex;align-items:center;justify-content:center;gap:0;width:100%;}
 .dhero-sec{display:flex;flex-direction:column;align-items:center;flex:1;}
@@ -647,7 +650,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.69</div>
+    <div class="app-version">RegRally THOR v0.68</div>
   </div>
 </div>
 
@@ -693,12 +696,16 @@ body{
 
   <div id="live-run">
     <div class="sbar" id="sbar">
-      <div class="sdot" id="sdot"></div>
-      <span class="sbar-badge cur">NOW</span>
-      <span class="sbar-text cur" id="sbar-cur">— SELECT LEG —</span>
-      <div class="sbar-sep"></div>
-      <span class="sbar-badge nxt">NEXT</span>
-      <span class="sbar-text nxt" id="sbar-nxt">—</span>
+      <div class="sbar-row">
+        <div class="sdot" id="sdot"></div>
+        <span class="sbar-badge cur">NOW</span>
+        <span class="sbar-text cur" id="sbar-cur">— SELECT LEG —</span>
+      </div>
+      <div class="sbar-row">
+        <div style="width:8px;flex-shrink:0"></div>
+        <span class="sbar-badge nxt">NEXT</span>
+        <span class="sbar-text nxt" id="sbar-nxt">—</span>
+      </div>
     </div>
 
     <div class="autostart-banner" id="as-banner" style="display:none">
@@ -1202,8 +1209,14 @@ function loadLeg(idx){
   gel('live-leg-target-dist-hero').textContent=distKm;
   gel('live-leg-remaining-dist').textContent=distKm;
   setDelta(0,'neutral',false);
+  
+  gel('t-tgt').textContent=fmtMMSSdd(secs);
+  gel('t-el').textContent='0:00.0';
+  gel('t-rem').textContent=fmtMMSS(secs);
+  gel('d-tot').textContent=distKm;
+  gel('d-gps').textContent='0.000'; gel('d-exp').textContent='0.000'; gel('d-delta-distance').textContent='0.000';
 
-  // Telem table row 1 — target values from leg definition
+  // Telem table row 1 — target values
   gel('tt-tgt-time').innerHTML = `<small>Target Time</small>${fmtMMSSdd(secs)}`;
   gel('tt-tgt-dist').innerHTML = `<small>Target Dist</small>${distKm} km`;
   gel('tt-tgt-spd').innerHTML  = `<small>Target Speed</small>${parseFloat(leg.spdKmh).toFixed(1)} km/h`;
@@ -1286,8 +1299,13 @@ function tick(){
   setDelta(Math.abs(delta),state,true);
 
   const deltaDistanceKm = (gpsDistM - expDistM) / 1000;
+  const dDElement = gel('d-delta-distance');
+  dDElement.textContent = (deltaDistanceKm > 0 ? '+' : '') + deltaDistanceKm.toFixed(3);
+  if(Math.abs(deltaDistanceKm) < 0.005) { dDElement.className = 'dv gn'; }
+  else if(deltaDistanceKm > 0) { dDElement.className = 'dv bl'; }
+  else { dDElement.className = 'dv rd'; }
 
-  // Hero delta distance display
+  // Hero delta distance display (70% size, same colour logic)
   const ddistEl = gel('ddist-hero');
   const ddistSign = gel('ddist-sign');
   ddistEl.textContent = Math.abs(deltaDistanceKm).toFixed(3);
@@ -1304,6 +1322,11 @@ function tick(){
   } else {
     gel('spd').textContent='—'; gel('spd-diff').textContent='';
   }
+  gel('t-el').textContent=fmtEl(elSec*1000);
+  gel('t-rem').textContent=fmtMMSS(Math.max(0,tgtSecs-elSec));
+  gel('d-gps').textContent=km3(gpsDistM);
+  gel('d-exp').textContent=km3(Math.min(expDistM,tgtDistM));
+
   // Real avg speed
   const realAvgKmh = elSec > 0 ? (gpsDistM / 1000) / (elSec / 3600) : 0;
   const tgtKmh = parseFloat(leg.spdKmh);

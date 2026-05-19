@@ -325,31 +325,7 @@ body{
 
 /* ── LIVE RUN ── */
 #live-run{display:none;flex-direction:column;gap:9px;}
-/* ── STAGE INFO BAR (replaces STANDBY) ── */
-.sbar{
-  overflow-x:auto;
-  overflow-y:visible;
-  -webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
-  border-bottom:1px solid var(--border);
-  padding-bottom:8px;
-  display:flex;
-  flex-direction:row;
-  align-items:center;
-  gap:10px;
-  white-space:nowrap;
-}
-.sbar::-webkit-scrollbar{display:none;}
-.sbar-sep{width:1px;height:20px;background:var(--border);flex-shrink:0;}
-.sbar-badge{
-  font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-  flex-shrink:0;padding:2px 6px;border-radius:3px;
-}
-.sbar-badge.cur{color:var(--bg);background:#fff;}
-.sbar-badge.nxt{color:var(--txt3);background:var(--surf3);border:1px solid var(--border);}
-.sbar-text{font-size:19.8px;font-weight:700;letter-spacing:-.3px;flex-shrink:0;}
-.sbar-text.cur{color:#fff;}
-.sbar-text.nxt{color:var(--txt3);}
+.sbar{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:8px;}
 .sdot{width:8px;height:8px;border-radius:50%;background:var(--txt3);flex-shrink:0;transition:all .3s;}
 .sdot.run{background:var(--ok);box-shadow:0 0 8px var(--ok);animation:blink 1s infinite;}
 .sdot.done{background:var(--behind);}
@@ -411,7 +387,7 @@ body{
 .chips{display:flex;gap:5px;flex-wrap:wrap;}
 .chip{font-size:11px;font-weight:600;padding:5px 10px;border-radius:4px;border:1px solid var(--border);background:var(--surf2);color:var(--txt3);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:4px;}
 .chip.cur{border-color:var(--ahead);color:var(--ahead);background:color-mix(in srgb,var(--ahead) 8%,transparent);}
-.chip.done{border-color:var(--ok);color:var(--bg);background:var(--ok);font-weight:700;}
+.chip.done{border-color:var(--ok);color:var(--ok);background:color-mix(in srgb,var(--ok) 6%,transparent);}
 .chip.auto{border-color:var(--warn);color:var(--warn);animation:blink .6s infinite;}
 /* Linked chips share a warm teal/green group colour */
 .chip.is-linked{border-color:color-mix(in srgb,var(--ok) 55%,var(--ahead));color:color-mix(in srgb,var(--ok) 55%,var(--ahead));background:color-mix(in srgb,var(--ok) 7%,transparent);border-left:3px solid var(--ok);}
@@ -419,10 +395,9 @@ body{
 .chip-icons{font-size:9px;opacity:.85;letter-spacing:1px;}
 
 /* Speed panel */
-.spanel{background:var(--surf);border:1px solid var(--border);border-radius:6px;padding:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px;}
+.spanel{background:var(--surf);border:1px solid var(--border);border-radius:6px;padding:12px;display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;}
 .sb{display:flex;flex-direction:column;align-items:center;gap:2px;}
 .slb{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;margin-bottom:2px;}
-.spd-row{display:flex;align-items:baseline;gap:5px;justify-content:center;}
 .sn{font-family:'DM Mono',monospace;font-size:38px;font-weight:500;line-height:1;letter-spacing:-1px;color:var(--ahead);transition:color .3s;}
 [data-theme="dark"] .sn{text-shadow:0 0 16px color-mix(in srgb,var(--ahead) 40%,transparent);}
 .sn.over{color:var(--behind);}.sn.good{color:var(--ok);}.sn.near{color:var(--warn);}
@@ -438,7 +413,7 @@ body{
 .tgt-block .slb{color:var(--warn);}
 .st{font-family:'DM Mono',monospace;font-size:28px;font-weight:700;color:var(--warn);letter-spacing:-1px;line-height:1;}
 [data-theme="dark"] .st{text-shadow:0 0 12px color-mix(in srgb,var(--warn) 40%,transparent);}
-.sdiff{font-family:'DM Mono',monospace;font-size:28.5px;font-weight:600;line-height:1;letter-spacing:-1px;}
+.sdiff{font-size:11px;font-weight:600;margin-top:2px;}
 .sdiff.p{color:var(--behind);}.sdiff.n{color:var(--ahead);}.sdiff.z{color:var(--ok);}
 
 /* Hero display layout panel colors styling matrix */
@@ -446,8 +421,7 @@ body{
 .delta::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--dc,var(--border2));transition:background .4s;}
 [data-theme="dark"] .delta::before{box-shadow:0 0 12px var(--dc,transparent);}
 .delta-in{padding:14px 14px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;}
-.dlbl{font-size:22px;font-weight:700;letter-spacing:0px;color:#fff;margin-bottom:1px;text-align:center;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
-.dlbl-sub{font-size:13px;font-weight:600;color:#fff;opacity:.85;text-align:center;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;letter-spacing:.1px;}
+.dlbl{font-size:11px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;margin-bottom:6px;text-align:center;}
 /* Two-column hero: seconds left, delta-dist right */
 .dhero-cols{display:flex;align-items:center;justify-content:center;gap:0;width:100%;}
 .dhero-sec{display:flex;flex-direction:column;align-items:center;flex:1;}
@@ -490,32 +464,7 @@ body{
 .subleg-fill{height:100%;background:var(--ok);transition:width .4s linear;}
 .subleg-info{font-size:10px;font-weight:600;color:var(--txt3);margin-top:3px;}
 
-/* ── 3×3 TELEMETRY TABLE ── */
-.telem-table{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
-.telem-table td{
-  font-family:'DM Mono',monospace;
-  text-align:center;
-  padding:9px 6px;
-  font-size:16px;
-  font-weight:600;
-  border:1px solid var(--border);
-  line-height:1.2;
-}
-.telem-table td small{
-  display:block;
-  font-family:'DM Sans',sans-serif;
-  font-size:9px;
-  font-weight:600;
-  letter-spacing:1px;
-  text-transform:uppercase;
-  opacity:.7;
-  margin-bottom:2px;
-}
-/* Row 1 — white target values */
-.telem-table tr:nth-child(1) td{color:#fff;background:color-mix(in srgb,var(--txt3) 12%,transparent);}
-[data-theme="light"] .telem-table tr:nth-child(1) td{color:var(--txt);background:var(--surf2);}
-/* Row 3 — grey expected values */
-.telem-table tr:nth-child(3) td{color:var(--txt3);background:var(--surf2);}
+/* Timing / Distance rows */
 .trow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
 .tc{background:var(--surf);padding:10px 8px;text-align:center;}
 .tl{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;margin-bottom:4px;}
@@ -573,28 +522,10 @@ body{
 }
 .rtable td:first-child{font-family:'DM Sans',sans-serif;font-weight:700;font-size:18px;text-align:left;}
 .rtable tr:last-child td{border-bottom:none;}
-/* Base colour classes — vivid, visible on both themes */
-.cbeh{
-  color:#fff !important;
-  font-weight:700;
-  background:var(--behind) !important;
-  text-shadow:0 1px 3px rgba(0,0,0,.4);
-}
-.cahd{
-  color:#fff !important;
-  font-weight:700;
-  background:var(--ahead) !important;
-  text-shadow:0 1px 3px rgba(0,0,0,.3);
-}
-.cok{
-  color:#fff !important;
-  font-weight:700;
-  background:var(--ok) !important;
-  text-shadow:0 1px 3px rgba(0,0,0,.3);
-}
-[data-theme="light"] .cbeh{color:#fff !important;background:var(--behind) !important;}
-[data-theme="light"] .cahd{color:#fff !important;background:var(--ahead) !important;}
-[data-theme="light"] .cok{color:#fff !important;background:var(--ok) !important;}
+/* Base colour classes */
+.cbeh{color:var(--behind);font-weight:700;background:color-mix(in srgb,var(--behind) 8%,transparent);}
+.cahd{color:var(--ahead);font-weight:700;background:color-mix(in srgb,var(--ahead) 8%,transparent);}
+.cok{color:var(--ok);font-weight:700;background:color-mix(in srgb,var(--ok) 7%,transparent);}
 .sub-badge{font-size:14px;font-weight:700;color:var(--ok);background:color-mix(in srgb,var(--ok) 10%,transparent);border:1px solid color-mix(in srgb,var(--ok) 25%,transparent);padding:2px 6px;border-radius:3px;margin-left:4px;vertical-align:middle;}
 .totcard{background:var(--surf);border:1px solid var(--border2);border-radius:6px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
 .totlbl{font-size:19.8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
@@ -647,7 +578,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.69</div>
+    <div class="app-version">RegRally THOR v0.67</div>
   </div>
 </div>
 
@@ -692,14 +623,7 @@ body{
   </div>
 
   <div id="live-run">
-    <div class="sbar" id="sbar">
-      <div class="sdot" id="sdot"></div>
-      <span class="sbar-badge cur">NOW</span>
-      <span class="sbar-text cur" id="sbar-cur">— SELECT LEG —</span>
-      <div class="sbar-sep"></div>
-      <span class="sbar-badge nxt">NEXT</span>
-      <span class="sbar-text nxt" id="sbar-nxt">—</span>
-    </div>
+    <div class="sbar"><div class="sdot" id="sdot"></div><span id="stxt">STANDBY</span></div>
 
     <div class="autostart-banner" id="as-banner" style="display:none">
       <div class="ab-label" id="as-label">⏱ Auto-start in</div>
@@ -717,25 +641,13 @@ body{
     <button class="btn-gps-run" id="btn-gps-run" onclick="doRequestGPS()" style="display:none">📍 Grant GPS Permission</button>
 
     <div class="spanel">
-      <div class="sb">
-        <div class="slb">GPS Speed</div>
-        <div class="spd-row">
-          <div class="sn" id="spd">—</div>
-          <div class="sdiff" id="spd-diff"></div>
-        </div>
-        <div class="su">km/h</div>
-      </div>
+      <div class="sb"><div class="slb">GPS Speed</div><div class="sn" id="spd">—</div><div class="su">km/h</div></div>
       <div class="sdiv"></div>
       <div class="tgt-block">
         <div class="slb">Target Speed</div>
         <div class="st" id="spd-tgt">—</div>
         <div class="su">km/h</div>
-      </div>
-      <div class="sdiv"></div>
-      <div class="tgt-block" id="avg-spd-block" style="background:color-mix(in srgb,var(--ok) 10%,transparent);border-color:color-mix(in srgb,var(--ok) 35%,transparent);">
-        <div class="slb" style="color:var(--ok)">Avg Speed</div>
-        <div class="st" id="spd-avg" style="color:var(--ok)">—</div>
-        <div class="su">km/h</div>
+        <div class="sdiff" id="spd-diff"></div>
       </div>
       <div class="sdiv"></div>
       <div class="tgt-block" style="background:color-mix(in srgb,var(--ahead) 10%,transparent); border-color:color-mix(in srgb,var(--ahead) 35%,transparent);">
@@ -743,18 +655,11 @@ body{
         <div class="st" id="live-leg-target-dist-hero" style="color:var(--ahead)">—</div>
         <div class="su" style="color:var(--txt3)">km</div>
       </div>
-      <div class="sdiv"></div>
-      <div class="tgt-block" style="background:color-mix(in srgb,var(--warn) 8%,transparent); border-color:color-mix(in srgb,var(--warn) 35%,transparent);">
-        <div class="slb" style="color:var(--warn)">Remaining</div>
-        <div class="st" id="live-leg-remaining-dist" style="color:var(--warn)">—</div>
-        <div class="su" style="color:var(--txt3)">km</div>
-      </div>
     </div>
 
     <div class="delta" id="delta" style="--dc:var(--border2)">
       <div class="delta-in">
         <div class="dlbl" id="dlbl">— SELECT LEG —</div>
-        <div class="dlbl-sub" id="dlbl-sub"></div>
         <div class="dverd-text neutral" id="live-text-warning-label">WAITING</div>
         <div class="dhero-cols">
           <div class="dhero-sec">
@@ -774,25 +679,18 @@ body{
       </div>
     </div>
 
-    <table class="telem-table" id="telem-table">
-      <tbody>
-        <tr><!-- Row 1: Target values — white -->
-          <td id="tt-tgt-time"><small>Target Time</small>—</td>
-          <td id="tt-tgt-dist"><small>Target Dist</small>—</td>
-          <td id="tt-tgt-spd"><small>Target Speed</small>—</td>
-        </tr>
-        <tr><!-- Row 2: Actual values — colour logic -->
-          <td id="tt-act-time"><small>Elapsed</small>0:00.0</td>
-          <td id="tt-act-dist"><small>GPS Dist</small>0.000</td>
-          <td id="tt-act-spd"><small>Avg Speed</small>—</td>
-        </tr>
-        <tr><!-- Row 3: Expected values — grey -->
-          <td id="tt-exp-time"><small>Exp Time</small>—</td>
-          <td id="tt-exp-dist"><small>Exp Dist</small>0.000</td>
-          <td id="tt-exp-spd"><small>Exp Speed</small>—</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="trow">
+      <div class="tc"><div class="tl">Elapsed</div><div class="tv hi" id="t-el">0:00.0</div><div class="tunit">mm:ss.t</div></div>
+      <div class="tc"><div class="tl">Target</div><div class="tv" id="t-tgt">—</div><div class="tunit">mm:ss.ss</div></div>
+      <div class="tc"><div class="tl">Remaining</div><div class="tv" id="t-rem">—</div><div class="tunit">mm:ss</div></div>
+    </div>
+
+    <div class="drow2">
+      <div class="dc2"><div class="dl">GPS Dist</div><div class="dv bl" id="d-gps">0.000</div><div class="du">km covered</div></div>
+      <div class="dc2"><div class="dl">Expected</div><div class="dv" id="d-exp">0.000</div><div class="du">km at pace</div></div>
+      <div class="dc2"><div class="dl">Delta Distance</div><div class="dv yl" id="d-delta-distance">0.000</div><div class="du">km error delta</div></div>
+      <div class="dc2"><div class="dl">Stage Distance</div><div class="dv gn" id="d-tot" style="font-family:'DM Mono',monospace; font-size:17px;">—</div><div class="du">km config total</div></div>
+    </div>
 
     <div>
       <div class="pwrap"><div class="pfill" id="pfill" style="width:0%"></div><div class="pexp" id="pexp" style="left:0%"></div></div>
@@ -1133,7 +1031,7 @@ function launch(){
   legResults=new Array(legs.length).fill(null);
   showTab('live');
   gel('live-idle').style.display='none'; gel('live-run').style.display='flex';
-  renderChips(); loadLeg(0); updateSbar();
+  renderChips(); loadLeg(0);
   scheduleAutoStart(0);
 }
 
@@ -1161,60 +1059,31 @@ function renderChips(){
   gel('chips').innerHTML=legs.map((leg,i)=>{
     const isLinked = leg.linked && i>0;
     const icons = (isLinked?'🔗':'')+(leg.autoStart?'⏰':'')+(leg.atDistance?'🏁':'');
-    const isDone = !!legResults[i];
     const classes = [
       'chip',
       i===curIdx?'cur':'',
-      isDone?'done':'',
+      legResults[i]?'done':'',
       isLinked?'is-linked':'',
     ].filter(Boolean).join(' ');
     return`<div class="${classes}" onclick="jumpLeg(${i})">${leg.name||'Leg '+(i+1)}${icons?`<span class="chip-icons">${icons}</span>`:''}</div>`;
   }).join('');
 }
-
-function legSummaryText(leg){
-  if(!leg) return '—';
-  const km = leg.distM ? (parseFloat(leg.distM)/1000).toFixed(2)+'km' : '';
-  const spd = leg.spdKmh ? '@'+parseFloat(leg.spdKmh).toFixed(1)+'km/h' : '';
-  const s = calcSecs(leg.distM, leg.spdKmh);
-  const t = s != null ? 'in '+fmtMMSS(s) : '';
-  return [leg.name||'Unnamed', km, spd, t].filter(Boolean).join('  ');
-}
-
-function updateSbar(){
-  const cur = legs[curIdx];
-  const nxt = legs[curIdx+1] || null;
-  gel('sbar-cur').textContent = cur ? legSummaryText(cur) : '— SELECT LEG —';
-  gel('sbar-nxt').textContent = nxt ? legSummaryText(nxt) : 'No more stages';
-}
-function jumpLeg(idx){ if(legRunning||asTimer)return; curIdx=idx; renderChips(); loadLeg(idx); updateSbar(); }
+function jumpLeg(idx){ if(legRunning||asTimer)return; curIdx=idx; renderChips(); loadLeg(idx); }
 
 function loadLeg(idx){
   const leg=legs[idx];
   const secs=calcSecs(leg.distM,leg.spdKmh);
   const distKm=(parseFloat(leg.distM)/1000).toFixed(3);
   
-  gel('dlbl').textContent = (leg.name||'Leg '+(idx+1));
-  const km = (parseFloat(leg.distM)/1000).toFixed(2)+'km';
-  const spd = '@'+parseFloat(leg.spdKmh).toFixed(1)+'km/h';
-  const t = secs != null ? 'in '+fmtMMSS(secs) : '';
-  gel('dlbl-sub').textContent = [km, spd, t].filter(Boolean).join('  ');
+  gel('dlbl').textContent=(leg.name||'Leg '+(idx+1)).toUpperCase();
   gel('live-leg-target-dist-hero').textContent=distKm;
-  gel('live-leg-remaining-dist').textContent=distKm;
   setDelta(0,'neutral',false);
-
-  // Telem table row 1 — target values from leg definition
-  gel('tt-tgt-time').innerHTML = `<small>Target Time</small>${fmtMMSSdd(secs)}`;
-  gel('tt-tgt-dist').innerHTML = `<small>Target Dist</small>${distKm} km`;
-  gel('tt-tgt-spd').innerHTML  = `<small>Target Speed</small>${parseFloat(leg.spdKmh).toFixed(1)} km/h`;
-  // Row 2 reset
-  gel('tt-act-time').innerHTML = '<small>Elapsed</small>0:00.0'; gel('tt-act-time').style.cssText='';
-  gel('tt-act-dist').innerHTML = '<small>GPS Dist</small>0.000 km'; gel('tt-act-dist').style.cssText='';
-  gel('tt-act-spd').innerHTML  = '<small>Avg Speed</small>—'; gel('tt-act-spd').style.cssText='';
-  // Row 3 reset
-  gel('tt-exp-time').innerHTML = '<small>Exp Time</small>—';
-  gel('tt-exp-dist').innerHTML = '<small>Exp Dist</small>0.000 km';
-  gel('tt-exp-spd').innerHTML  = `<small>Exp Speed</small>${parseFloat(leg.spdKmh).toFixed(1)} km/h`;
+  
+  gel('t-tgt').textContent=fmtMMSSdd(secs);
+  gel('t-el').textContent='0:00.0';
+  gel('t-rem').textContent=fmtMMSS(secs);
+  gel('d-tot').textContent=distKm;
+  gel('d-gps').textContent='0.000'; gel('d-exp').textContent='0.000'; gel('d-delta-distance').textContent='0.000';
   gel('ddist-hero').textContent='0.000'; gel('ddist-hero').style.color=''; gel('ddist-sign').textContent=''; gel('ddist-sign').style.color='';
   gel('spd-tgt').textContent=parseFloat(leg.spdKmh).toFixed(2);
   gel('spd-diff').textContent=''; gel('spd-diff').className='sdiff';
@@ -1254,7 +1123,7 @@ function startLeg(){
   legRunning=true; legStartTs=performance.now();
   gpsDistM=0; gpsFixN=0; totalAccPointsThisStage=0;
   gel('live-legs-collapsible').classList.remove('open');
-  renderChips(); updateControlsState(); updateSbar();
+  renderChips(); updateControlsState();
   clearInterval(legTimer); legTimer=setInterval(tick,100);
 }
 
@@ -1286,8 +1155,13 @@ function tick(){
   setDelta(Math.abs(delta),state,true);
 
   const deltaDistanceKm = (gpsDistM - expDistM) / 1000;
+  const dDElement = gel('d-delta-distance');
+  dDElement.textContent = (deltaDistanceKm > 0 ? '+' : '') + deltaDistanceKm.toFixed(3);
+  if(Math.abs(deltaDistanceKm) < 0.005) { dDElement.className = 'dv gn'; }
+  else if(deltaDistanceKm > 0) { dDElement.className = 'dv bl'; }
+  else { dDElement.className = 'dv rd'; }
 
-  // Hero delta distance display
+  // Hero delta distance display (70% size, same colour logic)
   const ddistEl = gel('ddist-hero');
   const ddistSign = gel('ddist-sign');
   ddistEl.textContent = Math.abs(deltaDistanceKm).toFixed(3);
@@ -1304,45 +1178,10 @@ function tick(){
   } else {
     gel('spd').textContent='—'; gel('spd-diff').textContent='';
   }
-  // Real avg speed
-  const realAvgKmh = elSec > 0 ? (gpsDistM / 1000) / (elSec / 3600) : 0;
-  const tgtKmh = parseFloat(leg.spdKmh);
-  const spdAvgEl = gel('spd-avg');
-  const avgDiff = realAvgKmh - tgtKmh;
-  spdAvgEl.textContent = realAvgKmh.toFixed(1);
-  if(elSec < 2){ spdAvgEl.style.color = 'var(--ok)'; }
-  else if(Math.abs(avgDiff)<0.5){ spdAvgEl.style.color = 'var(--ok)'; }
-  else { spdAvgEl.style.color = avgDiff > 0 ? 'var(--ahead)' : 'var(--behind)'; }
-  const avgBlock = gel('avg-spd-block');
-  if(Math.abs(avgDiff)<0.5){ avgBlock.style.borderColor = 'color-mix(in srgb,var(--ok) 35%,transparent)'; }
-  else { avgBlock.style.borderColor = avgDiff>0 ? 'color-mix(in srgb,var(--ahead) 35%,transparent)' : 'color-mix(in srgb,var(--behind) 35%,transparent)'; }
-
-  // Remaining distance
-  const remainKm = Math.max(0, (tgtDistM - gpsDistM) / 1000);
-  gel('live-leg-remaining-dist').textContent = remainKm.toFixed(3);
-
-  // ── Telem table Row 2 (actual — colour logic) ──
-  const timeDiff = elSec - tgtSecs;
-  const actTimeC = Math.abs(timeDiff)<0.3?'var(--ok)':timeDiff>0?'var(--behind)':'var(--ahead)';
-  gel('tt-act-time').innerHTML = `<small>Elapsed</small>${fmtEl(elSec*1000)}`;
-  gel('tt-act-time').style.cssText = `color:#fff;font-weight:700;background:${actTimeC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
-
-  const distDiff = gpsDistM - expDistM;
-  const actDistC = Math.abs(distDiff)<5?'var(--ok)':distDiff>0?'var(--ahead)':'var(--behind)';
-  gel('tt-act-dist').innerHTML = `<small>GPS Dist</small>${km3(gpsDistM)} km`;
-  gel('tt-act-dist').style.cssText = `color:#fff;font-weight:700;background:${actDistC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
-
-  const actSpdDiff = realAvgKmh - tgtKmh;
-  const actSpdC = elSec<2?'var(--txt3)':Math.abs(actSpdDiff)<0.5?'var(--ok)':actSpdDiff>0?'var(--ahead)':'var(--behind)';
-  gel('tt-act-spd').innerHTML = `<small>Avg Speed</small>${realAvgKmh.toFixed(1)} km/h`;
-  gel('tt-act-spd').style.cssText = elSec<2?'':`color:#fff;font-weight:700;background:${actSpdC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
-
-  // ── Telem table Row 3 (expected — grey, no colour) ──
-  gel('tt-exp-time').innerHTML  = `<small>Exp Time</small>${fmtMMSSdd(Math.min(elSec,tgtSecs))}`;
-  gel('tt-exp-dist').innerHTML  = `<small>Exp Dist</small>${km3(Math.min(expDistM,tgtDistM))} km`;
-  const expSpdKmh = elSec > 0 ? (Math.min(expDistM,tgtDistM)/1000)/(elSec/3600) : tgtKmh;
-  gel('tt-exp-spd').innerHTML   = `<small>Exp Speed</small>${expSpdKmh.toFixed(1)} km/h`;
-
+  gel('t-el').textContent=fmtEl(elSec*1000);
+  gel('t-rem').textContent=fmtMMSS(Math.max(0,tgtSecs-elSec));
+  gel('d-gps').textContent=km3(gpsDistM);
+  gel('d-exp').textContent=km3(Math.min(expDistM,tgtDistM));
   const pctVal = tgtDistM > 0 ? Math.min((gpsDistM/tgtDistM)*100, 100) : 0;
   gel('pfill').style.width = pctVal.toFixed(1)+'%';
   gel('pexp').style.left=((expDistM/tgtDistM)*100).toFixed(1)+'%';
@@ -1375,16 +1214,16 @@ function stopLeg(){
 
   const nextIdx=curIdx+1;
   if(nextIdx<legs.length&&legs[nextIdx].linked){
-    autoAdvance=true; curIdx=nextIdx; loadLeg(curIdx); renderChips(); updateSbar(); startLeg();
+    autoAdvance=true; curIdx=nextIdx; loadLeg(curIdx); renderChips(); startLeg();
   } else {
-    updateControlsState(); renderChips(); updateSbar();
-    if(nextIdx<legs.length){ curIdx=nextIdx; loadLeg(curIdx); renderChips(); updateSbar(); }
+    updateControlsState(); renderChips();
+    if(nextIdx<legs.length){ curIdx=nextIdx; loadLeg(curIdx); renderChips(); }
   }
 }
 
 function nextLeg(){
   if(legRunning) { stopLeg(); return; }
-  if(curIdx+1<legs.length){ curIdx++; loadLeg(curIdx); renderChips(); updateSbar(); }
+  if(curIdx+1<legs.length){ curIdx++; loadLeg(curIdx); renderChips(); }
 }
 
 function resetRally(){
