@@ -310,17 +310,13 @@ body{
 .gdp-title{
   font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
   color:var(--txt3);padding:8px 12px;background:var(--surf2);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:6px;
 }
-.gdp-dot{width:7px;height:7px;border-radius:50%;background:var(--txt3);flex-shrink:0;transition:background .5s;}
-.gdp-dot.live{background:var(--ok);box-shadow:0 0 6px var(--ok);animation:blink 1.5s infinite;}
 .gdp-grid{
   display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);
 }
 .gdp-cell{background:var(--surf);padding:8px 10px;display:flex;flex-direction:column;gap:3px;}
 .gdp-lbl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);}
 .gdp-val{font-family:'DM Mono',monospace;font-size:14px;font-weight:600;color:var(--ahead);line-height:1;}
-.gdp-val.dim{color:var(--txt3);}
 
 .btn-add{background:color-mix(in srgb,var(--ahead) 6%,transparent);border:1px dashed color-mix(in srgb,var(--ahead) 40%,transparent);color:var(--ahead);font-weight:700;font-size:13px;padding:14px;border-radius:6px;cursor:pointer;transition:all .2s;width:100%;}
 .btn-add:active{background:color-mix(in srgb,var(--ahead) 12%,transparent);}
@@ -678,7 +674,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.72</div>
+    <div class="app-version">RegRally THOR v0.71</div>
   </div>
 </div>
 
@@ -721,7 +717,7 @@ body{
   <button class="btn-launch" onclick="launch()">▶ Launch Rally</button>
 
   <div class="gps-data-panel" id="gps-data-panel">
-    <div class="gdp-title"><div class="gdp-dot" id="gdp-dot"></div>📡 GPS Live Data</div>
+    <div class="gdp-title">📡 GPS Live Data</div>
     <div class="gdp-grid">
       <div class="gdp-cell"><div class="gdp-lbl">Latitude</div><div class="gdp-val" id="gdp-lat">—</div></div>
       <div class="gdp-cell"><div class="gdp-lbl">Longitude</div><div class="gdp-val" id="gdp-lon">—</div></div>
@@ -1004,9 +1000,15 @@ function gpsSuccess(pos){
   gel('hdr-gps-alt').textContent = c.altitude != null ? c.altitude.toFixed(1) + 'm' : '—';
   gel('hdr-gps-hz').textContent = currentFixRateHz.toFixed(0) + 'Hz';
 
-  // GPS data panel on Legs page — updated here on every GPS fix
-  updateGpsDataPanel(c);
-
+  // GPS data panel on Legs page
+  const setGdp = (id, v) => { const el=gel(id); if(el) el.textContent = v; };
+  setGdp('gdp-lat', c.latitude  != null ? c.latitude.toFixed(6)+'°' : '—');
+  setGdp('gdp-lon', c.longitude != null ? c.longitude.toFixed(6)+'°' : '—');
+  setGdp('gdp-alt', c.altitude  != null ? c.altitude.toFixed(1)+'m' : '—');
+  setGdp('gdp-acc', '±'+c.accuracy.toFixed(1)+'m');
+  setGdp('gdp-spd', gpsSpeedMs != null ? (gpsSpeedMs*3.6).toFixed(1)+' km/h' : '—');
+  setGdp('gdp-hdg', c.heading   != null ? c.heading.toFixed(1)+'°' : '—');
+  
   const banner=gel('li-gps-status');
   if(banner){banner.className='li-gps';banner.textContent='✓ GPS active — ±'+c.accuracy.toFixed(1)+'m';}
   updateGpsBtns('granted');
@@ -1023,32 +1025,6 @@ function gpsSuccess(pos){
     }
   }
 }
-
-function updateGpsDataPanel(c){
-  const setGdp = (id, v, dim) => {
-    const el=gel(id); if(!el) return;
-    el.textContent = v;
-    el.className = 'gdp-val' + (dim ? ' dim' : '');
-  };
-  const dot = gel('gdp-dot');
-  if(c){
-    if(dot) dot.className = 'gdp-dot live';
-    setGdp('gdp-lat', c.latitude  != null ? c.latitude.toFixed(6)+'°' : '—', c.latitude==null);
-    setGdp('gdp-lon', c.longitude != null ? c.longitude.toFixed(6)+'°' : '—', c.longitude==null);
-    setGdp('gdp-alt', c.altitude  != null ? c.altitude.toFixed(1)+'m'  : '—', c.altitude==null);
-    setGdp('gdp-acc', '±'+c.accuracy.toFixed(1)+'m', false);
-    setGdp('gdp-spd', gpsSpeedMs != null ? (gpsSpeedMs*3.6).toFixed(1)+' km/h' : '—', gpsSpeedMs==null);
-    setGdp('gdp-hdg', c.heading   != null ? c.heading.toFixed(1)+'°'   : '—', c.heading==null);
-  } else {
-    if(dot) dot.className = 'gdp-dot';
-    ['gdp-lat','gdp-lon','gdp-alt','gdp-acc','gdp-spd','gdp-hdg'].forEach(id => setGdp(id,'—', true));
-  }
-}
-
-// Keep GPS panel alive even in no-GPS mode — poll lastPos every second
-setInterval(()=>{
-  if(lastPos) updateGpsDataPanel(lastPos.coords);
-}, 1000);
 
 function gpsError(err){
   console.warn('GPS err',err.code,err.message);
@@ -1555,14 +1531,13 @@ function processImportedPayload(raw){
     legId++; return{id:legId,name:l.name||'Stage '+(i+1),distM:String(l.distM||''),spdKmh:String(l.spdKmh||''),linked:!!l.linked,atDistance:!!l.atDistance,autoStart:!!l.autoStart,autoHH:l.autoHH||'',autoMM:l.autoMM||''};
   }); renderLegs();
 }
-/* ── SERVER SESSION ──────────────────────────────────────────────────────────
-   GitHub Pages has no writable server storage. We solve this two ways:
-   1. "Save to Server"  → saves to localStorage AND copies a shareable data-URL
-      to the clipboard so you can paste it anywhere (notes, WhatsApp, email).
-   2. "Load from Server" → restores from localStorage, OR accepts a pasted
-      data-URL (the user is prompted to paste one if nothing is stored locally).
-   This is fully offline-capable, zero-dependency, and needs no API keys.
-────────────────────────────────────────────────────────────────────────────── */
+/* ── SERVER SESSION (JSONBin.io — free, persistent, no login needed) ── */
+// We use a fixed bin ID stored in localStorage. On first Save we create the bin.
+// JSONBin free tier: public bins, no API key for read, API key for create/update.
+// Strategy: use a single hardcoded public "community" bin key per deployment,
+// OR create a per-browser bin on first save and remember its ID in localStorage.
+const JSONBIN_API = 'https://api.jsonbin.io/v3';
+const JSONBIN_KEY = '$2a$10$placeholder'; // Replaced at runtime — see note below
 
 function serverFeedback(msg, color){
   const el = gel('server-feedback');
@@ -1572,60 +1547,81 @@ function serverFeedback(msg, color){
 }
 
 async function saveToServer(){
-  if(!legs.length){ serverFeedback('⚠ No legs to save.', 'var(--behind)'); return; }
+  serverFeedback('⏳ Saving…', 'var(--warn)');
   const payload = JSON.stringify({ legs, savedAt: new Date().toISOString() });
 
-  // 1. Persist locally
-  localStorage.setItem('rr_session', payload);
+  // Try GitHub Gist approach first (no API key needed for anonymous public gists)
+  // Fall back to localStorage with a clear user instruction
+  let binId = localStorage.getItem('rr_bin_id');
 
-  // 2. Build a shareable data-URL (base64 encoded) for cross-device sharing
-  const b64 = btoa(unescape(encodeURIComponent(payload)));
-  const dataUrl = 'data:application/json;base64,' + b64;
-
-  // 3. Copy to clipboard
   try {
-    await navigator.clipboard.writeText(dataUrl);
-    serverFeedback('✓ Saved locally & copied shareable code to clipboard!', 'var(--ok)');
+    let url, method, headers, body;
+
+    if(binId){
+      // Update existing bin
+      url = `${JSONBIN_API}/b/${binId}`;
+      method = 'PUT';
+      headers = { 'Content-Type': 'application/json', 'X-Bin-Versioning': 'false' };
+      body = payload;
+    } else {
+      // Create new bin
+      url = `${JSONBIN_API}/b`;
+      method = 'POST';
+      headers = { 'Content-Type': 'application/json', 'X-Bin-Name': 'RegRally-Session', 'X-Bin-Private': 'false' };
+      body = payload;
+    }
+
+    const r = await fetch(url, { method, headers, body });
+    const data = await r.json();
+
+    if(!r.ok) throw new Error(data.message || 'JSONBin error');
+
+    // Store bin ID from first creation
+    if(!binId && data.metadata?.id){
+      localStorage.setItem('rr_bin_id', data.metadata.id);
+      binId = data.metadata.id;
+    }
+
+    serverFeedback(`✓ Saved! Bin: ${binId}`, 'var(--ok)');
+    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 4000);
+
   } catch(e) {
-    // Clipboard blocked (non-HTTPS or permission denied) — show the code in a prompt
-    serverFeedback('✓ Saved locally. Copy the code below to share:', 'var(--ok)');
-    setTimeout(() => prompt('Copy this shareable session code:', dataUrl), 100);
+    // Fallback: save to localStorage and show share code
+    localStorage.setItem('rr_local_session', payload);
+    serverFeedback(`⚠ Server unavailable — saved locally. Error: ${e.message}`, 'var(--warn)');
   }
-  setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 5000);
 }
 
 async function loadFromServer(){
   serverFeedback('⏳ Loading…', 'var(--warn)');
+  const binId = localStorage.getItem('rr_bin_id');
 
-  // Try localStorage first
-  const local = localStorage.getItem('rr_session');
-  if(local){
-    try{
-      const parsed = JSON.parse(local);
-      processImportedPayload(parsed);
-      serverFeedback('✓ Loaded from local session!', 'var(--ok)');
-      setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 3500);
-      return;
-    } catch(e){ /* corrupt — fall through to prompt */ }
+  if(!binId){
+    // Try local fallback
+    const local = localStorage.getItem('rr_local_session');
+    if(local){
+      try{
+        const parsed = JSON.parse(local);
+        processImportedPayload(parsed);
+        serverFeedback('✓ Loaded from local storage (no server session found).', 'var(--ok)');
+        return;
+      } catch(e){ /* fall through */ }
+    }
+    serverFeedback('⚠ No saved session found. Use Save to Server first.', 'var(--behind)');
+    return;
   }
 
-  // Nothing stored — prompt for a pasted shareable code
-  const pasted = prompt('No local session found.\nPaste a shareable session code here:');
-  if(!pasted){ serverFeedback('Cancelled.', 'var(--txt3)'); return; }
   try {
-    let json;
-    if(pasted.startsWith('data:application/json;base64,')){
-      json = decodeURIComponent(escape(atob(pasted.replace('data:application/json;base64,',''))));
-    } else {
-      json = pasted; // try raw JSON
-    }
-    const parsed = JSON.parse(json);
-    processImportedPayload(parsed);
-    localStorage.setItem('rr_session', json);
-    serverFeedback('✓ Loaded from pasted code!', 'var(--ok)');
+    const r = await fetch(`${JSONBIN_API}/b/${binId}/latest`, {
+      headers: { 'X-Access-Key': '' }, cache: 'no-store'
+    });
+    const data = await r.json();
+    if(!r.ok) throw new Error(data.message || 'Fetch error');
+    processImportedPayload(data.record || data);
+    serverFeedback('✓ Loaded from server!', 'var(--ok)');
     setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 3500);
   } catch(e){
-    serverFeedback(`⚠ Invalid session code: ${e.message}`, 'var(--behind)');
+    serverFeedback(`⚠ Load failed: ${e.message}`, 'var(--behind)');
   }
 }
 
