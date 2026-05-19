@@ -302,22 +302,6 @@ body{
 .btn-url-fetch:active { background: var(--border); color: var(--txt); }
 .io-feedback { font-size: 13px; font-weight: 600; padding: 8px 10px; border-radius: 5px; background: var(--surf2); border: 1px solid var(--border); }
 
-/* GPS Live Data panel on Legs page */
-.gps-data-panel{
-  margin-top:12px;
-  background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;
-}
-.gdp-title{
-  font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-  color:var(--txt3);padding:8px 12px;background:var(--surf2);border-bottom:1px solid var(--border);
-}
-.gdp-grid{
-  display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);
-}
-.gdp-cell{background:var(--surf);padding:8px 10px;display:flex;flex-direction:column;gap:3px;}
-.gdp-lbl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);}
-.gdp-val{font-family:'DM Mono',monospace;font-size:14px;font-weight:600;color:var(--ahead);line-height:1;}
-
 .btn-add{background:color-mix(in srgb,var(--ahead) 6%,transparent);border:1px dashed color-mix(in srgb,var(--ahead) 40%,transparent);color:var(--ahead);font-weight:700;font-size:13px;padding:14px;border-radius:6px;cursor:pointer;transition:all .2s;width:100%;}
 .btn-add:active{background:color-mix(in srgb,var(--ahead) 12%,transparent);}
 .btn-launch{background:var(--ahead);color:#fff;font-weight:700;font-size:15px;padding:16px;border:none;border-radius:8px;cursor:pointer;width:100%;transition:all .2s;}
@@ -352,15 +336,10 @@ body{
   display:flex;
   flex-direction:row;
   align-items:center;
-  justify-content:space-between;
-  gap:8px;
+  gap:10px;
   white-space:nowrap;
-  min-width:0;
 }
 .sbar::-webkit-scrollbar{display:none;}
-.sbar-half{display:flex;align-items:center;gap:6px;flex-shrink:0;overflow:hidden;}
-.sbar-half.left{justify-content:flex-start;}
-.sbar-half.right{justify-content:flex-end;}
 .sbar-sep{width:1px;height:20px;background:var(--border);flex-shrink:0;}
 .sbar-badge{
   font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
@@ -368,7 +347,7 @@ body{
 }
 .sbar-badge.cur{color:var(--bg);background:#fff;}
 .sbar-badge.nxt{color:var(--txt3);background:var(--surf3);border:1px solid var(--border);}
-.sbar-text{font-size:19.8px;font-weight:700;letter-spacing:-.3px;flex-shrink:0;letter-spacing:.3em;}
+.sbar-text{font-size:19.8px;font-weight:700;letter-spacing:-.3px;flex-shrink:0;}
 .sbar-text.cur{color:#fff;}
 .sbar-text.nxt{color:var(--txt3);}
 .sdot{width:8px;height:8px;border-radius:50%;background:var(--txt3);flex-shrink:0;transition:all .3s;}
@@ -433,7 +412,6 @@ body{
 .chip{font-size:11px;font-weight:600;padding:5px 10px;border-radius:4px;border:1px solid var(--border);background:var(--surf2);color:var(--txt3);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:4px;}
 .chip.cur{border-color:var(--ahead);color:var(--ahead);background:color-mix(in srgb,var(--ahead) 8%,transparent);}
 .chip.done{border-color:var(--ok);color:var(--bg);background:var(--ok);font-weight:700;}
-.chip.done.is-linked{border-color:var(--ok);color:var(--bg);background:var(--ok);border-left:3px solid color-mix(in srgb,var(--ok) 70%,#fff);}
 .chip.auto{border-color:var(--warn);color:var(--warn);animation:blink .6s infinite;}
 /* Linked chips share a warm teal/green group colour */
 .chip.is-linked{border-color:color-mix(in srgb,var(--ok) 55%,var(--ahead));color:color-mix(in srgb,var(--ok) 55%,var(--ahead));background:color-mix(in srgb,var(--ok) 7%,transparent);border-left:3px solid var(--ok);}
@@ -441,32 +419,27 @@ body{
 .chip-icons{font-size:9px;opacity:.85;letter-spacing:1px;}
 
 /* Speed panel */
-.spanel{background:var(--surf);border:1px solid var(--border);border-radius:6px;padding:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;width:100%;box-sizing:border-box;}
-.sb{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;}
-.slb{font-size:12px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;margin-bottom:2px;}
-.spd-row{display:flex;align-items:baseline;gap:8px;justify-content:center;}
-.sn{font-family:'DM Mono',monospace;font-size:45.6px;font-weight:500;line-height:1;letter-spacing:-1px;color:var(--ahead);transition:color .3s;}
+.spanel{background:var(--surf);border:1px solid var(--border);border-radius:6px;padding:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px;}
+.sb{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.slb{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;margin-bottom:2px;}
+.spd-row{display:flex;align-items:baseline;gap:5px;justify-content:center;}
+.sn{font-family:'DM Mono',monospace;font-size:38px;font-weight:500;line-height:1;letter-spacing:-1px;color:var(--ahead);transition:color .3s;}
 [data-theme="dark"] .sn{text-shadow:0 0 16px color-mix(in srgb,var(--ahead) 40%,transparent);}
 .sn.over{color:var(--behind);}.sn.good{color:var(--ok);}.sn.near{color:var(--warn);}
-.su{font-size:12px;font-weight:600;color:var(--txt3);}
-.sdiv{width:1px;background:var(--border);height:52px;margin:0 4px;flex-shrink:0;}
+.su{font-size:10px;font-weight:600;color:var(--txt3);}
+.sdiv{width:1px;background:var(--border);height:44px;margin:0 8px;}
 /* Target speed block */
 .tgt-block{
-  display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
   background:color-mix(in srgb,var(--warn) 10%,transparent);
   border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);
   border-radius:5px;padding:6px 10px;margin:0 2px;
 }
 .tgt-block .slb{color:var(--warn);}
-.st{font-family:'DM Mono',monospace;font-size:33.6px;font-weight:700;color:var(--warn);letter-spacing:-1px;line-height:1;}
+.st{font-family:'DM Mono',monospace;font-size:28px;font-weight:700;color:var(--warn);letter-spacing:-1px;line-height:1;}
 [data-theme="dark"] .st{text-shadow:0 0 12px color-mix(in srgb,var(--warn) 40%,transparent);}
-/* sdiff: in [brackets], reversed colour (red=slower, blue=faster) */
-.sdiff{font-family:'DM Mono',monospace;font-size:34.2px;font-weight:600;line-height:1;letter-spacing:-1px;}
-/* p = positive diff = faster than target = AHEAD = blue */
-.sdiff.p{color:var(--ahead);}
-/* n = negative diff = slower than target = BEHIND = red */
-.sdiff.n{color:var(--behind);}
-.sdiff.z{color:var(--ok);}
+.sdiff{font-family:'DM Mono',monospace;font-size:28.5px;font-weight:600;line-height:1;letter-spacing:-1px;}
+.sdiff.p{color:var(--behind);}.sdiff.n{color:var(--ahead);}.sdiff.z{color:var(--ok);}
 
 /* Hero display layout panel colors styling matrix */
 .delta{background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;position:relative;}
@@ -523,7 +496,7 @@ body{
   font-family:'DM Mono',monospace;
   text-align:center;
   padding:9px 6px;
-  font-size:20.8px;
+  font-size:16px;
   font-weight:600;
   border:1px solid var(--border);
   line-height:1.2;
@@ -674,7 +647,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.71</div>
+    <div class="app-version">RegRally THOR v0.69</div>
   </div>
 </div>
 
@@ -697,36 +670,15 @@ body{
       <input type="file" id="import-file" accept=".json,application/json" style="display:none" onchange="importLegs(this)">
     </div>
     
-    <div class="io-url-row" style="display:none">
+    <div class="io-url-row">
       <input type="url" id="import-url" class="fi-url" placeholder="Paste Proton, Google Drive or JSON link..." autocomplete="off">
       <button class="btn-url-fetch" onclick="fetchLegsFromUrl()">🔗 Fetch URL</button>
-    </div>
-
-    <div class="io-section" style="margin-top:10px;">
-      <div class="io-title">☁ Server Session</div>
-      <div class="io-row">
-        <button class="btn-io btn-export" onclick="saveToServer()">☁ Save to Server</button>
-        <button class="btn-io btn-import" onclick="loadFromServer()">⬇ Load from Server</button>
-      </div>
-      <div id="server-feedback" class="io-feedback" style="display:none"></div>
     </div>
     <div id="io-feedback" class="io-feedback" style="display:none"></div>
   </div>
 
   <div style="height:2px"></div>
   <button class="btn-launch" onclick="launch()">▶ Launch Rally</button>
-
-  <div class="gps-data-panel" id="gps-data-panel">
-    <div class="gdp-title">📡 GPS Live Data</div>
-    <div class="gdp-grid">
-      <div class="gdp-cell"><div class="gdp-lbl">Latitude</div><div class="gdp-val" id="gdp-lat">—</div></div>
-      <div class="gdp-cell"><div class="gdp-lbl">Longitude</div><div class="gdp-val" id="gdp-lon">—</div></div>
-      <div class="gdp-cell"><div class="gdp-lbl">Altitude</div><div class="gdp-val" id="gdp-alt">—</div></div>
-      <div class="gdp-cell"><div class="gdp-lbl">Accuracy</div><div class="gdp-val" id="gdp-acc">—</div></div>
-      <div class="gdp-cell"><div class="gdp-lbl">Speed</div><div class="gdp-val" id="gdp-spd">—</div></div>
-      <div class="gdp-cell"><div class="gdp-lbl">Heading</div><div class="gdp-val" id="gdp-hdg">—</div></div>
-    </div>
-  </div>
 </div>
 
 <div class="pg" id="pg-live">
@@ -741,15 +693,12 @@ body{
 
   <div id="live-run">
     <div class="sbar" id="sbar">
-      <div class="sbar-half left">
-        <div class="sdot" id="sdot"></div>
-        <span class="sbar-badge cur">NOW</span>
-        <span class="sbar-text cur" id="sbar-cur">— SELECT LEG —</span>
-      </div>
-      <div class="sbar-half right">
-        <span class="sbar-badge nxt">NEXT</span>
-        <span class="sbar-text nxt" id="sbar-nxt">—</span>
-      </div>
+      <div class="sdot" id="sdot"></div>
+      <span class="sbar-badge cur">NOW</span>
+      <span class="sbar-text cur" id="sbar-cur">— SELECT LEG —</span>
+      <div class="sbar-sep"></div>
+      <span class="sbar-badge nxt">NEXT</span>
+      <span class="sbar-text nxt" id="sbar-nxt">—</span>
     </div>
 
     <div class="autostart-banner" id="as-banner" style="display:none">
@@ -999,15 +948,6 @@ function gpsSuccess(pos){
   gel('hdr-gps-spd').textContent = gpsSpeedMs != null ? (gpsSpeedMs * 3.6).toFixed(1) + 'km/h' : '0.0km/h';
   gel('hdr-gps-alt').textContent = c.altitude != null ? c.altitude.toFixed(1) + 'm' : '—';
   gel('hdr-gps-hz').textContent = currentFixRateHz.toFixed(0) + 'Hz';
-
-  // GPS data panel on Legs page
-  const setGdp = (id, v) => { const el=gel(id); if(el) el.textContent = v; };
-  setGdp('gdp-lat', c.latitude  != null ? c.latitude.toFixed(6)+'°' : '—');
-  setGdp('gdp-lon', c.longitude != null ? c.longitude.toFixed(6)+'°' : '—');
-  setGdp('gdp-alt', c.altitude  != null ? c.altitude.toFixed(1)+'m' : '—');
-  setGdp('gdp-acc', '±'+c.accuracy.toFixed(1)+'m');
-  setGdp('gdp-spd', gpsSpeedMs != null ? (gpsSpeedMs*3.6).toFixed(1)+' km/h' : '—');
-  setGdp('gdp-hdg', c.heading   != null ? c.heading.toFixed(1)+'°' : '—');
   
   const banner=gel('li-gps-status');
   if(banner){banner.className='li-gps';banner.textContent='✓ GPS active — ±'+c.accuracy.toFixed(1)+'m';}
@@ -1234,12 +1174,11 @@ function renderChips(){
 
 function legSummaryText(leg){
   if(!leg) return '—';
-  const km  = leg.distM   ? (parseFloat(leg.distM)/1000).toFixed(2)+'km' : '';
-  const spd = leg.spdKmh  ? '@'+parseFloat(leg.spdKmh).toFixed(1)+'km/h' : '';
-  const s   = calcSecs(leg.distM, leg.spdKmh);
-  const t   = s != null   ? 'in '+fmtMMSS(s) : '';
-  // Use 3 non-breaking wide spaces as separator for triple spacing
-  return [leg.name||'Unnamed', km, spd, t].filter(Boolean).join('\u2003\u2003\u2003');
+  const km = leg.distM ? (parseFloat(leg.distM)/1000).toFixed(2)+'km' : '';
+  const spd = leg.spdKmh ? '@'+parseFloat(leg.spdKmh).toFixed(1)+'km/h' : '';
+  const s = calcSecs(leg.distM, leg.spdKmh);
+  const t = s != null ? 'in '+fmtMMSS(s) : '';
+  return [leg.name||'Unnamed', km, spd, t].filter(Boolean).join('  ');
 }
 
 function updateSbar(){
@@ -1360,9 +1299,7 @@ function tick(){
   if(gpsKmh!=null){
     const diff=gpsKmh-parseFloat(leg.spdKmh);
     gel('spd').textContent=gpsKmh.toFixed(1);
-    // Brackets, reversed logic: faster (positive diff)=blue(ahead), slower(negative)=red(behind)
-    const sign = diff>0?'+':'';
-    gel('spd-diff').textContent='['+sign+diff.toFixed(1)+']';
+    gel('spd-diff').textContent=(diff>0?'+':'')+diff.toFixed(1);
     gel('spd-diff').className='sdiff '+(Math.abs(diff)<1?'z':diff>0?'p':'n');
   } else {
     gel('spd').textContent='—'; gel('spd-diff').textContent='';
@@ -1531,100 +1468,6 @@ function processImportedPayload(raw){
     legId++; return{id:legId,name:l.name||'Stage '+(i+1),distM:String(l.distM||''),spdKmh:String(l.spdKmh||''),linked:!!l.linked,atDistance:!!l.atDistance,autoStart:!!l.autoStart,autoHH:l.autoHH||'',autoMM:l.autoMM||''};
   }); renderLegs();
 }
-/* ── SERVER SESSION (JSONBin.io — free, persistent, no login needed) ── */
-// We use a fixed bin ID stored in localStorage. On first Save we create the bin.
-// JSONBin free tier: public bins, no API key for read, API key for create/update.
-// Strategy: use a single hardcoded public "community" bin key per deployment,
-// OR create a per-browser bin on first save and remember its ID in localStorage.
-const JSONBIN_API = 'https://api.jsonbin.io/v3';
-const JSONBIN_KEY = '$2a$10$placeholder'; // Replaced at runtime — see note below
-
-function serverFeedback(msg, color){
-  const el = gel('server-feedback');
-  el.style.display = 'block';
-  el.textContent = msg;
-  el.style.color = color || 'var(--warn)';
-}
-
-async function saveToServer(){
-  serverFeedback('⏳ Saving…', 'var(--warn)');
-  const payload = JSON.stringify({ legs, savedAt: new Date().toISOString() });
-
-  // Try GitHub Gist approach first (no API key needed for anonymous public gists)
-  // Fall back to localStorage with a clear user instruction
-  let binId = localStorage.getItem('rr_bin_id');
-
-  try {
-    let url, method, headers, body;
-
-    if(binId){
-      // Update existing bin
-      url = `${JSONBIN_API}/b/${binId}`;
-      method = 'PUT';
-      headers = { 'Content-Type': 'application/json', 'X-Bin-Versioning': 'false' };
-      body = payload;
-    } else {
-      // Create new bin
-      url = `${JSONBIN_API}/b`;
-      method = 'POST';
-      headers = { 'Content-Type': 'application/json', 'X-Bin-Name': 'RegRally-Session', 'X-Bin-Private': 'false' };
-      body = payload;
-    }
-
-    const r = await fetch(url, { method, headers, body });
-    const data = await r.json();
-
-    if(!r.ok) throw new Error(data.message || 'JSONBin error');
-
-    // Store bin ID from first creation
-    if(!binId && data.metadata?.id){
-      localStorage.setItem('rr_bin_id', data.metadata.id);
-      binId = data.metadata.id;
-    }
-
-    serverFeedback(`✓ Saved! Bin: ${binId}`, 'var(--ok)');
-    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 4000);
-
-  } catch(e) {
-    // Fallback: save to localStorage and show share code
-    localStorage.setItem('rr_local_session', payload);
-    serverFeedback(`⚠ Server unavailable — saved locally. Error: ${e.message}`, 'var(--warn)');
-  }
-}
-
-async function loadFromServer(){
-  serverFeedback('⏳ Loading…', 'var(--warn)');
-  const binId = localStorage.getItem('rr_bin_id');
-
-  if(!binId){
-    // Try local fallback
-    const local = localStorage.getItem('rr_local_session');
-    if(local){
-      try{
-        const parsed = JSON.parse(local);
-        processImportedPayload(parsed);
-        serverFeedback('✓ Loaded from local storage (no server session found).', 'var(--ok)');
-        return;
-      } catch(e){ /* fall through */ }
-    }
-    serverFeedback('⚠ No saved session found. Use Save to Server first.', 'var(--behind)');
-    return;
-  }
-
-  try {
-    const r = await fetch(`${JSONBIN_API}/b/${binId}/latest`, {
-      headers: { 'X-Access-Key': '' }, cache: 'no-store'
-    });
-    const data = await r.json();
-    if(!r.ok) throw new Error(data.message || 'Fetch error');
-    processImportedPayload(data.record || data);
-    serverFeedback('✓ Loaded from server!', 'var(--ok)');
-    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 3500);
-  } catch(e){
-    serverFeedback(`⚠ Load failed: ${e.message}`, 'var(--behind)');
-  }
-}
-
 async function fetchLegsFromUrl(){
   const url = gel('import-url').value.trim(); if(!url) return;
   const feedback = gel('io-feedback');
