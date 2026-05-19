@@ -522,10 +522,7 @@ body{
 }
 .rtable td:first-child{font-family:'DM Sans',sans-serif;font-weight:700;font-size:18px;text-align:left;}
 .rtable tr:last-child td{border-bottom:none;}
-/* Base colour classes */
-.cbeh{color:var(--behind);font-weight:700;background:color-mix(in srgb,var(--behind) 8%,transparent);}
-.cahd{color:var(--ahead);font-weight:700;background:color-mix(in srgb,var(--ahead) 8%,transparent);}
-.cok{color:var(--ok);font-weight:700;background:color-mix(in srgb,var(--ok) 7%,transparent);}
+.cbeh{color:var(--behind);}.cahd{color:var(--ahead);}.cok{color:var(--ok);}
 .sub-badge{font-size:14px;font-weight:700;color:var(--ok);background:color-mix(in srgb,var(--ok) 10%,transparent);border:1px solid color-mix(in srgb,var(--ok) 25%,transparent);padding:2px 6px;border-radius:3px;margin-left:4px;vertical-align:middle;}
 .totcard{background:var(--surf);border:1px solid var(--border2);border-radius:6px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
 .totlbl{font-size:19.8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
@@ -578,7 +575,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.67</div>
+    <div class="app-version">RegRally THOR v0.66</div>
   </div>
 </div>
 
@@ -1244,29 +1241,24 @@ function buildResults(){
     const actSpd = r.elSec > 0 ? ((r.gpsDistM / 1000) / (r.elSec / 3600)) : 0.0;
     const tgtSpd = parseFloat(leg.spdKmh);
 
-    // Actual Time: timeDiff>0 = took longer = LATE (red), timeDiff<0 = faster = EARLY (blue)
+    // Actual Time colouring: compare to target time
     const timeDiff = r.elSec - r.tgtSecs;
-    const actTimeCls = Math.abs(timeDiff)<0.3 ? 'cok' : timeDiff>0 ? 'cbeh' : 'cahd';
-    const actTimeSign = Math.abs(timeDiff)<0.3 ? '' : timeDiff>0 ? '+' : '−';
+    const actTimeCls = Math.abs(timeDiff)<0.3?'cok':timeDiff>0?'cbeh':'cahd';
 
-    // Actual Speed: faster than target = EARLY (blue), slower = LATE (red)
+    // Actual Speed colouring: compare to target speed
     const spdDiff = actSpd - tgtSpd;
-    const actSpdCls = Math.abs(spdDiff)<0.5 ? 'cok' : spdDiff>0 ? 'cahd' : 'cbeh';
-    const actSpdSign = Math.abs(spdDiff)<0.5 ? '' : spdDiff>0 ? '+' : '−';
-
-    // Delta Sec sign
-    const deltaCls = Math.abs(r.delta)<0.3 ? 'cok' : r.delta>0 ? 'cbeh' : 'cahd';
+    const actSpdCls = Math.abs(spdDiff)<0.5?'cok':spdDiff>0?'cahd':'cbeh';
 
     rows+=`<tr>
       <td>${leg.name||'Leg '+(i+1)}</td>
       <td>${fmtMMSSdd(r.tgtSecs)}</td>
-      <td class="${actTimeCls}">${actTimeSign}${fmtMMSSdd(r.elSec)}</td>
+      <td class="${actTimeCls}">${fmtMMSSdd(r.elSec)}</td>
       <td>${tgtSpd.toFixed(1)}</td>
-      <td class="${actSpdCls}">${actSpdSign}${actSpd.toFixed(1)}</td>
+      <td class="${actSpdCls}">${actSpd.toFixed(1)}</td>
       <td>${(parseFloat(leg.distM)/1000).toFixed(3)}</td>
       <td>${(r.gpsDistM/1000).toFixed(3)}</td>
       <td><b>±${r.avgAccuracy.toFixed(2)}m</b></td>
-      <td class="${deltaCls}">${sign}${Math.abs(r.delta).toFixed(3)}s</td>
+      <td class="${Math.abs(r.delta)<0.3?'cok':r.delta>0?'cbeh':'cahd'}">${sign}${Math.abs(r.delta).toFixed(3)}s</td>
     </tr>`;
   });
   const netSign = tot>0.005?'+':tot<-0.005?'−':'';

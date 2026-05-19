@@ -522,16 +522,11 @@ body{
 }
 .rtable td:first-child{font-family:'DM Sans',sans-serif;font-weight:700;font-size:18px;text-align:left;}
 .rtable tr:last-child td{border-bottom:none;}
-/* Base colour classes */
-.cbeh{color:var(--behind);font-weight:700;background:color-mix(in srgb,var(--behind) 8%,transparent);}
-.cahd{color:var(--ahead);font-weight:700;background:color-mix(in srgb,var(--ahead) 8%,transparent);}
-.cok{color:var(--ok);font-weight:700;background:color-mix(in srgb,var(--ok) 7%,transparent);}
+.cbeh{color:var(--behind);}.cahd{color:var(--ahead);}.cok{color:var(--ok);}
 .sub-badge{font-size:14px;font-weight:700;color:var(--ok);background:color-mix(in srgb,var(--ok) 10%,transparent);border:1px solid color-mix(in srgb,var(--ok) 25%,transparent);padding:2px 6px;border-radius:3px;margin-left:4px;vertical-align:middle;}
 .totcard{background:var(--surf);border:1px solid var(--border2);border-radius:6px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
-.totlbl{font-size:19.8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
-.totlbl-net{color:var(--ahead);}
-.totlbl-real{color:var(--behind);}
-.totval{font-family:'DM Mono',monospace;font-size:32px;font-weight:500;letter-spacing:-1px;line-height:1;}
+.totlbl{font-size:12px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;}
+.totval{font-family:'DM Mono',monospace;font-size:57.6px;font-weight:700;letter-spacing:-2px;line-height:1;}
 .totval-net{color:var(--ahead);}
 .totval-real{color:var(--behind);}
 </style>
@@ -578,7 +573,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.67</div>
+    <div class="app-version">RegRally THOR v0.65</div>
   </div>
 </div>
 
@@ -1244,29 +1239,24 @@ function buildResults(){
     const actSpd = r.elSec > 0 ? ((r.gpsDistM / 1000) / (r.elSec / 3600)) : 0.0;
     const tgtSpd = parseFloat(leg.spdKmh);
 
-    // Actual Time: timeDiff>0 = took longer = LATE (red), timeDiff<0 = faster = EARLY (blue)
+    // Actual Time colouring: compare to target time
     const timeDiff = r.elSec - r.tgtSecs;
-    const actTimeCls = Math.abs(timeDiff)<0.3 ? 'cok' : timeDiff>0 ? 'cbeh' : 'cahd';
-    const actTimeSign = Math.abs(timeDiff)<0.3 ? '' : timeDiff>0 ? '+' : '−';
+    const actTimeCls = Math.abs(timeDiff)<0.3?'cok':timeDiff>0?'cbeh':'cahd';
 
-    // Actual Speed: faster than target = EARLY (blue), slower = LATE (red)
+    // Actual Speed colouring: compare to target speed
     const spdDiff = actSpd - tgtSpd;
-    const actSpdCls = Math.abs(spdDiff)<0.5 ? 'cok' : spdDiff>0 ? 'cahd' : 'cbeh';
-    const actSpdSign = Math.abs(spdDiff)<0.5 ? '' : spdDiff>0 ? '+' : '−';
-
-    // Delta Sec sign
-    const deltaCls = Math.abs(r.delta)<0.3 ? 'cok' : r.delta>0 ? 'cbeh' : 'cahd';
+    const actSpdCls = Math.abs(spdDiff)<0.5?'cok':spdDiff>0?'cahd':'cbeh';
 
     rows+=`<tr>
       <td>${leg.name||'Leg '+(i+1)}</td>
       <td>${fmtMMSSdd(r.tgtSecs)}</td>
-      <td class="${actTimeCls}">${actTimeSign}${fmtMMSSdd(r.elSec)}</td>
+      <td class="${actTimeCls}">${fmtMMSSdd(r.elSec)}</td>
       <td>${tgtSpd.toFixed(1)}</td>
-      <td class="${actSpdCls}">${actSpdSign}${actSpd.toFixed(1)}</td>
+      <td class="${actSpdCls}">${actSpd.toFixed(1)}</td>
       <td>${(parseFloat(leg.distM)/1000).toFixed(3)}</td>
       <td>${(r.gpsDistM/1000).toFixed(3)}</td>
       <td><b>±${r.avgAccuracy.toFixed(2)}m</b></td>
-      <td class="${deltaCls}">${sign}${Math.abs(r.delta).toFixed(3)}s</td>
+      <td class="${Math.abs(r.delta)<0.3?'cok':r.delta>0?'cbeh':'cahd'}">${sign}${Math.abs(r.delta).toFixed(3)}s</td>
     </tr>`;
   });
   const netSign = tot>0.005?'+':tot<-0.005?'−':'';
@@ -1274,8 +1264,8 @@ function buildResults(){
     <thead><tr>
       <th>Stage</th><th>Target Time</th><th>Actual Time</th><th>Tgt Spd</th><th>Act Spd</th><th>Tgt Dist</th><th>GPS Dist</th><th>Avg Acc</th><th>Δ Sec</th>
     </tr></thead><tbody>${rows}</tbody></table>
-    <div class="totcard"><div class="totlbl totlbl-net">Net Penalty</div><div class="totval totval-net">${netSign}${Math.abs(tot).toFixed(3)}s</div></div>
-    <div class="totcard"><div class="totlbl totlbl-real">Real Penalty</div><div class="totval totval-real">${realPenalty.toFixed(3)}s</div></div>`;
+    <div class="totcard"><div class="totlbl">Net Penalty</div><div class="totval totval-net">${netSign}${Math.abs(tot).toFixed(3)}s</div></div>
+    <div class="totcard"><div class="totlbl">Real Penalty</div><div class="totval totval-real">${realPenalty.toFixed(3)}s</div></div>`;
 }
 
 /* ── DATA FILE SYNC IO ── */
@@ -1316,95 +1306,81 @@ async function fetchLegsFromUrl(){
 
   // ── URL normalisation ──────────────────────────────────────────────────────
   let finalUrl = url;
-  let isGDrive = false;
-  let gdriveFileId = null;
 
+  // Proton Drive
   if(url.includes('drive.proton.me/urls/')){
     finalUrl = url.replace('drive.proton.me/urls/', 'api.proton.me/drive/shares/') + '/api/v1/files/raw';
   }
 
+  // Google Drive — any share/view/edit link → direct download
   if(url.includes('drive.google.com/') || url.includes('docs.google.com/')){
+    let fileId = null;
     const m1 = url.match(/\/file\/d\/([a-zA-Z0-9_\-]+)/);
     const m2 = url.match(/[?&]id=([a-zA-Z0-9_\-]+)/);
-    if(m1) gdriveFileId = m1[1];
-    else if(m2) gdriveFileId = m2[1];
-    if(!gdriveFileId){
+    if(m1) fileId = m1[1];
+    else if(m2) fileId = m2[1];
+
+    if(fileId){
+      // drive.usercontent.google.com is the modern direct-download hostname.
+      // Adding confirm=t skips the virus-scan HTML interstitial.
+      finalUrl = `https://drive.usercontent.google.com/download?id=${fileId}&export=download&authuser=0&confirm=t`;
+    } else {
       feedback.textContent = '⚠ Could not extract a file ID from that Google Drive URL.';
-      feedback.style.color = 'var(--behind)'; return;
+      feedback.style.color = 'var(--behind)';
+      return;
     }
-    isGDrive = true;
-    finalUrl = `https://drive.google.com/uc?export=download&id=${gdriveFileId}`;
   }
 
-  feedback.textContent = `⏳ Resolving → ${finalUrl}`;
+  // Show the resolved URL so the user can verify / copy it
+  feedback.textContent = `⏳ Resolved → ${finalUrl}`;
 
-  // ── Helper: fetch via proxy, return text or null ───────────────────────────
-  const proxyFetch = async (targetUrl) => {
-    const proxies = [
-      `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`,
-      `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
-    ];
-    for(const p of proxies){
-      try{
-        const r = await fetch(p, {cache:'no-store'});
-        if(r.ok) return await r.text();
-      } catch(e){ /* try next */ }
+  // ── Proxy waterfall ────────────────────────────────────────────────────────
+  // corsproxy.io is tried first; allorigins is the fallback.
+  const proxies = [
+    `https://corsproxy.io/?${encodeURIComponent(finalUrl)}`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(finalUrl)}`,
+  ];
+
+  let txt = null;
+  let lastErr = '';
+
+  for(const proxyUrl of proxies){
+    try{
+      const resp = await fetch(proxyUrl, { cache: 'no-store' });
+      const body = await resp.text();
+      const trimmed = body.trim();
+      // Reject obvious HTML (Google interstitial, login page, etc.)
+      if(trimmed.startsWith('<') || /<!doctype/i.test(trimmed)){
+        lastErr = 'Proxy returned an HTML page instead of JSON (Google interstitial?).';
+        continue;
+      }
+      if(trimmed.length < 2){ lastErr = 'Empty response.'; continue; }
+      txt = trimmed;
+      break;
+    } catch(e){
+      lastErr = e.message;
     }
-    return null;
-  };
+  }
+
+  // ── Parse & import ─────────────────────────────────────────────────────────
+  if(!txt){
+    feedback.textContent = `⚠ ${lastErr || 'All proxies failed.'} — Resolved URL: ${finalUrl}`;
+    feedback.style.color = 'var(--behind)';
+    return;
+  }
 
   try{
-    let txt = await proxyFetch(finalUrl);
-    if(!txt) throw new Error('No response from proxies.');
-
-    // ── Google Drive: handle virus-scan confirmation page ──────────────────
-    // The confirmation page contains a form with an action URL that has the
-    // real download token. Extract it and follow it.
-    if(isGDrive && (txt.trim().startsWith('<') || /<!doctype/i.test(txt.trim()))){
-      feedback.textContent = '⏳ Following Google Drive confirmation…';
-
-      // Try to extract the confirm token from the page
-      // Pattern 1: confirm=XXXX in a link or form action
-      let confirmToken = null;
-      const reConfirm = /confirm=([0-9A-Za-z_\-]+)/g;
-      let m;
-      while((m = reConfirm.exec(txt)) !== null){
-        if(m[1] !== 't') { confirmToken = m[1]; break; }
-      }
-      // Pattern 2: /uc?export=download... in an anchor href
-      const reHref = /href="(\/uc\?[^"]*export=download[^"]*)"/.exec(txt);
-      if(reHref){
-        const confirmedUrl = 'https://drive.google.com' + reHref[1].replace(/&amp;/g,'&');
-        txt = await proxyFetch(confirmedUrl);
-      } else if(confirmToken){
-        const confirmedUrl = `https://drive.google.com/uc?export=download&confirm=${confirmToken}&id=${gdriveFileId}`;
-        txt = await proxyFetch(confirmedUrl);
-      } else {
-        // Last resort: try drive.usercontent.google.com
-        const usercontent = `https://drive.usercontent.google.com/download?id=${gdriveFileId}&export=download&confirm=t`;
-        txt = await proxyFetch(usercontent);
-      }
-      if(!txt) throw new Error('Could not retrieve file after following Drive confirmation page.');
-    }
-
-    // Final HTML check
-    if(!txt || txt.trim().startsWith('<') || /<!doctype/i.test(txt.trim())){
-      throw new Error('Got an HTML page instead of JSON — make sure the file is shared as "Anyone with the link" → Viewer.');
-    }
-
     // Strip Google Visualization wrapper if present
     if(txt.startsWith('/*O_o*/')){
       txt = txt.replace('/*O_o*/\ngoogle.visualization.Query.setResponse(','').replace(/\);$/,'');
     }
-
-    const parsed = JSON.parse(txt.trim());
+    const parsed = JSON.parse(txt);
     processImportedPayload(parsed);
     feedback.textContent = '✓ Imported successfully!';
     feedback.style.color = 'var(--ok)';
     setTimeout(() => { feedback.style.display = 'none'; }, 3500);
-
   } catch(e){
-    feedback.textContent = `⚠ ${e.message}`;
+    feedback.textContent = `⚠ JSON parse error: ${e.message}`;
     feedback.style.color = 'var(--behind)';
   }
 }
