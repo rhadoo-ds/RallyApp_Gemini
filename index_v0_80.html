@@ -652,16 +652,7 @@ body{
 .pexp-marker{position:absolute;top:0;bottom:0;width:2px;background:var(--warn);opacity:.9;transition:left .7s linear;}
 
 /* Cat & Mouse page: scroll normally — ONLY override display when active */
-#pg-cm.on {
-  display: flex;
-  flex-direction: column;
-  flex: 1;          /* fill the remaining height after #tabs */
-  overflow-y: auto;
-  overflow-x: hidden;
-  min-height: 0;    /* critical: allows flex child to shrink below content size */
-}
-/* All direct children must not force the container to grow beyond viewport */
-#pg-cm > * { flex-shrink: 0; }
+#pg-cm.on { display: flex; flex-direction: column; overflow-y: auto; }
 
 /* Scale down the giant hero numbers on small screens so sections don't overlap */
 @media (max-height: 700px) {
@@ -722,7 +713,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.81</div>
+    <div class="app-version">RegRally THOR v0.80</div>
   </div>
 </div>
 
@@ -1201,16 +1192,13 @@ function gpsSuccess(pos){
   gpsSpeedMs = (c.speed!=null&&c.speed>=0)?c.speed:null;
   
   accumulatedFixesThisSec++;
-  if(lastPos){
+  if(legRunning && lastPos){
     const d = haversine(lastPos.coords.latitude,lastPos.coords.longitude,c.latitude,c.longitude);
-    if(d>=0&&d<200){
-      // Always feed Cat & Mouse (recording or lap running)
+    if(d>=0&&d<200){ 
+      gpsDistM += d;
       cmOnGps(d);
-      if(legRunning){
-        gpsDistM += d;
-        gpsFixN++;
-        totalAccPointsThisStage += c.accuracy;
-      }
+      gpsFixN++; 
+      totalAccPointsThisStage += c.accuracy;
     }
   }
   
@@ -1717,12 +1705,9 @@ function cmTick(){
   if(!cmRunning) return;
   const elSec   = (performance.now()-cmLapStart)/1000;
   const expDist = (cmLapDistM/cmTargetSec)*elSec;  // expected dist at this time
-  const expTime = cmLapDist > 5
-    ? cmLapDist/(cmLapDistM/cmTargetSec)   // GPS: expected time to reach current dist
-    : elSec;                                // no GPS: use raw elapsed
   const delta   = cmLapDist > 5
-    ? elSec - expTime                      // GPS-based: +late, -early
-    : elSec - cmTargetSec;                 // time-only: counts up from -target to 0 and beyond
+    ? elSec - (cmLapDist/(cmLapDistM/cmTargetSec))  // GPS-based
+    : Math.max(0, elSec - cmTargetSec);             // time-only
   const state   = Math.abs(delta)<0.3?'ontime':delta>0?'behind':'ahead';
 
   cmSetDelta(Math.abs(delta), state, true);
@@ -1740,7 +1725,7 @@ function cmTick(){
   gel('cm-pexp').style.left   = Math.min((expDist/cmLapDistM)*100,100).toFixed(1)+'%';
   gel('cm-ppct').textContent  = pct.toFixed(1)+'%';
 
-  // Telem row 2 — actual
+  // Telem row 2
   const timeDiff = elSec - cmTargetSec;
   const actTC = Math.abs(timeDiff)<0.3?'var(--ok)':timeDiff>0?'var(--behind)':'var(--ahead)';
   gel('cm-tt-act-time').innerHTML = `<small>Elapsed</small>${fmtEl(elSec*1000)}`;
@@ -1758,7 +1743,7 @@ function cmTick(){
   gel('cm-tt-act-spd').innerHTML = `<small>Lap Avg Spd</small>${avgSpd.toFixed(1)} km/h`;
   gel('cm-tt-act-spd').style.cssText = elSec<2?'': `color:#fff;font-weight:700;background:${actSC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
 
-  // Telem row 3 — expected
+  // Telem row 3
   gel('cm-tt-exp-time').innerHTML = `<small>Exp Time</small>${fmtMMSSdd(Math.min(elSec,cmTargetSec))}`;
   gel('cm-tt-exp-dist').innerHTML = `<small>Exp Dist</small>${(Math.min(expDist,cmLapDistM)/1000).toFixed(3)} km`;
   const expSpd = elSec>0?(Math.min(expDist,cmLapDistM)/1000)/(elSec/3600):tgtSpd;
