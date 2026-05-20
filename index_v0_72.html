@@ -301,13 +301,6 @@ body{
 }
 .btn-url-fetch:active { background: var(--border); color: var(--txt); }
 .io-feedback { font-size: 13px; font-weight: 600; padding: 8px 10px; border-radius: 5px; background: var(--surf2); border: 1px solid var(--border); }
-.server-setup { display:flex; flex-direction:column; gap:6px; padding:10px; background:var(--surf2); border-radius:5px; border:1px solid var(--border); margin-top:6px; }
-.server-setup-row { display:flex; flex-direction:column; gap:4px; }
-.server-lbl { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--txt3); }
-.server-key-input { font-family:'DM Mono',monospace; font-size:13px; padding:8px 10px; background:var(--bg); border:1px solid var(--border2); border-radius:4px; color:var(--txt); outline:none; width:100%; box-sizing:border-box; }
-.server-key-input:focus { border-color:var(--ahead); }
-.server-bin-row { font-family:'DM Mono',monospace; font-size:11px; color:var(--txt3); padding:4px 2px; }
-.server-hint { font-size:11px; color:var(--txt3); line-height:1.5; padding:4px 2px; border-top:1px solid var(--border); padding-top:8px; }
 
 /* GPS Live Data panel on Legs page */
 .gps-data-panel{
@@ -641,34 +634,6 @@ body{
 .totval{font-family:'DM Mono',monospace;font-size:32px;font-weight:500;letter-spacing:-1px;line-height:1;}
 .totval-net{color:var(--ahead);}
 .totval-real{color:var(--behind);}
-/* ── CAT & MOUSE ── */
-.cm-config{background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;padding:10px;}
-.cm-config-info{font-family:'DM Mono',monospace;font-size:13px;color:var(--txt3);padding:8px 4px;text-align:center;border-top:1px solid var(--border);margin-top:8px;padding-top:10px;}
-
-/* Progress bar inside Cat & Mouse delta panel */
-.pbar{position:relative;height:8px;background:var(--surf2);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
-.pbar-wrap{width:100%;margin-top:4px;}
-.pbar-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--txt3);margin-top:3px;font-weight:500;}
-.pexp-marker{position:absolute;top:0;bottom:0;width:2px;background:var(--warn);opacity:.9;transition:left .7s linear;}
-
-/* Cat & Mouse page: scroll normally — ONLY override display when active */
-#pg-cm.on { display: flex; flex-direction: column; overflow-y: auto; }
-
-/* Scale down the giant hero numbers on small screens so sections don't overlap */
-@media (max-height: 700px) {
-  .dint { font-size: 48px !important; }
-  .ddec { font-size: 28px !important; }
-  .dsign { font-size: 26px !important; }
-  .ddist-val { font-size: 34px !important; }
-  .ddist-sign { font-size: 18px !important; }
-  .dhero-div { height: 46px !important; }
-  .delta-in { padding: 10px 10px 8px !important; gap: 1px !important; }
-}
-@media (max-height: 580px) {
-  .dint { font-size: 36px !important; }
-  .ddec { font-size: 22px !important; }
-  .ddist-val { font-size: 26px !important; }
-}
 </style>
 </head>
 <body>
@@ -713,7 +678,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.80</div>
+    <div class="app-version">RegRally THOR v0.72</div>
   </div>
 </div>
 
@@ -721,7 +686,6 @@ body{
   <button class="tb on" id="tab-legs" onclick="showTab('legs')">⚙ Legs</button>
   <button class="tb"    id="tab-live" onclick="showTab('live')">▶ Live</button>
   <button class="tb"    id="tab-res"  onclick="showTab('res')">≡ Results</button>
-  <button class="tb"    id="tab-cm"   onclick="showTab('cm')">🐱🐭 Cat &amp; Mouse</button>
 </div>
 
 <div class="pg on" id="pg-legs">
@@ -743,17 +707,12 @@ body{
     </div>
 
     <div class="io-section" style="margin-top:10px;">
-      <div class="io-title">💾 Quick Save / Load</div>
-      <div class="server-setup">
-        <div class="server-hint">Save keeps your legs on <b>this device</b>. To move to another device, use <b>Copy</b> then <b>Paste</b> on the other device.</div>
+      <div class="io-title">☁ Server Session</div>
+      <div class="io-row">
+        <button class="btn-io btn-export" onclick="saveToServer()">☁ Save to Server</button>
+        <button class="btn-io btn-import" onclick="loadFromServer()">⬇ Load from Server</button>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
-        <button class="btn-io btn-export" onclick="saveToServer()">💾 Save</button>
-        <button class="btn-io btn-import" onclick="loadFromServer()">↩ Load</button>
-        <button class="btn-io btn-export" onclick="copyToClipboard()" style="background:color-mix(in srgb,var(--warn) 10%,transparent);border-color:color-mix(in srgb,var(--warn) 40%,transparent);color:var(--warn);">📋 Copy to Clipboard</button>
-        <button class="btn-io btn-import" onclick="pasteFromClipboard()" style="background:color-mix(in srgb,var(--warn) 10%,transparent);border-color:color-mix(in srgb,var(--warn) 40%,transparent);color:var(--warn);">📥 Paste &amp; Load</button>
-      </div>
-      <div id="server-feedback" class="io-feedback" style="display:none;margin-top:8px;"></div>
+      <div id="server-feedback" class="io-feedback" style="display:none"></div>
     </div>
     <div id="io-feedback" class="io-feedback" style="display:none"></div>
   </div>
@@ -911,105 +870,6 @@ body{
   <div id="res-content"><div class="empty-msg">No completed legs yet</div></div>
 </div>
 
-<div class="pg" id="pg-cm">
-  <div class="sec-lbl">🐱🐭 Cat &amp; Mouse — Lap Timer</div>
-
-  <!-- Config -->
-  <div class="cm-config" id="cm-config">
-    <div class="lgrid" style="grid-template-columns:1fr 1fr 1fr;">
-      <div class="lf">
-        <div class="fl">Laps</div>
-        <input class="fi" type="number" id="cm-laps" value="5" min="1" oninput="cmUpdateConfig()">
-        <div class="fu">count</div>
-      </div>
-      <div class="lf">
-        <div class="fl">Lap Length</div>
-        <input class="fi" type="number" id="cm-dist" value="1000" min="1" oninput="cmUpdateConfig()">
-        <div class="fu">metres</div>
-      </div>
-      <div class="lf">
-        <div class="fl">Target Time</div>
-        <input class="fi" type="number" id="cm-target" value="60" min="1" oninput="cmUpdateConfig()">
-        <div class="fu">seconds</div>
-      </div>
-    </div>
-    <div class="cm-config-info" id="cm-config-info">—</div>
-    <div class="io-row" style="margin-top:10px;gap:8px;">
-      <button class="btn-io btn-export" id="cm-rec-btn" onclick="cmToggleRecordLap()" style="flex:1;font-size:15px;padding:14px;">⏺ Record Lap Length</button>
-      <button class="btn-io" onclick="cmReset()" style="flex:0 0 auto;background:var(--surf2);color:var(--txt3);border-color:var(--border);">↺ Reset</button>
-    </div>
-    <div class="io-feedback" id="cm-rec-feedback" style="display:none;margin-top:6px;"></div>
-  </div>
-
-  <!-- Delta hero (same style as Live page) -->
-  <div class="delta" id="cm-delta-panel" style="--dc:var(--txt3)">
-    <div class="delta-in">
-      <div class="dlbl" id="cm-dlbl">LAP 0</div>
-      <div class="dlbl-sub" id="cm-dlbl-sub">—</div>
-      <div class="dhero-cols">
-        <div class="dhero-sec">
-          <div class="drow" id="cm-drow"><div class="dsign" id="cm-dsign"></div><div class="dint" id="cm-dint">0</div><div class="ddec" id="cm-ddec">.0</div></div>
-          <div class="dunit">SECONDS</div>
-        </div>
-        <div class="dhero-div"></div>
-        <div class="dhero-dist">
-          <div class="ddist-row"><span class="ddist-sign" id="cm-ddist-sign"></span><span class="ddist-val" id="cm-ddist-val">0.000</span></div>
-          <div class="ddist-unit">km Δ DIST</div>
-        </div>
-      </div>
-      <!-- Progress bar -->
-      <div class="pbar-wrap" style="margin-top:8px;width:100%;">
-        <div class="pbar"><div class="pfill" id="cm-pfill" style="width:0%"></div><div class="pexp-marker" id="cm-pexp" style="left:0%"></div></div>
-        <div class="pbar-labels"><span id="cm-ppct">0.0%</span><span>Lap Progress</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Control buttons -->
-  <div class="io-row" style="gap:8px;">
-    <button class="btn-launch" id="cm-start-btn" onclick="cmStartLap()" style="flex:1;">▶ Start Lap</button>
-    <button class="btn-io" id="cm-end-btn" onclick="cmEndLap()" disabled style="flex:1;font-size:15px;padding:14px;opacity:.4;">⏭ End Lap</button>
-    <button class="btn-io" id="cm-stop-btn" onclick="cmStopRace()" disabled style="flex:0 0 auto;font-size:15px;padding:14px;background:color-mix(in srgb,var(--behind) 15%,transparent);border-color:color-mix(in srgb,var(--behind) 40%,transparent);color:var(--behind);opacity:.4;">■ Stop</button>
-  </div>
-
-  <!-- Telemetry table -->
-  <table class="telem-table" id="cm-telem">
-    <tbody>
-      <tr>
-        <td id="cm-tt-tgt-time"><small>Target Time</small>—</td>
-        <td id="cm-tt-tgt-dist"><small>Target Dist</small>—</td>
-        <td id="cm-tt-tgt-spd"><small>Target Speed</small>—</td>
-      </tr>
-      <tr>
-        <td id="cm-tt-act-time"><small>Elapsed</small>0:00.0</td>
-        <td id="cm-tt-act-dist"><small>GPS Dist</small>0.000</td>
-        <td id="cm-tt-act-spd"><small>Lap Avg Spd</small>—</td>
-      </tr>
-      <tr>
-        <td id="cm-tt-exp-time"><small>Exp Time</small>—</td>
-        <td id="cm-tt-exp-dist"><small>Exp Dist</small>0.000</td>
-        <td id="cm-tt-exp-spd"><small>Exp Speed</small>—</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- Lap results table -->
-  <div class="sec-lbl" style="margin-top:10px;">Lap Results</div>
-  <div id="cm-laps-table-wrap">
-    <div class="empty-msg" id="cm-laps-empty">No laps completed yet</div>
-    <table class="rtable" id="cm-laps-table" style="display:none">
-      <thead><tr>
-        <th style="text-align:left">#</th>
-        <th>Lap Dist</th>
-        <th>Lap Time</th>
-        <th>Δ Time</th>
-        <th>Avg Speed</th>
-      </tr></thead>
-      <tbody id="cm-laps-tbody"></tbody>
-    </table>
-  </div>
-</div>
-
 <script>
 function gel(id){ return document.getElementById(id); }
 
@@ -1028,82 +888,6 @@ function updateSystemClock(){
 }
 setInterval(updateSystemClock, 50);
 updateSystemClock();
-
-/* ══════════════════════════════════════════════════════════════════════════
-   SAVE / LOAD — localStorage (same device) + Clipboard (cross-device)
-   Zero network dependency — works perfectly on GitHub Pages everywhere.
-   ══════════════════════════════════════════════════════════════════════════ */
-const LS_KEY = 'rr-saved-legs';
-
-function initServerUI(){ /* nothing to restore in UI */ }
-
-function serverFeedback(msg, color){
-  const el = gel('server-feedback');
-  if(!el) return;
-  el.style.display = 'block';
-  el.textContent   = msg;
-  el.style.color   = color || 'var(--warn)';
-}
-
-function saveToServer(){
-  if(!legs.length){ serverFeedback('⚠ No legs defined yet.', 'var(--behind)'); return; }
-  try {
-    const payload = JSON.stringify({ legs, savedAt: new Date().toISOString() });
-    localStorage.setItem(LS_KEY, payload);
-    serverFeedback(`✓ Saved ${legs.length} leg(s) on this device at ${new Date().toLocaleTimeString()}`, 'var(--ok)');
-    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 5000);
-  } catch(e){
-    serverFeedback('⚠ Save failed: ' + e.message, 'var(--behind)');
-  }
-}
-
-function loadFromServer(){
-  try {
-    const raw = localStorage.getItem(LS_KEY);
-    if(!raw){ serverFeedback('⚠ Nothing saved on this device yet. Use "Paste & Load" to import from another device.', 'var(--warn)'); return; }
-    const record = JSON.parse(raw);
-    if(!record.legs) throw new Error('Saved data has no legs.');
-    processImportedPayload(record);
-    serverFeedback(`✓ Loaded ${record.legs.length} leg(s) — saved ${record.savedAt ? new Date(record.savedAt).toLocaleString() : 'unknown time'}`, 'var(--ok)');
-    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 5000);
-  } catch(e){
-    serverFeedback('⚠ Load failed: ' + e.message, 'var(--behind)');
-  }
-}
-
-async function copyToClipboard(){
-  if(!legs.length){ serverFeedback('⚠ No legs to copy.', 'var(--behind)'); return; }
-  try {
-    const payload = JSON.stringify({ legs, savedAt: new Date().toISOString() });
-    await navigator.clipboard.writeText(payload);
-    serverFeedback('✓ Copied! Now open the app on the other device and tap "Paste & Load".', 'var(--ok)');
-    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 8000);
-  } catch(e){
-    // Fallback: show a prompt the user can manually copy from
-    const payload = JSON.stringify({ legs, savedAt: new Date().toISOString() });
-    window.prompt('Copy this text, then paste it on the other device:', payload);
-  }
-}
-
-async function pasteFromClipboard(){
-  try {
-    let text = '';
-    if(navigator.clipboard && navigator.clipboard.readText){
-      text = await navigator.clipboard.readText();
-    }
-    if(!text){
-      text = window.prompt('Paste the copied configuration here:') || '';
-    }
-    if(!text){ serverFeedback('⚠ Nothing pasted.', 'var(--warn)'); return; }
-    const record = JSON.parse(text.trim());
-    if(!record.legs) throw new Error('Pasted data has no legs.');
-    processImportedPayload(record);
-    serverFeedback(`✓ Loaded ${record.legs.length} leg(s) from clipboard.`, 'var(--ok)');
-    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 5000);
-  } catch(e){
-    serverFeedback('⚠ Paste failed — make sure you copied from the other device first. (' + e.message + ')', 'var(--behind)');
-  }
-}
 
 /* ── THEME ── */
 let theme = localStorage.getItem('rr-theme') || 'dark';
@@ -1195,8 +979,7 @@ function gpsSuccess(pos){
   if(legRunning && lastPos){
     const d = haversine(lastPos.coords.latitude,lastPos.coords.longitude,c.latitude,c.longitude);
     if(d>=0&&d<200){ 
-      gpsDistM += d;
-      cmOnGps(d);
+      gpsDistM += d; 
       gpsFixN++; 
       totalAccPointsThisStage += c.accuracy;
     }
@@ -1524,293 +1307,10 @@ function loadLeg(idx){
 }
 
 function showTab(name){
-  const names=['legs','live','res','cm'];
+  const names=['legs','live','res'];
   document.querySelectorAll('.tb').forEach((b,i)=>b.classList.toggle('on',names[i]===name));
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
   gel('pg-'+name).classList.add('on');
-  if(name==='cm') cmRefreshUI();
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   CAT & MOUSE — Lap Timer
-══════════════════════════════════════════════════════════════════════════ */
-let cmLapCount    = 5;
-let cmLapDistM    = 1000;
-let cmTargetSec   = 60;
-let cmLaps        = [];          // completed laps
-let cmRunning     = false;
-let cmLapStart    = 0;           // performance.now() at lap start
-let cmLapDist     = 0;           // GPS distance accumulated for current lap
-let cmTimer       = null;
-let cmLapNum      = 0;
-
-// Recording mode (user drives a lap manually to measure its length)
-let cmRecording   = false;
-let cmRecStart    = 0;
-let cmRecDist     = 0;
-
-function cmUpdateConfig(){
-  cmLapCount  = parseInt(gel('cm-laps').value)  || 5;
-  cmLapDistM  = parseFloat(gel('cm-dist').value) || 1000;
-  cmTargetSec = parseFloat(gel('cm-target').value) || 60;
-  const tgtSpd = cmLapDistM > 0 && cmTargetSec > 0
-    ? ((cmLapDistM/1000)/(cmTargetSec/3600)).toFixed(1)+' km/h'
-    : '—';
-  gel('cm-config-info').textContent =
-    `${cmLapCount} laps × ${(cmLapDistM/1000).toFixed(2)} km @ ${tgtSpd}  —  target ${fmtMMSSdd(cmTargetSec)} per lap`;
-  cmUpdateTelemRow1();
-}
-
-function cmUpdateTelemRow1(){
-  const tgtSpd = cmLapDistM > 0 && cmTargetSec > 0
-    ? ((cmLapDistM/1000)/(cmTargetSec/3600)).toFixed(1)+' km/h' : '—';
-  gel('cm-tt-tgt-time').innerHTML = `<small>Target Time</small>${fmtMMSSdd(cmTargetSec)}`;
-  gel('cm-tt-tgt-dist').innerHTML = `<small>Target Dist</small>${(cmLapDistM/1000).toFixed(3)} km`;
-  gel('cm-tt-tgt-spd').innerHTML  = `<small>Target Speed</small>${tgtSpd}`;
-}
-
-function cmRefreshUI(){
-  cmUpdateConfig();
-  cmRenderLaps();
-}
-
-function cmToggleRecordLap(){
-  if(!cmRecording){
-    // Start recording
-    cmRecording = true;
-    cmRecDist   = 0;
-    cmRecStart  = performance.now();
-    gel('cm-rec-btn').textContent   = '⏹ Stop Recording';
-    gel('cm-rec-btn').style.background = 'var(--behind)';
-    gel('cm-rec-btn').style.color   = '#fff';
-    cmShowFeedback('🔴 Recording lap length… drive your lap then stop.', 'var(--behind)');
-    // Hijack GPS distance accumulation
-    cmRecInterval = setInterval(()=>{
-      // cmRecDist is updated in gpsSuccess via cmOnGps()
-      const elapsed = (performance.now()-cmRecStart)/1000;
-      gel('cm-rec-feedback').textContent = `🔴 Recording: ${(cmRecDist/1000).toFixed(3)} km  —  ${fmtMMSSdd(elapsed)}`;
-    }, 200);
-  } else {
-    // Stop recording
-    clearInterval(cmRecInterval);
-    cmRecording = false;
-    if(cmRecDist > 10){
-      gel('cm-dist').value = Math.round(cmRecDist);
-      cmUpdateConfig();
-      cmShowFeedback(`✓ Lap length set to ${(cmRecDist/1000).toFixed(3)} km from recording.`, 'var(--ok)');
-    } else {
-      cmShowFeedback('⚠ Too little distance recorded.', 'var(--warn)');
-    }
-    gel('cm-rec-btn').textContent   = '⏺ Record Lap Length';
-    gel('cm-rec-btn').style.background = '';
-    gel('cm-rec-btn').style.color   = '';
-  }
-}
-let cmRecInterval = null;
-
-function cmShowFeedback(msg, color){
-  const el=gel('cm-rec-feedback'); if(!el) return;
-  el.style.display='block'; el.textContent=msg; el.style.color=color||'var(--warn)';
-}
-
-// Called from gpsSuccess to accumulate distance for Cat & Mouse
-function cmOnGps(distDelta){
-  if(cmRecording) cmRecDist += distDelta;
-  if(cmRunning)   cmLapDist += distDelta;
-}
-
-function cmStartLap(){
-  if(cmRunning) return;
-  cmLapNum++;
-  cmRunning  = true;
-  cmLapDist  = 0;
-  cmLapStart = performance.now();
-  gel('cm-start-btn').disabled = true;
-  gel('cm-end-btn').disabled   = false;
-  gel('cm-end-btn').style.opacity = '1';
-  gel('cm-stop-btn').disabled  = false;
-  gel('cm-stop-btn').style.opacity = '1';
-  gel('cm-dlbl').textContent = `LAP ${cmLapNum}`;
-  gel('cm-dlbl-sub').textContent = `${(cmLapDistM/1000).toFixed(2)}km  @${((cmLapDistM/1000)/(cmTargetSec/3600)).toFixed(1)}km/h  in ${fmtMMSS(cmTargetSec)}`;
-  clearInterval(cmTimer);
-  cmTimer = setInterval(cmTick, 100);
-}
-
-// Internal: record the lap result and reset UI for next lap (or finish).
-// autoAdvance=true → immediately start next lap; false → wait for user.
-function cmStopLap(autoAdvance){
-  if(!cmRunning) return;
-  clearInterval(cmTimer);
-  cmRunning = false;
-  const elSec   = (performance.now()-cmLapStart)/1000;
-  const delta   = elSec - cmTargetSec;
-  const avgKmh  = elSec > 0 ? (cmLapDist/1000)/(elSec/3600) : 0;
-  cmLaps.push({ num: cmLapNum, distM: cmLapDist, elSec, delta, avgKmh });
-
-  const moreLeft = cmLapNum < cmLapCount;
-
-  // Disable End Lap button (lap is done)
-  gel('cm-end-btn').disabled  = true;
-  gel('cm-end-btn').style.opacity = '.4';
-  // Stop button stays enabled while race is in progress
-  gel('cm-stop-btn').disabled = !moreLeft;
-  gel('cm-stop-btn').style.opacity = moreLeft ? '1' : '.4';
-
-  if(moreLeft){
-    gel('cm-start-btn').textContent = `▶ Start Lap ${cmLapNum+1}`;
-    gel('cm-dlbl').textContent = `LAP ${cmLapNum} DONE`;
-  } else {
-    gel('cm-start-btn').textContent = '✓ All Laps Done';
-    gel('cm-start-btn').disabled = true;
-    gel('cm-stop-btn').disabled = true;
-    gel('cm-stop-btn').style.opacity = '.4';
-    gel('cm-dlbl').textContent = '🏁 FINISHED';
-  }
-
-  cmSetDelta(0, 'neutral', false);
-  cmRenderLaps();
-
-  if(autoAdvance && moreLeft){
-    setTimeout(()=>cmStartLap(), 300);
-  }
-}
-
-// "End Lap" button: user manually ends the lap → auto-start next
-function cmEndLap(){
-  if(!cmRunning) return;
-  cmStopLap(true); // always auto-start next lap
-}
-
-// "Stop Race" button: end lap and stop the race entirely
-function cmStopRace(){
-  if(!cmRunning) return;
-  clearInterval(cmTimer);
-  cmRunning = false;
-  const elSec  = (performance.now()-cmLapStart)/1000;
-  const delta  = elSec - cmTargetSec;
-  const avgKmh = elSec > 0 ? (cmLapDist/1000)/(elSec/3600) : 0;
-  cmLaps.push({ num: cmLapNum, distM: cmLapDist, elSec, delta, avgKmh });
-  gel('cm-start-btn').disabled = true;
-  gel('cm-start-btn').textContent = '⏹ Race Stopped';
-  gel('cm-end-btn').disabled  = true;
-  gel('cm-end-btn').style.opacity = '.4';
-  gel('cm-stop-btn').disabled = true;
-  gel('cm-stop-btn').style.opacity = '.4';
-  gel('cm-dlbl').textContent = '⏹ STOPPED';
-  cmSetDelta(0, 'neutral', false);
-  cmRenderLaps();
-}
-
-function cmTick(){
-  if(!cmRunning) return;
-  const elSec   = (performance.now()-cmLapStart)/1000;
-  const expDist = (cmLapDistM/cmTargetSec)*elSec;  // expected dist at this time
-  const delta   = cmLapDist > 5
-    ? elSec - (cmLapDist/(cmLapDistM/cmTargetSec))  // GPS-based
-    : Math.max(0, elSec - cmTargetSec);             // time-only
-  const state   = Math.abs(delta)<0.3?'ontime':delta>0?'behind':'ahead';
-
-  cmSetDelta(Math.abs(delta), state, true);
-
-  // ddist
-  const ddKm = (cmLapDist - expDist)/1000;
-  gel('cm-ddist-val').textContent  = Math.abs(ddKm).toFixed(3);
-  gel('cm-ddist-sign').textContent = ddKm>0.005?'+':ddKm<-0.005?'−':'';
-  const dc = Math.abs(ddKm)<0.005?'var(--ok)':ddKm>0?'var(--ahead)':'var(--behind)';
-  gel('cm-ddist-val').style.color = dc; gel('cm-ddist-sign').style.color = dc;
-
-  // Progress bar
-  const pct = Math.min((cmLapDist/cmLapDistM)*100,100);
-  gel('cm-pfill').style.width = pct.toFixed(1)+'%';
-  gel('cm-pexp').style.left   = Math.min((expDist/cmLapDistM)*100,100).toFixed(1)+'%';
-  gel('cm-ppct').textContent  = pct.toFixed(1)+'%';
-
-  // Telem row 2
-  const timeDiff = elSec - cmTargetSec;
-  const actTC = Math.abs(timeDiff)<0.3?'var(--ok)':timeDiff>0?'var(--behind)':'var(--ahead)';
-  gel('cm-tt-act-time').innerHTML = `<small>Elapsed</small>${fmtEl(elSec*1000)}`;
-  gel('cm-tt-act-time').style.cssText = `color:#fff;font-weight:700;background:${actTC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
-
-  const distDiff = cmLapDist - expDist;
-  const actDC = Math.abs(distDiff)<5?'var(--ok)':distDiff>0?'var(--ahead)':'var(--behind)';
-  gel('cm-tt-act-dist').innerHTML = `<small>GPS Dist</small>${(cmLapDist/1000).toFixed(3)} km`;
-  gel('cm-tt-act-dist').style.cssText = `color:#fff;font-weight:700;background:${actDC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
-
-  const avgSpd = elSec>0?(cmLapDist/1000)/(elSec/3600):0;
-  const tgtSpd = (cmLapDistM/1000)/(cmTargetSec/3600);
-  const spdDiff = avgSpd - tgtSpd;
-  const actSC = elSec<2?'':Math.abs(spdDiff)<0.5?'var(--ok)':spdDiff>0?'var(--ahead)':'var(--behind)';
-  gel('cm-tt-act-spd').innerHTML = `<small>Lap Avg Spd</small>${avgSpd.toFixed(1)} km/h`;
-  gel('cm-tt-act-spd').style.cssText = elSec<2?'': `color:#fff;font-weight:700;background:${actSC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
-
-  // Telem row 3
-  gel('cm-tt-exp-time').innerHTML = `<small>Exp Time</small>${fmtMMSSdd(Math.min(elSec,cmTargetSec))}`;
-  gel('cm-tt-exp-dist').innerHTML = `<small>Exp Dist</small>${(Math.min(expDist,cmLapDistM)/1000).toFixed(3)} km`;
-  const expSpd = elSec>0?(Math.min(expDist,cmLapDistM)/1000)/(elSec/3600):tgtSpd;
-  gel('cm-tt-exp-spd').innerHTML  = `<small>Exp Speed</small>${expSpd.toFixed(1)} km/h`;
-
-  // Auto-advance when lap distance reached (±2m tolerance)
-  if(cmLapDist >= cmLapDistM - 2){
-    cmStopLap(cmLapNum < cmLapCount); // auto-advance if laps remain
-  }
-}
-
-function cmSetDelta(absSec, state, running){
-  const c={behind:'var(--behind)',ahead:'var(--ahead)',ontime:'var(--ok)',neutral:'var(--border2)'};
-  const col = c[state]||c.neutral;
-  gel('cm-delta-panel').style.setProperty('--dc', col);
-  gel('cm-drow').style.setProperty('--dc', col);
-  gel('cm-dsign').textContent = running?(state==='behind'?'+':state==='ahead'?'−':''):'';
-  gel('cm-dint').textContent  = Math.floor(absSec);
-  gel('cm-ddec').textContent  = '.'+(Math.round(absSec*10)%10);
-}
-
-function cmRenderLaps(){
-  if(!cmLaps.length){
-    gel('cm-laps-empty').style.display='';
-    gel('cm-laps-table').style.display='none';
-    return;
-  }
-  gel('cm-laps-empty').style.display='none';
-  gel('cm-laps-table').style.display='';
-  const rows = cmLaps.map(l=>{
-    const sign = l.delta>0.005?'+':l.delta<-0.005?'−':'';
-    const cls  = Math.abs(l.delta)<0.3?'cok':l.delta>0?'cbeh':'cahd';
-    return `<tr>
-      <td style="text-align:left;font-weight:700;">${l.num}</td>
-      <td>${(l.distM/1000).toFixed(3)} km</td>
-      <td>${fmtMMSSdd(l.elSec)}</td>
-      <td class="${cls}">${sign}${Math.abs(l.delta).toFixed(2)}s</td>
-      <td>${l.avgKmh.toFixed(1)} km/h</td>
-    </tr>`;
-  }).join('');
-  gel('cm-laps-tbody').innerHTML = rows;
-}
-
-function cmReset(){
-  clearInterval(cmTimer); clearInterval(cmRecInterval);
-  cmRunning=false; cmRecording=false; cmLapNum=0; cmLaps=[];
-  cmLapDist=0; cmRecDist=0;
-  gel('cm-start-btn').disabled=false; gel('cm-start-btn').textContent='▶ Start Lap';
-  gel('cm-end-btn').disabled=true; gel('cm-end-btn').style.opacity='.4';
-  gel('cm-stop-btn').disabled=true; gel('cm-stop-btn').style.opacity='.4';
-  gel('cm-rec-btn').textContent='⏺ Record Lap Length'; gel('cm-rec-btn').style.background=''; gel('cm-rec-btn').style.color='';
-  gel('cm-rec-feedback').style.display='none';
-  cmSetDelta(0,'neutral',false);
-  gel('cm-dlbl').textContent='LAP 0'; gel('cm-dlbl-sub').textContent='—';
-  gel('cm-pfill').style.width='0%'; gel('cm-pexp').style.left='0%'; gel('cm-ppct').textContent='0.0%';
-  // Reset telem rows 2+3
-  ['cm-tt-act-time','cm-tt-act-dist','cm-tt-act-spd','cm-tt-exp-time','cm-tt-exp-dist','cm-tt-exp-spd'].forEach(id=>{
-    const el=gel(id); if(el){el.style.cssText='';} 
-  });
-  gel('cm-tt-act-time').innerHTML='<small>Elapsed</small>0:00.0';
-  gel('cm-tt-act-dist').innerHTML='<small>GPS Dist</small>0.000 km';
-  gel('cm-tt-act-spd').innerHTML='<small>Lap Avg Spd</small>—';
-  gel('cm-tt-exp-time').innerHTML='<small>Exp Time</small>—';
-  gel('cm-tt-exp-dist').innerHTML='<small>Exp Dist</small>0.000 km';
-  gel('cm-tt-exp-spd').innerHTML='<small>Exp Speed</small>—';
-  cmRenderLaps();
-  cmUpdateConfig();
 }
 
 function updateControlsState() {
@@ -2054,6 +1554,79 @@ function processImportedPayload(raw){
   legs=arr.map((l,i)=>{
     legId++; return{id:legId,name:l.name||'Stage '+(i+1),distM:String(l.distM||''),spdKmh:String(l.spdKmh||''),linked:!!l.linked,atDistance:!!l.atDistance,autoStart:!!l.autoStart,autoHH:l.autoHH||'',autoMM:l.autoMM||''};
   }); renderLegs();
+}
+/* ── SERVER SESSION ──────────────────────────────────────────────────────────
+   GitHub Pages has no writable server storage. We solve this two ways:
+   1. "Save to Server"  → saves to localStorage AND copies a shareable data-URL
+      to the clipboard so you can paste it anywhere (notes, WhatsApp, email).
+   2. "Load from Server" → restores from localStorage, OR accepts a pasted
+      data-URL (the user is prompted to paste one if nothing is stored locally).
+   This is fully offline-capable, zero-dependency, and needs no API keys.
+────────────────────────────────────────────────────────────────────────────── */
+
+function serverFeedback(msg, color){
+  const el = gel('server-feedback');
+  el.style.display = 'block';
+  el.textContent = msg;
+  el.style.color = color || 'var(--warn)';
+}
+
+async function saveToServer(){
+  if(!legs.length){ serverFeedback('⚠ No legs to save.', 'var(--behind)'); return; }
+  const payload = JSON.stringify({ legs, savedAt: new Date().toISOString() });
+
+  // 1. Persist locally
+  localStorage.setItem('rr_session', payload);
+
+  // 2. Build a shareable data-URL (base64 encoded) for cross-device sharing
+  const b64 = btoa(unescape(encodeURIComponent(payload)));
+  const dataUrl = 'data:application/json;base64,' + b64;
+
+  // 3. Copy to clipboard
+  try {
+    await navigator.clipboard.writeText(dataUrl);
+    serverFeedback('✓ Saved locally & copied shareable code to clipboard!', 'var(--ok)');
+  } catch(e) {
+    // Clipboard blocked (non-HTTPS or permission denied) — show the code in a prompt
+    serverFeedback('✓ Saved locally. Copy the code below to share:', 'var(--ok)');
+    setTimeout(() => prompt('Copy this shareable session code:', dataUrl), 100);
+  }
+  setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 5000);
+}
+
+async function loadFromServer(){
+  serverFeedback('⏳ Loading…', 'var(--warn)');
+
+  // Try localStorage first
+  const local = localStorage.getItem('rr_session');
+  if(local){
+    try{
+      const parsed = JSON.parse(local);
+      processImportedPayload(parsed);
+      serverFeedback('✓ Loaded from local session!', 'var(--ok)');
+      setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 3500);
+      return;
+    } catch(e){ /* corrupt — fall through to prompt */ }
+  }
+
+  // Nothing stored — prompt for a pasted shareable code
+  const pasted = prompt('No local session found.\nPaste a shareable session code here:');
+  if(!pasted){ serverFeedback('Cancelled.', 'var(--txt3)'); return; }
+  try {
+    let json;
+    if(pasted.startsWith('data:application/json;base64,')){
+      json = decodeURIComponent(escape(atob(pasted.replace('data:application/json;base64,',''))));
+    } else {
+      json = pasted; // try raw JSON
+    }
+    const parsed = JSON.parse(json);
+    processImportedPayload(parsed);
+    localStorage.setItem('rr_session', json);
+    serverFeedback('✓ Loaded from pasted code!', 'var(--ok)');
+    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 3500);
+  } catch(e){
+    serverFeedback(`⚠ Invalid session code: ${e.message}`, 'var(--behind)');
+  }
 }
 
 async function fetchLegsFromUrl(){

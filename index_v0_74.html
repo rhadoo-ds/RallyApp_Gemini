@@ -644,31 +644,6 @@ body{
 /* ── CAT & MOUSE ── */
 .cm-config{background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;padding:10px;}
 .cm-config-info{font-family:'DM Mono',monospace;font-size:13px;color:var(--txt3);padding:8px 4px;text-align:center;border-top:1px solid var(--border);margin-top:8px;padding-top:10px;}
-
-/* Progress bar inside Cat & Mouse delta panel */
-.pbar{position:relative;height:8px;background:var(--surf2);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
-.pbar-wrap{width:100%;margin-top:4px;}
-.pbar-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--txt3);margin-top:3px;font-weight:500;}
-.pexp-marker{position:absolute;top:0;bottom:0;width:2px;background:var(--warn);opacity:.9;transition:left .7s linear;}
-
-/* Cat & Mouse page: scroll normally — ONLY override display when active */
-#pg-cm.on { display: flex; flex-direction: column; overflow-y: auto; }
-
-/* Scale down the giant hero numbers on small screens so sections don't overlap */
-@media (max-height: 700px) {
-  .dint { font-size: 48px !important; }
-  .ddec { font-size: 28px !important; }
-  .dsign { font-size: 26px !important; }
-  .ddist-val { font-size: 34px !important; }
-  .ddist-sign { font-size: 18px !important; }
-  .dhero-div { height: 46px !important; }
-  .delta-in { padding: 10px 10px 8px !important; gap: 1px !important; }
-}
-@media (max-height: 580px) {
-  .dint { font-size: 36px !important; }
-  .ddec { font-size: 22px !important; }
-  .ddist-val { font-size: 26px !important; }
-}
 </style>
 </head>
 <body>
@@ -713,7 +688,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.80</div>
+    <div class="app-version">RegRally THOR v0.74</div>
   </div>
 </div>
 
@@ -743,17 +718,16 @@ body{
     </div>
 
     <div class="io-section" style="margin-top:10px;">
-      <div class="io-title">💾 Quick Save / Load</div>
+      <div class="io-title">☁ Server Session</div>
       <div class="server-setup">
-        <div class="server-hint">Save keeps your legs on <b>this device</b>. To move to another device, use <b>Copy</b> then <b>Paste</b> on the other device.</div>
+        <div class="server-bin-row" id="jsonbin-bin-display">No bin yet — press Save to create one</div>
+        <div class="server-hint">Saves legs to the cloud. Use <b>Save</b> on your phone, then <b>Load</b> on any other device (Tesla, tablet, etc.).</div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
-        <button class="btn-io btn-export" onclick="saveToServer()">💾 Save</button>
-        <button class="btn-io btn-import" onclick="loadFromServer()">↩ Load</button>
-        <button class="btn-io btn-export" onclick="copyToClipboard()" style="background:color-mix(in srgb,var(--warn) 10%,transparent);border-color:color-mix(in srgb,var(--warn) 40%,transparent);color:var(--warn);">📋 Copy to Clipboard</button>
-        <button class="btn-io btn-import" onclick="pasteFromClipboard()" style="background:color-mix(in srgb,var(--warn) 10%,transparent);border-color:color-mix(in srgb,var(--warn) 40%,transparent);color:var(--warn);">📥 Paste &amp; Load</button>
+      <div class="io-row" style="margin-top:8px;">
+        <button class="btn-io btn-export" onclick="saveToServer()">☁ Save to Server</button>
+        <button class="btn-io btn-import" onclick="loadFromServer()">⬇ Load from Server</button>
       </div>
-      <div id="server-feedback" class="io-feedback" style="display:none;margin-top:8px;"></div>
+      <div id="server-feedback" class="io-feedback" style="display:none"></div>
     </div>
     <div id="io-feedback" class="io-feedback" style="display:none"></div>
   </div>
@@ -968,8 +942,7 @@ body{
   <!-- Control buttons -->
   <div class="io-row" style="gap:8px;">
     <button class="btn-launch" id="cm-start-btn" onclick="cmStartLap()" style="flex:1;">▶ Start Lap</button>
-    <button class="btn-io" id="cm-end-btn" onclick="cmEndLap()" disabled style="flex:1;font-size:15px;padding:14px;opacity:.4;">⏭ End Lap</button>
-    <button class="btn-io" id="cm-stop-btn" onclick="cmStopRace()" disabled style="flex:0 0 auto;font-size:15px;padding:14px;background:color-mix(in srgb,var(--behind) 15%,transparent);border-color:color-mix(in srgb,var(--behind) 40%,transparent);color:var(--behind);opacity:.4;">■ Stop</button>
+    <button class="btn-io" id="cm-stop-btn" onclick="cmStopLap()" disabled style="flex:1;font-size:15px;padding:14px;opacity:.4;">⏹ Finish Lap</button>
   </div>
 
   <!-- Telemetry table -->
@@ -1028,82 +1001,7 @@ function updateSystemClock(){
 }
 setInterval(updateSystemClock, 50);
 updateSystemClock();
-
-/* ══════════════════════════════════════════════════════════════════════════
-   SAVE / LOAD — localStorage (same device) + Clipboard (cross-device)
-   Zero network dependency — works perfectly on GitHub Pages everywhere.
-   ══════════════════════════════════════════════════════════════════════════ */
-const LS_KEY = 'rr-saved-legs';
-
-function initServerUI(){ /* nothing to restore in UI */ }
-
-function serverFeedback(msg, color){
-  const el = gel('server-feedback');
-  if(!el) return;
-  el.style.display = 'block';
-  el.textContent   = msg;
-  el.style.color   = color || 'var(--warn)';
-}
-
-function saveToServer(){
-  if(!legs.length){ serverFeedback('⚠ No legs defined yet.', 'var(--behind)'); return; }
-  try {
-    const payload = JSON.stringify({ legs, savedAt: new Date().toISOString() });
-    localStorage.setItem(LS_KEY, payload);
-    serverFeedback(`✓ Saved ${legs.length} leg(s) on this device at ${new Date().toLocaleTimeString()}`, 'var(--ok)');
-    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 5000);
-  } catch(e){
-    serverFeedback('⚠ Save failed: ' + e.message, 'var(--behind)');
-  }
-}
-
-function loadFromServer(){
-  try {
-    const raw = localStorage.getItem(LS_KEY);
-    if(!raw){ serverFeedback('⚠ Nothing saved on this device yet. Use "Paste & Load" to import from another device.', 'var(--warn)'); return; }
-    const record = JSON.parse(raw);
-    if(!record.legs) throw new Error('Saved data has no legs.');
-    processImportedPayload(record);
-    serverFeedback(`✓ Loaded ${record.legs.length} leg(s) — saved ${record.savedAt ? new Date(record.savedAt).toLocaleString() : 'unknown time'}`, 'var(--ok)');
-    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 5000);
-  } catch(e){
-    serverFeedback('⚠ Load failed: ' + e.message, 'var(--behind)');
-  }
-}
-
-async function copyToClipboard(){
-  if(!legs.length){ serverFeedback('⚠ No legs to copy.', 'var(--behind)'); return; }
-  try {
-    const payload = JSON.stringify({ legs, savedAt: new Date().toISOString() });
-    await navigator.clipboard.writeText(payload);
-    serverFeedback('✓ Copied! Now open the app on the other device and tap "Paste & Load".', 'var(--ok)');
-    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 8000);
-  } catch(e){
-    // Fallback: show a prompt the user can manually copy from
-    const payload = JSON.stringify({ legs, savedAt: new Date().toISOString() });
-    window.prompt('Copy this text, then paste it on the other device:', payload);
-  }
-}
-
-async function pasteFromClipboard(){
-  try {
-    let text = '';
-    if(navigator.clipboard && navigator.clipboard.readText){
-      text = await navigator.clipboard.readText();
-    }
-    if(!text){
-      text = window.prompt('Paste the copied configuration here:') || '';
-    }
-    if(!text){ serverFeedback('⚠ Nothing pasted.', 'var(--warn)'); return; }
-    const record = JSON.parse(text.trim());
-    if(!record.legs) throw new Error('Pasted data has no legs.');
-    processImportedPayload(record);
-    serverFeedback(`✓ Loaded ${record.legs.length} leg(s) from clipboard.`, 'var(--ok)');
-    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 5000);
-  } catch(e){
-    serverFeedback('⚠ Paste failed — make sure you copied from the other device first. (' + e.message + ')', 'var(--behind)');
-  }
-}
+initServerUI();
 
 /* ── THEME ── */
 let theme = localStorage.getItem('rr-theme') || 'dark';
@@ -1626,8 +1524,6 @@ function cmStartLap(){
   cmLapDist  = 0;
   cmLapStart = performance.now();
   gel('cm-start-btn').disabled = true;
-  gel('cm-end-btn').disabled   = false;
-  gel('cm-end-btn').style.opacity = '1';
   gel('cm-stop-btn').disabled  = false;
   gel('cm-stop-btn').style.opacity = '1';
   gel('cm-dlbl').textContent = `LAP ${cmLapNum}`;
@@ -1636,9 +1532,7 @@ function cmStartLap(){
   cmTimer = setInterval(cmTick, 100);
 }
 
-// Internal: record the lap result and reset UI for next lap (or finish).
-// autoAdvance=true → immediately start next lap; false → wait for user.
-function cmStopLap(autoAdvance){
+function cmStopLap(auto){
   if(!cmRunning) return;
   clearInterval(cmTimer);
   cmRunning = false;
@@ -1646,58 +1540,17 @@ function cmStopLap(autoAdvance){
   const delta   = elSec - cmTargetSec;
   const avgKmh  = elSec > 0 ? (cmLapDist/1000)/(elSec/3600) : 0;
   cmLaps.push({ num: cmLapNum, distM: cmLapDist, elSec, delta, avgKmh });
-
-  const moreLeft = cmLapNum < cmLapCount;
-
-  // Disable End Lap button (lap is done)
-  gel('cm-end-btn').disabled  = true;
-  gel('cm-end-btn').style.opacity = '.4';
-  // Stop button stays enabled while race is in progress
-  gel('cm-stop-btn').disabled = !moreLeft;
-  gel('cm-stop-btn').style.opacity = moreLeft ? '1' : '.4';
-
-  if(moreLeft){
+  gel('cm-start-btn').disabled = cmLapNum >= cmLapCount;
+  gel('cm-stop-btn').disabled  = true;
+  gel('cm-stop-btn').style.opacity = '.4';
+  if(cmLapNum < cmLapCount){
     gel('cm-start-btn').textContent = `▶ Start Lap ${cmLapNum+1}`;
-    gel('cm-dlbl').textContent = `LAP ${cmLapNum} DONE`;
   } else {
     gel('cm-start-btn').textContent = '✓ All Laps Done';
-    gel('cm-start-btn').disabled = true;
-    gel('cm-stop-btn').disabled = true;
-    gel('cm-stop-btn').style.opacity = '.4';
-    gel('cm-dlbl').textContent = '🏁 FINISHED';
   }
-
+  // Reset hero
   cmSetDelta(0, 'neutral', false);
-  cmRenderLaps();
-
-  if(autoAdvance && moreLeft){
-    setTimeout(()=>cmStartLap(), 300);
-  }
-}
-
-// "End Lap" button: user manually ends the lap → auto-start next
-function cmEndLap(){
-  if(!cmRunning) return;
-  cmStopLap(true); // always auto-start next lap
-}
-
-// "Stop Race" button: end lap and stop the race entirely
-function cmStopRace(){
-  if(!cmRunning) return;
-  clearInterval(cmTimer);
-  cmRunning = false;
-  const elSec  = (performance.now()-cmLapStart)/1000;
-  const delta  = elSec - cmTargetSec;
-  const avgKmh = elSec > 0 ? (cmLapDist/1000)/(elSec/3600) : 0;
-  cmLaps.push({ num: cmLapNum, distM: cmLapDist, elSec, delta, avgKmh });
-  gel('cm-start-btn').disabled = true;
-  gel('cm-start-btn').textContent = '⏹ Race Stopped';
-  gel('cm-end-btn').disabled  = true;
-  gel('cm-end-btn').style.opacity = '.4';
-  gel('cm-stop-btn').disabled = true;
-  gel('cm-stop-btn').style.opacity = '.4';
-  gel('cm-dlbl').textContent = '⏹ STOPPED';
-  cmSetDelta(0, 'neutral', false);
+  gel('cm-dlbl').textContent = cmLapNum < cmLapCount ? `LAP ${cmLapNum} DONE` : '🏁 FINISHED';
   cmRenderLaps();
 }
 
@@ -1749,9 +1602,12 @@ function cmTick(){
   const expSpd = elSec>0?(Math.min(expDist,cmLapDistM)/1000)/(elSec/3600):tgtSpd;
   gel('cm-tt-exp-spd').innerHTML  = `<small>Exp Speed</small>${expSpd.toFixed(1)} km/h`;
 
-  // Auto-advance when lap distance reached (±2m tolerance)
-  if(cmLapDist >= cmLapDistM - 2){
-    cmStopLap(cmLapNum < cmLapCount); // auto-advance if laps remain
+  // Auto-advance when lap distance reached
+  if(cmLapDist >= cmLapDistM){
+    cmStopLap(true);
+    if(cmLapNum < cmLapCount){
+      setTimeout(()=>cmStartLap(), 300);
+    }
   }
 }
 
@@ -1792,7 +1648,6 @@ function cmReset(){
   cmRunning=false; cmRecording=false; cmLapNum=0; cmLaps=[];
   cmLapDist=0; cmRecDist=0;
   gel('cm-start-btn').disabled=false; gel('cm-start-btn').textContent='▶ Start Lap';
-  gel('cm-end-btn').disabled=true; gel('cm-end-btn').style.opacity='.4';
   gel('cm-stop-btn').disabled=true; gel('cm-stop-btn').style.opacity='.4';
   gel('cm-rec-btn').textContent='⏺ Record Lap Length'; gel('cm-rec-btn').style.background=''; gel('cm-rec-btn').style.color='';
   gel('cm-rec-feedback').style.display='none';
@@ -2054,6 +1909,120 @@ function processImportedPayload(raw){
   legs=arr.map((l,i)=>{
     legId++; return{id:legId,name:l.name||'Stage '+(i+1),distM:String(l.distM||''),spdKmh:String(l.spdKmh||''),linked:!!l.linked,atDistance:!!l.atDistance,autoStart:!!l.autoStart,autoHH:l.autoHH||'',autoMM:l.autoMM||''};
   }); renderLegs();
+}
+/* ── SERVER SESSION ──────────────────────────────────────────────────────────
+   JSONBin.io — Master Key embedded, Bin ID stored in localStorage.
+   If the JSONBin account has domain restrictions set, ALL calls will fail
+   with "Host not in allowlist". Fix: in jsonbin.io dashboard go to
+   Settings → CORS Allowlist → DELETE all entries (leave empty = allow all).
+   The Master Key is embedded so users don't need to enter anything.
+────────────────────────────────────────────────────────────────────────────── */
+
+const JSONBIN_API  = 'https://api.jsonbin.io/v3';
+const JSONBIN_MKEY = '$2a$10$js8PsIAZjb0QfJSO73gSSeTvVg6KtA/JWgmYeKzewWUh3b2yW6i96';
+
+function serverFeedback(msg, color){
+  const el = gel('server-feedback');
+  if(!el) return;
+  el.style.display = 'block';
+  el.textContent   = msg;
+  el.style.color   = color || 'var(--warn)';
+}
+
+function getBinId(){ return localStorage.getItem('rr_bin_id') || ''; }
+
+function initServerUI(){
+  const binId = getBinId();
+  const binEl = gel('jsonbin-bin-display');
+  if(binEl) binEl.textContent = binId ? '📦 Bin: ' + binId : 'No bin yet — press Save to create one';
+}
+
+async function jsonbinFetch(url, options){
+  // Attempt 1: direct (works when CORS allowlist is empty in jsonbin dashboard)
+  try {
+    const r = await fetch(url, { ...options, mode: 'cors' });
+    if(r.status === 403){
+      const txt = await r.text();
+      if(txt.includes('allowlist')) throw new Error('CORS_BLOCK');
+    }
+    return r;
+  } catch(e){
+    if(e.message !== 'CORS_BLOCK' && !e.message.includes('fetch')) throw e;
+  }
+  // Attempt 2: route through corsproxy.io
+  const proxied = 'https://corsproxy.io/?' + encodeURIComponent(url);
+  return fetch(proxied, { ...options, mode: 'cors' });
+}
+
+async function saveToServer(){
+  if(!legs.length){ serverFeedback('⚠ No legs defined yet.', 'var(--behind)'); return; }
+  serverFeedback('⏳ Saving…', 'var(--warn)');
+
+  const body    = JSON.stringify({ legs, savedAt: new Date().toISOString() });
+  const headers = { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_MKEY };
+  let   binId   = getBinId();
+
+  try {
+    let r;
+    if(binId){
+      r = await jsonbinFetch(`${JSONBIN_API}/b/${binId}`, {
+        method: 'PUT', headers: { ...headers, 'X-Bin-Versioning': 'false' }, body
+      });
+    } else {
+      r = await jsonbinFetch(`${JSONBIN_API}/b`, {
+        method: 'POST', headers: { ...headers, 'X-Bin-Name': 'RegRally', 'X-Bin-Private': 'false' }, body
+      });
+    }
+
+    let data;
+    try { data = await r.json(); } catch(e){ throw new Error(`HTTP ${r.status} — non-JSON response`); }
+    if(!r.ok) throw new Error(data.message || `HTTP ${r.status}`);
+
+    if(!binId){
+      binId = data.metadata?.id;
+      if(!binId) throw new Error('No bin ID in response: ' + JSON.stringify(data));
+      localStorage.setItem('rr_bin_id', binId);
+    }
+    const binEl = gel('jsonbin-bin-display');
+    if(binEl) binEl.textContent = '📦 Bin: ' + binId;
+    serverFeedback(`✓ Saved! ${legs.length} leg(s). Bin: ${binId}`, 'var(--ok)');
+    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 6000);
+
+  } catch(e){
+    const hint = e.message.includes('allowlist')
+      ? ' — Go to jsonbin.io → Settings → CORS and clear the allowlist.'
+      : e.message.includes('Failed to fetch')
+        ? ' — Check your internet connection.'
+        : '';
+    serverFeedback(`⚠ Save failed: ${e.message}${hint}`, 'var(--behind)');
+  }
+}
+
+async function loadFromServer(){
+  let binId = getBinId();
+  if(!binId){
+    const pasted = prompt('Enter your Bin ID (shown after first Save):');
+    if(!pasted || !pasted.trim()){ serverFeedback('Cancelled.', 'var(--txt3)'); return; }
+    binId = pasted.trim();
+    localStorage.setItem('rr_bin_id', binId);
+    const binEl = gel('jsonbin-bin-display');
+    if(binEl) binEl.textContent = '📦 Bin: ' + binId;
+  }
+  serverFeedback('⏳ Loading…', 'var(--warn)');
+  try {
+    const r = await jsonbinFetch(`${JSONBIN_API}/b/${binId}/latest`, {
+      method: 'GET', headers: { 'X-Master-Key': JSONBIN_MKEY }
+    });
+    let data;
+    try { data = await r.json(); } catch(e){ throw new Error(`HTTP ${r.status} — non-JSON response`); }
+    if(!r.ok) throw new Error(data.message || `HTTP ${r.status}`);
+    const record = data.record || data;
+    processImportedPayload(record);
+    serverFeedback(`✓ Loaded! ${(record.legs||[]).length} leg(s). Saved: ${record.savedAt ? new Date(record.savedAt).toLocaleString() : '—'}`, 'var(--ok)');
+    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 6000);
+  } catch(e){
+    serverFeedback(`⚠ Load failed: ${e.message}`, 'var(--behind)');
+  }
 }
 
 async function fetchLegsFromUrl(){

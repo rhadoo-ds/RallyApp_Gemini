@@ -713,7 +713,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.80</div>
+    <div class="app-version">RegRally THOR v0.79</div>
   </div>
 </div>
 
@@ -743,17 +743,16 @@ body{
     </div>
 
     <div class="io-section" style="margin-top:10px;">
-      <div class="io-title">💾 Quick Save / Load</div>
+      <div class="io-title">☁ Server Session</div>
       <div class="server-setup">
-        <div class="server-hint">Save keeps your legs on <b>this device</b>. To move to another device, use <b>Copy</b> then <b>Paste</b> on the other device.</div>
+        <div class="server-hint">Saves legs to the cloud. Use <b>Save</b> on your phone, then <b>Load</b> on any other device (Tesla, tablet, etc.).</div>
+        <div id="gh-gist-id-display" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--txt3);padding:4px 2px;word-break:break-all;display:none;"></div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
-        <button class="btn-io btn-export" onclick="saveToServer()">💾 Save</button>
-        <button class="btn-io btn-import" onclick="loadFromServer()">↩ Load</button>
-        <button class="btn-io btn-export" onclick="copyToClipboard()" style="background:color-mix(in srgb,var(--warn) 10%,transparent);border-color:color-mix(in srgb,var(--warn) 40%,transparent);color:var(--warn);">📋 Copy to Clipboard</button>
-        <button class="btn-io btn-import" onclick="pasteFromClipboard()" style="background:color-mix(in srgb,var(--warn) 10%,transparent);border-color:color-mix(in srgb,var(--warn) 40%,transparent);color:var(--warn);">📥 Paste &amp; Load</button>
+      <div class="io-row" style="margin-top:8px;">
+        <button class="btn-io btn-export" onclick="saveToServer()">☁ Save to Server</button>
+        <button class="btn-io btn-import" onclick="loadFromServer()">⬇ Load from Server</button>
       </div>
-      <div id="server-feedback" class="io-feedback" style="display:none;margin-top:8px;"></div>
+      <div id="server-feedback" class="io-feedback" style="display:none"></div>
     </div>
     <div id="io-feedback" class="io-feedback" style="display:none"></div>
   </div>
@@ -1030,12 +1029,29 @@ setInterval(updateSystemClock, 50);
 updateSystemClock();
 
 /* ══════════════════════════════════════════════════════════════════════════
-   SAVE / LOAD — localStorage (same device) + Clipboard (cross-device)
-   Zero network dependency — works perfectly on GitHub Pages everywhere.
+   SERVER SESSION — GitHub Gist
+   ─────────────────────────────────────────────────────────────────────────
+   Uses the GitHub Gist REST API which has full CORS support from browsers.
+   No proxy needed. Works perfectly from GitHub Pages.
+   - Token:   embedded in code (gist-scoped PAT)
+   - Gist ID: auto-created on first Save, then stored in localStorage
    ══════════════════════════════════════════════════════════════════════════ */
-const LS_KEY = 'rr-saved-legs';
+const GH_API       = 'https://api.github.com';
+const GH_GIST_FILE = 'regrally-legs.json';
+const GH_TOKEN     = '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';
 
-function initServerUI(){ /* nothing to restore in UI */ }
+function ghGetToken(){ return GH_TOKEN; }
+function ghGetGistId(){ return localStorage.getItem('rr-gh-gist-id') || ''; }
+function ghSaveGistId(id){
+  localStorage.setItem('rr-gh-gist-id', id);
+  const disp = gel('gh-gist-id-display');
+  if(disp){ disp.textContent = '🔗 Gist: ' + id; disp.style.display = ''; }
+}
+
+function initServerUI(){
+  const id = ghGetGistId();
+  if(id) ghSaveGistId(id);
+}
 
 function serverFeedback(msg, color){
   const el = gel('server-feedback');
@@ -1045,65 +1061,103 @@ function serverFeedback(msg, color){
   el.style.color   = color || 'var(--warn)';
 }
 
-function saveToServer(){
+async function saveToServer(){
   if(!legs.length){ serverFeedback('⚠ No legs defined yet.', 'var(--behind)'); return; }
-  try {
-    const payload = JSON.stringify({ legs, savedAt: new Date().toISOString() });
-    localStorage.setItem(LS_KEY, payload);
-    serverFeedback(`✓ Saved ${legs.length} leg(s) on this device at ${new Date().toLocaleTimeString()}`, 'var(--ok)');
-    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 5000);
-  } catch(e){
-    serverFeedback('⚠ Save failed: ' + e.message, 'var(--behind)');
-  }
-}
+  const token = ghGetToken();
+  if(!token){ serverFeedback('⚠ Paste your GitHub token first (see setup instructions above).', 'var(--behind)'); return; }
 
-function loadFromServer(){
-  try {
-    const raw = localStorage.getItem(LS_KEY);
-    if(!raw){ serverFeedback('⚠ Nothing saved on this device yet. Use "Paste & Load" to import from another device.', 'var(--warn)'); return; }
-    const record = JSON.parse(raw);
-    if(!record.legs) throw new Error('Saved data has no legs.');
-    processImportedPayload(record);
-    serverFeedback(`✓ Loaded ${record.legs.length} leg(s) — saved ${record.savedAt ? new Date(record.savedAt).toLocaleString() : 'unknown time'}`, 'var(--ok)');
-    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 5000);
-  } catch(e){
-    serverFeedback('⚠ Load failed: ' + e.message, 'var(--behind)');
-  }
-}
+  serverFeedback('⏳ Saving to Gist…', 'var(--warn)');
 
-async function copyToClipboard(){
-  if(!legs.length){ serverFeedback('⚠ No legs to copy.', 'var(--behind)'); return; }
-  try {
-    const payload = JSON.stringify({ legs, savedAt: new Date().toISOString() });
-    await navigator.clipboard.writeText(payload);
-    serverFeedback('✓ Copied! Now open the app on the other device and tap "Paste & Load".', 'var(--ok)');
-    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 8000);
-  } catch(e){
-    // Fallback: show a prompt the user can manually copy from
-    const payload = JSON.stringify({ legs, savedAt: new Date().toISOString() });
-    window.prompt('Copy this text, then paste it on the other device:', payload);
-  }
-}
+  const payload = JSON.stringify({ legs, savedAt: new Date().toISOString() }, null, 2);
+  const body    = { description: 'RegRally THOR – leg configuration', public: false,
+                    files: { [GH_GIST_FILE]: { content: payload } } };
 
-async function pasteFromClipboard(){
   try {
-    let text = '';
-    if(navigator.clipboard && navigator.clipboard.readText){
-      text = await navigator.clipboard.readText();
+    const existingId = ghGetGistId();
+    let   url, method;
+
+    if(existingId){
+      url    = `${GH_API}/gists/${existingId}`;
+      method = 'PATCH';
+    } else {
+      url    = `${GH_API}/gists`;
+      method = 'POST';
     }
-    if(!text){
-      text = window.prompt('Paste the copied configuration here:') || '';
+
+    const r = await fetch(url, {
+      method,
+      headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github+json' },
+      body: JSON.stringify(body)
+    });
+
+    if(!r.ok){
+      const err = await r.json().catch(()=>({}));
+      // If the saved Gist ID no longer exists (deleted), create a new one
+      if(r.status === 404 && existingId){
+        localStorage.removeItem('rr-gh-gist-id');
+        serverFeedback('⚠ Saved Gist not found — clearing ID, please Save again.', 'var(--warn)');
+        return;
+      }
+      throw new Error(err.message || 'GitHub API error: HTTP ' + r.status);
     }
-    if(!text){ serverFeedback('⚠ Nothing pasted.', 'var(--warn)'); return; }
-    const record = JSON.parse(text.trim());
-    if(!record.legs) throw new Error('Pasted data has no legs.');
-    processImportedPayload(record);
-    serverFeedback(`✓ Loaded ${record.legs.length} leg(s) from clipboard.`, 'var(--ok)');
-    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 5000);
+
+    const data = await r.json();
+    ghSaveGistId(data.id);
+    serverFeedback(`✓ Saved ${legs.length} leg(s) to Gist at ${new Date().toLocaleTimeString()}`, 'var(--ok)');
+    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 6000);
+
   } catch(e){
-    serverFeedback('⚠ Paste failed — make sure you copied from the other device first. (' + e.message + ')', 'var(--behind)');
+    serverFeedback('⚠ ' + e.message, 'var(--behind)');
   }
 }
+
+async function loadFromServer(){
+  const token   = ghGetToken();
+  const gistId  = ghGetGistId();
+
+  if(!gistId){
+    serverFeedback('⚠ No Gist saved yet — press "Save to Gist" first.', 'var(--behind)'); return;
+  }
+
+  serverFeedback('⏳ Loading from Gist…', 'var(--warn)');
+
+  try {
+    const headers = { 'Accept': 'application/vnd.github+json' };
+    if(token) headers['Authorization'] = 'token ' + token;
+
+    const r = await fetch(`${GH_API}/gists/${gistId}`, { headers });
+    if(!r.ok){
+      const err = await r.json().catch(()=>({}));
+      throw new Error(err.message || 'HTTP ' + r.status);
+    }
+
+    const data    = await r.json();
+    const file    = data.files && data.files[GH_GIST_FILE];
+    if(!file)      throw new Error(`File "${GH_GIST_FILE}" not found in Gist.`);
+
+    // Content may be truncated for large files — fetch raw_url if needed
+    let content = file.content;
+    if(file.truncated){
+      const raw = await fetch(file.raw_url);
+      content = await raw.text();
+    }
+
+    const record = JSON.parse(content);
+    if(!record.legs) throw new Error('No legs found in saved data.');
+    processImportedPayload(record);
+    serverFeedback(
+      `✓ Loaded ${record.legs.length} leg(s) — saved ${record.savedAt ? new Date(record.savedAt).toLocaleString() : 'unknown time'}`,
+      'var(--ok)'
+    );
+    setTimeout(()=>{ const e=gel('server-feedback'); if(e) e.style.display='none'; }, 6000);
+
+  } catch(e){
+    serverFeedback('⚠ ' + e.message, 'var(--behind)');
+  }
+}
+
+// Restore persisted token + gist ID into UI
+initServerUI();
 
 /* ── THEME ── */
 let theme = localStorage.getItem('rr-theme') || 'dark';
