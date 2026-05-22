@@ -33,7 +33,6 @@ body{
   background:var(--bg);color:var(--txt);
   font-family:'DM Sans',system-ui,sans-serif;font-size:15px;font-weight:400;
   -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;
-  overflow:hidden;height:100%;
   transition:background .25s,color .25s;
 }
 [data-theme="dark"] body::after{
@@ -235,15 +234,6 @@ body{
   font-family:'DM Mono',monospace;font-size:12px;font-weight:600;
   color:var(--warn);white-space:nowrap;flex-shrink:0;margin-left:auto;
 }
-.btn-copy-at-all{
-  flex-shrink:0;
-  background:color-mix(in srgb,var(--ok) 12%,transparent);
-  border:1px solid color-mix(in srgb,var(--ok) 40%,transparent);
-  color:var(--ok);
-  font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;
-  cursor:pointer;white-space:nowrap;margin-left:6px;
-}
-.btn-copy-at-all:active{background:color-mix(in srgb,var(--ok) 22%,transparent);}
 
 .lgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);}
 .lf{background:var(--surf);padding:9px 10px;display:flex;flex-direction:column;gap:3px;}
@@ -743,7 +733,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.85</div>
+    <div class="app-version">RegRally THOR v0.84</div>
   </div>
 </div>
 
@@ -1411,12 +1401,7 @@ function renderLegs(){
       html += `<label class="lopt-row"><input type="checkbox" class="auto-cb" ${leg.autoStart?'checked':''} onchange="updLeg(${leg.id},'autoStart',this.checked)"><span>⏰ Auto-start at scheduled time</span>${scheduledBadge}</label>`;
       
       if(leg.autoStart){
-        // Show Copy@All button only on the very first leg that has autoStart
-        const isFirstAutoStart = legs.slice(0, idx).every(l => !l.autoStart);
-        const copyBtn = isFirstAutoStart
-          ? `<button class="btn-copy-at-all" onclick="cmCopyRefTimeToAll(${leg.id})" title="Copy this Ref Time to all other auto-start legs">📋 Copy@All</button>`
-          : '';
-        html += `<div class="ltime-row"><label>Ref Time:</label><input type="number" class="ltime-input" style="width:92px" placeholder="HH" min="0" max="23" value="${leg.autoHH}" oninput="updLeg(${leg.id},'autoHH',this.value)"><span class="ltime-sep">:</span><input type="number" class="ltime-input" style="width:92px" placeholder="MM" min="0" max="59" value="${leg.autoMM}" oninput="updLeg(${leg.id},'autoMM',this.value)"><label>Offset:</label><input type="number" class="ltime-input" style="width:104px" placeholder="0" value="${leg.autoOffset||0}" oninput="updLeg(${leg.id},'autoOffset',this.value)"><label>min</label><span class="ltime-result" id="al-${leg.id}">→ ${absLabel||'—'}</span>${copyBtn}</div>`;
+        html += `<div class="ltime-row"><label>Ref Time:</label><input type="number" class="ltime-input" style="width:92px" placeholder="HH" min="0" max="23" value="${leg.autoHH}" oninput="updLeg(${leg.id},'autoHH',this.value)"><span class="ltime-sep">:</span><input type="number" class="ltime-input" style="width:92px" placeholder="MM" min="0" max="59" value="${leg.autoMM}" oninput="updLeg(${leg.id},'autoMM',this.value)"><label>Offset:</label><input type="number" class="ltime-input" style="width:104px" placeholder="0" value="${leg.autoOffset||0}" oninput="updLeg(${leg.id},'autoOffset',this.value)"><label>min</label><span class="ltime-result" id="al-${leg.id}">→ ${absLabel||'—'}</span></div>`;
       }
     }
     html += `<div class="lgrid"><div class="lf"><div class="fl">Distance</div><input class="fi" type="number" value="${leg.distM}" oninput="updLeg(${leg.id},'distM',this.value)"><div class="fu">metres</div></div><div class="lf"><div class="fl">Avg Speed</div><input class="fi" type="number" value="${leg.spdKmh}" oninput="updLeg(${leg.id},'spdKmh',this.value)"><div class="fu">km/h</div></div><div class="lf"><div class="fl">Required Time</div><div class="fv" id="lc-${leg.id}" style="${svColor}">${sv}</div><div class="fu">mm:ss.ss</div></div></div>`;
@@ -1444,28 +1429,6 @@ function refreshTime(id){
   } else {
     el.textContent='—';
     el.style.color='';
-  }
-}
-
-// Copy Ref Time (HH:MM) from the source leg to all other legs that have autoStart enabled.
-// Clears the Offset for all target legs (they set their own offset).
-function cmCopyRefTimeToAll(srcId){
-  const src = legs.find(l=>l.id===srcId);
-  if(!src) return;
-  let count = 0;
-  legs.forEach(l=>{
-    if(l.id===srcId) return;          // skip source
-    if(!l.autoStart) return;           // skip legs without autoStart
-    l.autoHH     = src.autoHH;
-    l.autoMM     = src.autoMM;
-    l.autoOffset = '0';                // clear offset
-    count++;
-  });
-  renderLegs();
-  // Brief flash to confirm
-  if(count>0){
-    const btn = document.querySelector('.btn-copy-at-all');
-    if(btn){ btn.textContent=`✓ Copied to ${count} leg${count>1?'s':''}!`; setTimeout(()=>renderLegs(),1500); }
   }
 }
 function legGroupInfo(idx){
@@ -1524,19 +1487,16 @@ function scheduleAutoStart(idx){
   asTimer=setInterval(()=>{
     const rem=asTarget-new Date();
     if(rem<=0){ clearAutoStart(); gel('as-banner').style.display='none'; startLeg(); return; }
-    const clkEl = gel('as-clock');
-    const dtEl  = gel('as-datetime');
-    clkEl.textContent = '− ' + fmtCountdown(rem);
+    gel('as-clock').textContent=fmtCountdown(rem);
+    // Flash datetime red in last 10 seconds
+    const dtEl = gel('as-datetime');
     if(rem<=10000){
-      // Last 10 seconds: clock turns red, datetime flashes red
-      clkEl.style.color = 'var(--behind)';
       const flash = Math.floor(rem/400)%2===0;
-      dtEl.style.opacity = flash ? '1' : '0.1';
-      dtEl.style.color   = 'var(--behind)';
+      dtEl.style.opacity  = flash ? '1' : '0.1';
+      dtEl.style.color    = 'var(--behind)';
     } else {
-      clkEl.style.color  = 'var(--warn)';
-      dtEl.style.opacity = '.75';
-      dtEl.style.color   = 'var(--warn)';
+      dtEl.style.opacity  = '.75';
+      dtEl.style.color    = 'var(--warn)';
     }
   }, 50);
 }
@@ -2179,7 +2139,7 @@ function importLegs(input){
 function processImportedPayload(raw){
   const arr=Array.isArray(raw)?raw:raw.legs||[];
   legs=arr.map((l,i)=>{
-    legId++; return{id:legId,name:l.name||'Stage '+(i+1),distM:String(l.distM||''),spdKmh:String(l.spdKmh||''),linked:!!l.linked,atDistance:!!l.atDistance,autoStart:!!l.autoStart,autoHH:l.autoHH||'',autoMM:l.autoMM||'',autoOffset:String(l.autoOffset||'0')};
+    legId++; return{id:legId,name:l.name||'Stage '+(i+1),distM:String(l.distM||''),spdKmh:String(l.spdKmh||''),linked:!!l.linked,atDistance:!!l.atDistance,autoStart:!!l.autoStart,autoHH:l.autoHH||'',autoMM:l.autoMM||''};
   }); renderLegs();
 }
 
