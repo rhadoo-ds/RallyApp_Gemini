@@ -2,7 +2,6 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -844,7 +843,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.87.7</div>
+    <div class="app-version">RegRally THOR v0.87</div>
   </div>
 </div>
 
@@ -1076,7 +1075,7 @@ body{
 
 <div class="pg" id="pg-res">
   <div class="sec-lbl">Stage Results</div>
-  <div class="empty-msg">No completed legs yet</div>
+  <div id="res-content"><div class="empty-msg">No completed legs yet</div></div>
 </div>
 
 <div class="pg" id="pg-cm">
@@ -2338,6 +2337,7 @@ function stopLeg(){
   const stopTime        = endedAt;  // exact stop timestamp
   
   legResults[curIdx]={leg:{...leg},tgtSecs,elSec,gpsDistM,gpsFixN,delta,avgAccuracy,startedAt,endedAt,wasAutoStart,wasAutoDistance,stopTime};
+  console.log('[stopLeg] wrote result at idx', curIdx, 'legResults.length=', legResults.length, 'non-null=', legResults.filter(r=>r!=null).length);
   buildResults();
 
   const nextIdx=curIdx+1;
@@ -2408,23 +2408,14 @@ function clearResults(){
 
 function buildResults(){
   try { _buildResultsInner(); } catch(e) {
+    const c=gel('res-content');
+    if(c) c.innerHTML=`<div class="empty-msg" style="color:var(--behind)">Results error: ${e.message}<br><small>${e.stack||''}</small></div>`;
     console.error('buildResults error:', e);
-    try {
-      const pg=gel('pg-res');
-      while(pg.children.length > 1) pg.removeChild(pg.lastChild);
-      const err=document.createElement('div');
-      err.className='empty-msg'; err.style.color='var(--behind)';
-      err.textContent='Results error: '+e.message;
-      pg.appendChild(err);
-    } catch(_){}
   }
 }
 function _buildResultsInner(){
-  const pg=gel('pg-res');
-  // Remove all previous result nodes (keep only the sec-lbl heading at index 0)
-  while(pg.children.length > 1) pg.removeChild(pg.lastChild);
-
-  const done=legResults.filter(r=>r!=null);
+  console.log('[buildResults] called. legResults.length=',legResults.length,'non-null=',legResults.filter(r=>r!=null).length,'c=',gel('res-content'));
+  const c=gel('res-content'); const done=legResults.filter(r=>r!=null);
   const calibFactor = getCalibFactor();
   const pad=n=>String(n).padStart(2,'0');
   const fmtTime=d=>{
@@ -2434,13 +2425,7 @@ function _buildResultsInner(){
     return `${pad(dt.getHours())}:${pad(dt.getMinutes())}:${pad(dt.getSeconds())}`;
   };
 
-  if(!done.length){
-    const empty=document.createElement('div');
-    empty.className='empty-msg';
-    empty.textContent='No completed legs yet';
-    pg.appendChild(empty);
-    return;
-  }
+  if(!done.length){c.innerHTML='<div class="empty-msg">No completed legs yet</div>';console.log('[buildResults] done.length=0, legResults=',legResults);return;}
 
   // Persist whenever we build
   saveResults(legResults, legSubEvents, legs);
@@ -2523,8 +2508,7 @@ function _buildResultsInner(){
     });
   });
   const netSign = tot>0.005?'+':tot<-0.005?'−':'';
-  const _tmp=document.createElement('div');
-  _tmp.innerHTML=`<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;"><table class="rtable">
+  c.innerHTML=`<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;"><table class="rtable">
     <thead><tr>
       <th>Stage</th>
       <th>Start@</th>
@@ -2548,7 +2532,7 @@ function _buildResultsInner(){
       </div>
       <button onclick="clearResults()" style="margin-left:auto;background:color-mix(in srgb,var(--behind) 12%,transparent);border:1px solid color-mix(in srgb,var(--behind) 40%,transparent);color:var(--behind);font-weight:700;font-size:12px;padding:8px 16px;border-radius:6px;cursor:pointer;white-space:nowrap;">↺ Reset Results</button>
     </div>`;
-  while(_tmp.firstChild) pg.appendChild(_tmp.firstChild);
+  console.log('[buildResults] DONE. rows length=', rows.length, 'c.innerHTML length=', c.innerHTML.length, 'c.children=', c.children.length);
 }
 
 /* ── DATA FILE SYNC IO ── */
