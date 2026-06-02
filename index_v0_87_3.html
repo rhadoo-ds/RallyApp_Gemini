@@ -2414,7 +2414,6 @@ function buildResults(){
   }
 }
 function _buildResultsInner(){
-  console.log('[buildResults] called. legResults.length=',legResults.length,'non-null=',legResults.filter(r=>r!=null).length,'c=',gel('res-content'));
   const c=gel('res-content'); const done=legResults.filter(r=>r!=null);
   const calibFactor = getCalibFactor();
   const pad=n=>String(n).padStart(2,'0');

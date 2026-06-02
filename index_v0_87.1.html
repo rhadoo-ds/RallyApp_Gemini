@@ -1869,7 +1869,6 @@ function showTab(name){
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
   gel('pg-'+name).classList.add('on');
   if(name==='cm') cmRefreshUI();
-  if(name==='res') buildResults();
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -2337,7 +2336,6 @@ function stopLeg(){
   const stopTime        = endedAt;  // exact stop timestamp
   
   legResults[curIdx]={leg:{...leg},tgtSecs,elSec,gpsDistM,gpsFixN,delta,avgAccuracy,startedAt,endedAt,wasAutoStart,wasAutoDistance,stopTime};
-  console.log('[stopLeg] wrote result at idx', curIdx, 'legResults.length=', legResults.length, 'non-null=', legResults.filter(r=>r!=null).length);
   buildResults();
 
   const nextIdx=curIdx+1;
@@ -2407,25 +2405,12 @@ function clearResults(){
 }
 
 function buildResults(){
-  try { _buildResultsInner(); } catch(e) {
-    const c=gel('res-content');
-    if(c) c.innerHTML=`<div class="empty-msg" style="color:var(--behind)">Results error: ${e.message}<br><small>${e.stack||''}</small></div>`;
-    console.error('buildResults error:', e);
-  }
-}
-function _buildResultsInner(){
-  console.log('[buildResults] called. legResults.length=',legResults.length,'non-null=',legResults.filter(r=>r!=null).length,'c=',gel('res-content'));
   const c=gel('res-content'); const done=legResults.filter(r=>r!=null);
   const calibFactor = getCalibFactor();
   const pad=n=>String(n).padStart(2,'0');
-  const fmtTime=d=>{
-    if(!d) return '—';
-    const dt = (d instanceof Date) ? d : new Date(d);
-    if(isNaN(dt.getTime())) return '?';
-    return `${pad(dt.getHours())}:${pad(dt.getMinutes())}:${pad(dt.getSeconds())}`;
-  };
+  const fmtTime=d=>d?`${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`:'—';
 
-  if(!done.length){c.innerHTML='<div class="empty-msg">No completed legs yet</div>';console.log('[buildResults] done.length=0, legResults=',legResults);return;}
+  if(!done.length){c.innerHTML='<div class="empty-msg">No completed legs yet</div>';return;}
 
   // Persist whenever we build
   saveResults(legResults, legSubEvents, legs);

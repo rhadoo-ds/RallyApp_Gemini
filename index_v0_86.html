@@ -599,114 +599,15 @@ body{
 .brst{background:var(--surf2);color:var(--txt2);border:1px solid var(--border);}
 .bc:disabled{opacity:0.3; cursor:not-allowed;}
 
-/* ── SECTION H: Quick Limits Column ── */
-.live-with-h {
-  display: flex;
-  gap: 5px;
-  width: 100%;
-  align-items: stretch;
-}
-.live-main-col {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-.sec-h {
-  width: 15%;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  align-self: stretch;
-}
-.qlimit-btn {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'DM Mono', monospace;
-  font-size: 13px;
-  font-weight: 700;
-  border-radius: 5px;
-  cursor: pointer;
-  border: 2px solid var(--border2);
-  background: var(--surf2);
-  color: var(--txt2);
-  transition: all 0.15s;
-  letter-spacing: 0.5px;
-  user-select: none;
-  -webkit-user-select: none;
-  text-align: center;
-  line-height: 1.1;
-  padding: 2px 2px;
-  box-sizing: border-box;
-  width: 100%;
-}
-.qlimit-btn:active { transform: scale(0.94); }
-.qlimit-btn.pressed {
-  border-color: var(--behind);
-  color: #fff;
-  background: color-mix(in srgb, var(--behind) 25%, transparent);
-}
-@keyframes qlimitFlash {
-  0%,100% { background: color-mix(in srgb, var(--behind) 25%, transparent); }
-  50%      { background: color-mix(in srgb, var(--behind) 55%, transparent); }
-}
-.qlimit-btn.pressed.flashing { animation: qlimitFlash 0.7s infinite; }
-
-.qlimit-marshal-btn {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 17px;
-  border-radius: 5px;
-  cursor: pointer;
-  border: 2px solid var(--border2);
-  background: var(--surf3);
-  color: var(--txt2);
-  transition: all 0.15s;
-  padding: 2px;
-  width: 100%;
-}
-.qlimit-marshal-btn:active { transform: scale(0.94); background: var(--surf2); }
-
-/* Flashing states when quick limit active */
-@keyframes tgtFlash {
-  0%,100% { opacity: 1; }
-  50%      { opacity: 0.35; }
-}
-.tgt-speed-flashing .st { animation: tgtFlash 0.7s infinite; color: var(--txt3) !important; }
-.tgt-speed-flashing { border-color: color-mix(in srgb, var(--txt3) 35%, transparent) !important; background: color-mix(in srgb, var(--txt3) 8%, transparent) !important; }
-
-/* Quick limit meters counter in Section E */
-.ql-meters-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-family: 'DM Mono', monospace;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--behind);
-  letter-spacing: 0.5px;
-  padding: 2px 0;
-}
-.ql-meters-lbl { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--txt3); }
-
 /* Expanded High-Visibility Results Matrix Table Grid */
-.rtable{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:clamp(10px,2.5vw,17.1px);}
+.rtable{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
 .rtable th{
-  font-size:clamp(9px,2vw,13.8px);
+  font-size:13.8px;
   font-weight:700;
   letter-spacing:.5px;
   color:var(--txt3);
   text-transform:uppercase;
-  padding:6px 4px;
+  padding:8px 5px;
   background:var(--surf2);
   text-align:right;
   border-bottom:1px solid var(--border);
@@ -715,16 +616,15 @@ body{
 .rtable th:first-child{text-align:left;}
 .rtable td{
   font-family:'DM Mono',monospace;
-  font-size:clamp(10px,2.5vw,17.1px);
-  padding:6px 4px;
+  font-size:17.1px;
+  padding:8px 5px;
   border-bottom:1px solid var(--border);
   color:var(--txt);
   text-align:right;
   vertical-align:middle;
   white-space:nowrap;
 }
-.rtable td:first-child{font-family:'DM Sans',sans-serif;font-weight:700;font-size:clamp(10px,2.5vw,17.1px);text-align:left;white-space:normal;word-break:break-word;min-width:80px;max-width:160px;}
-.rtable .subrow td { font-size: clamp(9px,2vw,13px); color: var(--txt3); background: var(--surf3); }
+.rtable td:first-child{font-family:'DM Sans',sans-serif;font-weight:700;font-size:17.1px;text-align:left;white-space:normal;word-break:break-word;min-width:120px;max-width:180px;}
 .rtable tr:last-child td{border-bottom:none;}
 /* Linked stage name cell — light green outline */
 .rtable td.linked-stage{
@@ -843,7 +743,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.87</div>
+    <div class="app-version">RegRally THOR v0.86</div>
   </div>
 </div>
 
@@ -954,11 +854,6 @@ body{
     
     <button class="btn-gps-run" id="btn-gps-run" onclick="doRequestGPS()" style="display:none">📍 Grant GPS Permission</button>
 
-    <!-- Sections E, F, G + Section H side column -->
-    <div class="live-with-h">
-      <!-- Main column: E, F, G -->
-      <div class="live-main-col">
-
     <div class="spanel">
       <div class="sb">
         <div class="slb">GPS Speed</div>
@@ -969,7 +864,7 @@ body{
         <div class="su">km/h</div>
       </div>
       <div class="sdiv"></div>
-      <div class="tgt-block" id="tgt-spd-block">
+      <div class="tgt-block">
         <div class="slb">Target Speed</div>
         <div class="st" id="spd-tgt">—</div>
         <div class="su">km/h</div>
@@ -998,12 +893,6 @@ body{
       <div class="delta-in">
         <div class="dlbl" id="dlbl">— SELECT LEG —</div>
         <div class="dlbl-sub" id="dlbl-sub"></div>
-        <!-- QL meters row: only visible when quick limit active -->
-        <div id="ql-meters-row" class="ql-meters-row" style="display:none">
-          <span class="ql-meters-lbl">⚠ Limit zone:</span>
-          <span id="ql-meters-val">0</span>
-          <span class="ql-meters-lbl">m</span>
-        </div>
         <div class="dverd-text neutral" id="live-text-warning-label">WAITING</div>
         <div class="dhero-cols">
           <div class="dhero-sec">
@@ -1056,21 +945,7 @@ body{
     <div style="display:flex; justify-content:center; margin-top:-2px;">
        <button class="bc brst" style="width:100%; max-width:180px; padding:8px 4px; font-size:11px;" onclick="resetRally()">↺ Reset Rally</button>
     </div>
-
-      </div><!-- end .live-main-col -->
-
-      <!-- Section H: Quick Limits -->
-      <div class="sec-h" id="sec-h">
-        <button class="qlimit-btn" id="ql-10"  onclick="toggleQuickLimit(10)"  data-spd="10">10</button>
-        <button class="qlimit-btn" id="ql-15"  onclick="toggleQuickLimit(15)"  data-spd="15">15</button>
-        <button class="qlimit-btn" id="ql-20"  onclick="toggleQuickLimit(20)"  data-spd="20">20</button>
-        <button class="qlimit-btn" id="ql-30"  onclick="toggleQuickLimit(30)"  data-spd="30">30</button>
-        <button class="qlimit-btn" id="ql-40"  onclick="toggleQuickLimit(40)"  data-spd="40">40</button>
-        <button class="qlimit-btn" id="ql-50"  onclick="toggleQuickLimit(50)"  data-spd="50">50</button>
-        <button class="qlimit-marshal-btn" id="ql-marshal" onclick="marshalAction()" title="Marshal">⏱</button>
-      </div>
-
-    </div><!-- end .live-with-h -->
+  </div>
 </div>
 
 <div class="pg" id="pg-res">
@@ -1622,105 +1497,6 @@ function legGroupInfo(idx){
 }
 function isGroupFirst(idx){ return !legs[idx].linked || idx===0; }
 
-/* ── QUICK LIMITS (Section H) ── */
-let activeQuickLimit   = null;   // currently pressed speed (km/h), or null
-let qlPressedAtDist    = 0;      // gpsDistM when QL was pressed
-let qlPressedAtTime    = 0;      // performance.now() when QL was pressed
-let qlAccumDistM       = 0;      // meters driven while QL active in this press
-let qlFlashInterval    = null;
-
-const QL_SPEEDS = [10, 15, 20, 30, 40, 50];
-
-function toggleQuickLimit(spd) {
-  if (activeQuickLimit === spd) {
-    // Deactivate
-    _deactivateQL();
-  } else {
-    // Switch to new
-    _deactivateQL();
-    _activateQL(spd);
-  }
-}
-
-function _activateQL(spd) {
-  activeQuickLimit  = spd;
-  qlPressedAtDist   = gpsDistM;
-  qlPressedAtTime   = performance.now();
-  qlAccumDistM      = 0;
-
-  // Button state
-  const btn = gel('ql-' + spd);
-  if (btn) { btn.classList.add('pressed', 'flashing'); }
-
-  // Target speed block flash
-  const tgtBlock = gel('tgt-spd-block');
-  if (tgtBlock) tgtBlock.classList.add('tgt-speed-flashing');
-
-  // Show QL meters row in Section E
-  const qlRow = gel('ql-meters-row');
-  if (qlRow) { qlRow.style.display = 'flex'; gel('ql-meters-val').textContent = '0'; }
-
-  // Log to results sub-row (press event)
-  _qlLogToResults(spd, 'press');
-}
-
-function _deactivateQL() {
-  if (activeQuickLimit === null) return;
-  const spd = activeQuickLimit;
-  const durationSec = (performance.now() - qlPressedAtTime) / 1000;
-  const distM = gpsDistM - qlPressedAtDist;
-
-  // Log to results sub-row (release event)
-  _qlLogToResults(spd, 'release', distM, durationSec);
-
-  activeQuickLimit = null;
-  qlAccumDistM     = 0;
-
-  // Clear all button states
-  QL_SPEEDS.forEach(s => {
-    const b = gel('ql-' + s);
-    if (b) b.classList.remove('pressed', 'flashing');
-  });
-
-  // Restore target speed block
-  const tgtBlock = gel('tgt-spd-block');
-  if (tgtBlock) tgtBlock.classList.remove('tgt-speed-flashing');
-
-  // Hide QL meters row
-  const qlRow = gel('ql-meters-row');
-  if (qlRow) qlRow.style.display = 'none';
-}
-
-function marshalAction() {
-  // Log marshal event as sub-row
-  _qlLogToResults(null, 'marshal');
-}
-
-function _qlLogToResults(spd, type, distM, durSec) {
-  if (curIdx < 0) return;
-  // Store sub-events on the current leg's result slot
-  if (!legSubEvents[curIdx]) legSubEvents[curIdx] = [];
-  const now = new Date();
-  const pad = n => String(n).padStart(2, '0');
-  const ts  = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
-  const elSec = legStartTs ? (performance.now() - legStartTs) / 1000 : 0;
-  const deltaSnap = lastDeltaSnap;
-
-  legSubEvents[curIdx].push({
-    type, ts, spd,
-    distFromStart: gpsDistM,
-    timeFromStart: elSec,
-    deltaSec: deltaSnap.sec,
-    deltaM:   deltaSnap.m,
-    qlDistM:  distM || 0,
-    qlSec:    durSec || 0,
-  });
-  buildResults();
-}
-
-let legSubEvents = [];  // per-leg array of sub-events
-let lastDeltaSnap = { sec: 0, m: 0 };
-
 /* ── RALLY OPERATION CORE LAYOUTS ── */
 let curIdx                  = -1;
 let legRunning              = false;
@@ -1741,8 +1517,6 @@ function launch(){
   legs=valid; renderLegs();
   curIdx=0; legRunning=false;
   legResults=new Array(legs.length).fill(null);
-  legSubEvents=new Array(legs.length).fill(null).map(()=>[]);
-  _deactivateQL();
   showTab('live');
   gel('live-idle').style.display='none'; gel('live-run').style.display='flex';
   renderChips(); loadLeg(0); updateSbar();
@@ -1869,7 +1643,6 @@ function showTab(name){
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
   gel('pg-'+name).classList.add('on');
   if(name==='cm') cmRefreshUI();
-  if(name==='res') buildResults();
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -2181,9 +1954,6 @@ function startLeg(){
   if(legRunning) return;
   legRunning=true; legStartTs=performance.now();
   gpsDistM=0; gpsFixN=0; totalAccPointsThisStage=0;
-  if(!legSubEvents[curIdx]) legSubEvents[curIdx]=[];
-  lastDeltaSnap={sec:0,m:0};
-  _deactivateQL();
   gel('live-legs-collapsible').classList.remove('open');
   renderChips(); updateControlsState(); updateSbar();
   clearInterval(legTimer); legTimer=setInterval(tick,100);
@@ -2194,54 +1964,29 @@ function tick(){
   const leg=legs[curIdx];
   const tgtSecs=calcSecs(leg.distM,leg.spdKmh);
   const tgtDistM=parseFloat(leg.distM);
-  const tgtKmh=parseFloat(leg.spdKmh);
-  const spdMs=tgtKmh/3.6;
+  const spdMs=parseFloat(leg.spdKmh)/3.6;
   const elSec=(performance.now()-legStartTs)/1000;
+  const expDistM=spdMs*elSec;
 
-  // ── Quick Limit delta calculation ──────────────────────────────────────
-  // When QL active: effective target time = time for (normal distance) + time for (QL distance)
-  // normalDist = totalDist - qlDist, normalTime = normalDist / tgtSpeed
-  // qlDist from current press = gpsDistM - qlPressedAtDist
-  // totalExpectedTime = (normalDist / spdMs) + (qlDist / qlSpdMs)
   let delta=0, state='neutral';
-  const qlDistM = activeQuickLimit !== null ? Math.max(0, gpsDistM - qlPressedAtDist) : 0;
-  if(activeQuickLimit !== null && gel('ql-meters-val')) {
-    gel('ql-meters-val').textContent = Math.round(qlDistM);
-  }
-
   if(gpsFixN>0 && gpsDistM>5 && spdMs>0){
-    if(activeQuickLimit !== null){
-      // GPS + QL mode: delta counts relative to active QL speed for the QL section
-      const qlSpdMs = activeQuickLimit / 3.6;
-      // Time that should have been spent on the QL distance at QL speed
-      const qlExpTimeSec = qlDistM / qlSpdMs;
-      // Time actually spent since QL was pressed
-      const qlActualTimeSec = (performance.now() - qlPressedAtTime) / 1000;
-      // Delta contribution from QL section
-      const qlDelta = qlActualTimeSec - qlExpTimeSec;
-      // Normal section delta (before QL was pressed):
-      const normalDistM = Math.max(0, qlPressedAtDist);
-      const normalIdealTime = normalDistM / spdMs;
-      const normalActualTime = qlPressedAtTime - legStartTs; // ms → convert
-      const normalDeltaSec = (normalActualTime / 1000) - normalIdealTime;
-      delta = normalDeltaSec + qlDelta;
-    } else {
-      const idealTime=gpsDistM/spdMs;
-      delta=elSec-idealTime;
-    }
+    // GPS mode: compare actual distance covered vs time taken
+    const idealTime=gpsDistM/spdMs;
+    delta=elSec-idealTime;
     state=Math.abs(delta)<0.3?'ontime':delta>0?'behind':'ahead';
   } else {
+    // Time-only mode: show how late you are past the target time.
+    // Before the target time elapses the count shows remaining penalty
+    // accumulating from zero — you start neutral, become "late" only
+    // after the clock exceeds target (a naturally correct reading from standstill).
+    // We show elapsed proportion: delta = how far past target we are,
+    // clamped to ≥0 so it never shows a bogus "EARLY" at launch.
     delta = Math.max(0, elSec - tgtSecs);
     state = delta < 0.3 ? (elSec < tgtSecs ? 'neutral' : 'ontime') : 'behind';
   }
   setDelta(Math.abs(delta),state,true);
 
-  // Snapshot for sub-event logging
-  const expDistM = spdMs * elSec;
-  const deltaDistM = (gpsDistM - expDistM);
-  lastDeltaSnap = { sec: delta, m: deltaDistM };
-
-  const deltaDistanceKm = deltaDistM / 1000;
+  const deltaDistanceKm = (gpsDistM - expDistM) / 1000;
 
   // Hero delta distance display
   const ddistEl = gel('ddist-hero');
@@ -2253,10 +1998,9 @@ function tick(){
 
   const gpsKmh=gpsSpeedMs!=null?gpsSpeedMs*3.6:null;
   if(gpsKmh!=null){
-    // When QL active, compare GPS speed to QL speed instead of target
-    const refKmh = activeQuickLimit !== null ? activeQuickLimit : tgtKmh;
-    const diff=gpsKmh-refKmh;
+    const diff=gpsKmh-parseFloat(leg.spdKmh);
     gel('spd').textContent=gpsKmh.toFixed(1);
+    // Brackets, reversed logic: faster (positive diff)=blue(ahead), slower(negative)=red(behind)
     const sign = diff>0?'+':'';
     gel('spd-diff').textContent='['+sign+diff.toFixed(1)+']';
     gel('spd-diff').className='sdiff '+(Math.abs(diff)<1?'z':diff>0?'p':'n');
@@ -2265,6 +2009,7 @@ function tick(){
   }
   // Real avg speed
   const realAvgKmh = elSec > 0 ? (gpsDistM / 1000) / (elSec / 3600) : 0;
+  const tgtKmh = parseFloat(leg.spdKmh);
   const spdAvgEl = gel('spd-avg');
   const avgDiff = realAvgKmh - tgtKmh;
   spdAvgEl.textContent = realAvgKmh.toFixed(3);
@@ -2321,7 +2066,6 @@ function tick(){
 function stopLeg(){
   if(!legRunning) return;
   clearInterval(legTimer); legRunning=false;
-  _deactivateQL();
   const leg=legs[curIdx];
   const tgtSecs=calcSecs(leg.distM,leg.spdKmh);
   const elSec=(performance.now()-legStartTs)/1000;
@@ -2334,10 +2078,8 @@ function stopLeg(){
   const endedAt    = new Date();
   const wasAutoStart    = !!leg.autoStart;
   const wasAutoDistance = !!leg.atDistance;
-  const stopTime        = endedAt;  // exact stop timestamp
   
-  legResults[curIdx]={leg:{...leg},tgtSecs,elSec,gpsDistM,gpsFixN,delta,avgAccuracy,startedAt,endedAt,wasAutoStart,wasAutoDistance,stopTime};
-  console.log('[stopLeg] wrote result at idx', curIdx, 'legResults.length=', legResults.length, 'non-null=', legResults.filter(r=>r!=null).length);
+  legResults[curIdx]={leg:{...leg},tgtSecs,elSec,gpsDistM,gpsFixN,delta,avgAccuracy,startedAt,endedAt,wasAutoStart,wasAutoDistance};
   buildResults();
 
   const nextIdx=curIdx+1;
@@ -2360,88 +2102,24 @@ function nextLeg(){
 }
 
 function resetRally(){
-  clearInterval(legTimer); clearAutoStart(); legRunning=false; curIdx=-1; legResults=[]; legSubEvents=[];
-  _deactivateQL();
+  clearInterval(legTimer); clearAutoStart(); legRunning=false; curIdx=-1; legResults=[];
   gel('live-idle').style.display='flex'; gel('live-run').style.display='none';
   gel('live-legs-collapsible').classList.add('open');
   buildResults();
 }
 
-/* ── RESULTS PERSISTENCE ── */
-const RES_KEY = 'rr-results';
-function saveResults(legResultsArr, legSubEventsArr, legsList){
-  try {
-    localStorage.setItem(RES_KEY, JSON.stringify({
-      legResults: legResultsArr,
-      legSubEvents: legSubEventsArr,
-      legs: legsList,
-      calibFactor: getCalibFactor(),
-      savedAt: new Date().toISOString()
-    }));
-  } catch(e) { /* quota exceeded — ignore */ }
-}
-function loadResults(){
-  try {
-    const raw = localStorage.getItem(RES_KEY);
-    if(!raw) return;
-    const data = JSON.parse(raw);
-    if(data.legResults && Array.isArray(data.legResults)) {
-      // Re-hydrate — keep as plain objects, buildResults reads r.leg for all data
-      legResults = data.legResults.map(r => {
-        if(!r) return null;
-        // Dates are stored as ISO strings in JSON; leave as strings — buildResults uses new Date(r.xxx)
-        return r;
-      });
-    }
-    if(data.legSubEvents && Array.isArray(data.legSubEvents)) {
-      legSubEvents = data.legSubEvents;
-    }
-    buildResults();
-  } catch(e) { /* corrupt data — ignore */ }
-}
-function clearResults(){
-  localStorage.removeItem(RES_KEY);
-  legResults = new Array(legs.length).fill(null);
-  legSubEvents = new Array(legs.length).fill(null).map(()=>[]);
-  buildResults();
-}
-
 function buildResults(){
-  try { _buildResultsInner(); } catch(e) {
-    const c=gel('res-content');
-    if(c) c.innerHTML=`<div class="empty-msg" style="color:var(--behind)">Results error: ${e.message}<br><small>${e.stack||''}</small></div>`;
-    console.error('buildResults error:', e);
-  }
-}
-function _buildResultsInner(){
-  console.log('[buildResults] called. legResults.length=',legResults.length,'non-null=',legResults.filter(r=>r!=null).length,'c=',gel('res-content'));
   const c=gel('res-content'); const done=legResults.filter(r=>r!=null);
-  const calibFactor = getCalibFactor();
-  const pad=n=>String(n).padStart(2,'0');
-  const fmtTime=d=>{
-    if(!d) return '—';
-    const dt = (d instanceof Date) ? d : new Date(d);
-    if(isNaN(dt.getTime())) return '?';
-    return `${pad(dt.getHours())}:${pad(dt.getMinutes())}:${pad(dt.getSeconds())}`;
-  };
-
-  if(!done.length){c.innerHTML='<div class="empty-msg">No completed legs yet</div>';console.log('[buildResults] done.length=0, legResults=',legResults);return;}
-
-  // Persist whenever we build
-  saveResults(legResults, legSubEvents, legs);
-
+  if(!done.length){c.innerHTML='<div class="empty-msg">No completed legs yet</div>';return;}
   let tot=0, realPenalty=0, rows='';
-
-  // Iterate legResults directly — works both live and after persistence reload
-  legResults.forEach((r, i)=>{
-    if(!r) return;
-    // Use the leg snapshot stored IN the result (guaranteed present after reload)
-    const leg = r.leg || (legs[i] || {});
-
+  const pad=n=>String(n).padStart(2,'0');
+  const fmtTime=d=>d?`${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`:'—';
+  legs.forEach((leg,i)=>{
+    const r=legResults[i]; if(!r) return;
     tot+=r.delta; realPenalty+=Math.abs(r.delta);
     const sign=r.delta>0.005?'+':r.delta<-0.005?'−':'';
     const actSpd = r.elSec > 0 ? ((r.gpsDistM / 1000) / (r.elSec / 3600)) : 0.0;
-    const tgtSpd = parseFloat(leg.spdKmh) || 0;
+    const tgtSpd = parseFloat(leg.spdKmh);
 
     const timeDiff = r.elSec - r.tgtSecs;
     const actTimeCls = Math.abs(timeDiff)<0.3 ? 'cok' : timeDiff>0 ? 'cbeh' : 'cahd';
@@ -2453,59 +2131,29 @@ function _buildResultsInner(){
 
     const deltaCls = Math.abs(r.delta)<0.3 ? 'cok' : r.delta>0 ? 'cbeh' : 'cahd';
 
+    // Stage name cell — add linked-stage class if leg is linked
     const isLinked = leg.linked && i > 0;
     const stageCls = isLinked ? 'linked-stage' : '';
 
+    // Start @ and End @ with mode suffix (space before indicator)
     const startSuffix = r.wasAutoStart    ? '<span style="font-size:10px;opacity:.7"> (a)</span>' : '<span style="font-size:10px;opacity:.7"> (m)</span>';
     const endSuffix   = r.wasAutoDistance ? '<span style="font-size:10px;opacity:.7"> (d)</span>' : '<span style="font-size:10px;opacity:.7"> (m)</span>';
-    const startAt = r.startedAt ? fmtTime(new Date(r.startedAt)) : '—';
-    const endAt   = r.endedAt   ? fmtTime(new Date(r.endedAt))   : '—';
-    const stopAt  = r.stopTime  ? fmtTime(new Date(r.stopTime))   : '—';
+    const startAt = r.startedAt ? fmtTime(r.startedAt) : '—';
+    const endAt   = r.endedAt   ? fmtTime(r.endedAt)   : '—';
 
     rows+=`<tr>
       <td class="${stageCls}">${leg.name||'Leg '+(i+1)}</td>
       <td style="text-align:right">${startAt}${startSuffix}</td>
       <td style="text-align:right">${endAt}${endSuffix}</td>
-      <td style="text-align:right;color:var(--warn);font-weight:700;">${stopAt}</td>
       <td>${fmtMMSSdd(r.tgtSecs)}</td>
       <td class="${actTimeCls}">${actTimeSign}${fmtMMSSdd(r.elSec)}</td>
       <td>${tgtSpd.toFixed(1)}</td>
       <td class="${actSpdCls}">${actSpdSign}${actSpd.toFixed(3)}</td>
-      <td>${(parseFloat(leg.distM||0)/1000).toFixed(3)}</td>
+      <td>${(parseFloat(leg.distM)/1000).toFixed(3)}</td>
       <td>${(r.gpsDistM/1000).toFixed(3)}</td>
       <td><b>±${r.avgAccuracy.toFixed(1)}m</b></td>
       <td class="${deltaCls}">${sign}${Math.abs(r.delta).toFixed(3)}s</td>
     </tr>`;
-
-    // Sub-events rows
-    const events = (legSubEvents[i]) || [];
-    events.forEach(ev => {
-      const dSecSign = ev.deltaSec > 0.005 ? '+' : ev.deltaSec < -0.005 ? '−' : '';
-      const dMSign   = ev.deltaM   > 5     ? '+' : ev.deltaM   < -5     ? '−' : '';
-      let evDesc = '';
-      let evExtra = '';
-      if(ev.type === 'press'){
-        evDesc = `⚑ QL ${ev.spd} km/h ON`;
-      } else if(ev.type === 'release'){
-        evDesc = `⚑ QL ${ev.spd} km/h OFF`;
-        evExtra = `<span style="color:var(--behind);margin-left:4px;">${(ev.qlDistM||0).toFixed(0)}m / ${(ev.qlSec||0).toFixed(1)}s</span>`;
-      } else if(ev.type === 'marshal'){
-        evDesc = '⏱ Marshal';
-      }
-      rows += `<tr class="subrow">
-        <td colspan="2" style="text-align:left;font-size:11px;padding-left:16px;color:var(--txt2);">${evDesc}${evExtra}</td>
-        <td style="text-align:right;">${ev.ts||'—'}</td>
-        <td style="text-align:right;">—</td>
-        <td style="text-align:right;">${(ev.timeFromStart||0).toFixed(1)}s</td>
-        <td style="text-align:right;">—</td>
-        <td style="text-align:right;">—</td>
-        <td style="text-align:right;">—</td>
-        <td style="text-align:right;">${((ev.distFromStart||0)/1000).toFixed(3)}</td>
-        <td style="text-align:right;">—</td>
-        <td style="text-align:right;">${dSecSign}${Math.abs(ev.deltaSec||0).toFixed(2)}s</td>
-        <td style="text-align:right;">${dMSign}${Math.abs(ev.deltaM||0).toFixed(0)}m</td>
-      </tr>`;
-    });
   });
   const netSign = tot>0.005?'+':tot<-0.005?'−':'';
   c.innerHTML=`<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;"><table class="rtable">
@@ -2513,7 +2161,6 @@ function _buildResultsInner(){
       <th>Stage</th>
       <th>Start@</th>
       <th>End@</th>
-      <th style="color:var(--warn)">Stop@</th>
       <th>Tgt Time</th>
       <th>Act Time</th>
       <th>Tgt Spd</th>
@@ -2524,14 +2171,7 @@ function _buildResultsInner(){
       <th>Penalty</th>
     </tr></thead><tbody>${rows}</tbody></table></div>
     <div class="totcard"><div class="totlbl totlbl-net">Net Penalty</div><div class="totval totval-net">${netSign}${Math.abs(tot).toFixed(3)}s</div></div>
-    <div class="totcard"><div class="totlbl totlbl-real">Real Penalty</div><div class="totval totval-real">${realPenalty.toFixed(3)}s</div></div>
-    <div class="totcard" style="justify-content:flex-start;gap:16px;flex-wrap:wrap;">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <div class="totlbl" style="color:var(--txt3);font-size:14px;">Cal. Factor Used</div>
-        <div style="font-family:'DM Mono',monospace;font-size:22px;font-weight:700;color:var(--warn);">${calibFactor.toFixed(3)}</div>
-      </div>
-      <button onclick="clearResults()" style="margin-left:auto;background:color-mix(in srgb,var(--behind) 12%,transparent);border:1px solid color-mix(in srgb,var(--behind) 40%,transparent);color:var(--behind);font-weight:700;font-size:12px;padding:8px 16px;border-radius:6px;cursor:pointer;white-space:nowrap;">↺ Reset Results</button>
-    </div>`;
+    <div class="totcard"><div class="totlbl totlbl-real">Real Penalty</div><div class="totval totval-real">${realPenalty.toFixed(3)}s</div></div>`;
 }
 
 /* ── DATA FILE SYNC IO ── */
@@ -2668,8 +2308,6 @@ async function fetchLegsFromUrl(){
 
 legId=1; legs.push({id:1,name:'Stage 1',distM:'',spdKmh:'',linked:false,atDistance:false,autoStart:false,autoHH:'',autoMM:'',autoOffset:'0'});
 renderLegs();
-// Try restoring previously persisted results
-loadResults();
 </script>
 </body>
 </html>
