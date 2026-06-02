@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "legs": [
+    {
+      "id": 2,
+      "name": "TR1 - 25 min(12.95km). B16-B20: 72km/h",
+      "distM": "12010",
+      "spdKmh": "72",
+      "linked": false,
+      "atDistance": true,
+      "autoStart": true,
+      "autoHH": "09",
+      "autoMM": "07",
+      "autoOffset": "25"
+    },
+    {
+      "id": 3,
+      "name": "TR2.1 - 70 min(56.06km). B32-B33: 48km/h",
+      "distM": "3410",
+      "spdKmh": "48",
+      "linked": false,
+      "atDistance": true,
+      "autoStart": true,
+      "autoHH": "09",
+      "autoMM": "07",
+      "autoOffset": "70"
+    },
+    {
+      "id": 4,
+      "name": "TR2.2 - 70 min. B33-B35: 42km/h",
+      "distM": "2450",
+      "spdKmh": "42",
+      "linked": true,
+      "atDistance": true,
+      "autoStart": false,
+      "autoHH": "",
+      "autoMM": "",
+      "autoOffset": "0"
+    },
+    {
+      "id": 5,
+      "name": "TR2.3 - 70 min. B35-B40: 62km/h",
+      "distM": "6810",
+      "spdKmh": "62",
+      "linked": true,
+      "atDistance": true,
+      "autoStart": false,
+      "autoHH": "",
+      "autoMM": "",
+      "autoOffset": "0"
+    },
+    {
+      "id": 6,
+      "name": "TR3 - 100 min(77.10km). B42-B47: 63km/h",
+      "distM": "7040",
+      "spdKmh": "63",
+      "linked": false,
+      "atDistance": true,
+      "autoStart": true,
+      "autoHH": "09",
+      "autoMM": "07",
+      "autoOffset": "100"
+    },
+    {
+      "id": 7,
+      "name": "TR4 - 215 min(97.17km). B52-B60: 55km/h",
+      "distM": "13050",
+      "spdKmh": "55",
+      "linked": false,
+      "atDistance": true,
+      "autoStart": true,
+      "autoHH": "09",
+      "autoMM": "07",
+      "autoOffset": "215"
+    },
+    {
+      "id": 8,
+      "name": "TR5 - 405 min(132.89). B70-B76: 59km/h",
+      "distM": "11250",
+      "spdKmh": "59",
+      "linked": false,
+      "atDistance": true,
+      "autoStart": true,
+      "autoHH": "09",
+      "autoMM": "07",
+      "autoOffset": "405"
+    },
+    {
+      "id": 9,
+      "name": "TR6 - 430 min(153.89km). B77-B85: 48km/h",
+      "distM": "11360",
+      "spdKmh": "61",
+      "linked": false,
+      "atDistance": true,
+      "autoStart": true,
+      "autoHH": "09",
+      "autoMM": "07",
+      "autoOffset": "430"
+    }
+  ]
+}
