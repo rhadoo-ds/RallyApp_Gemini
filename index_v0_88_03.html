@@ -941,7 +941,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.88.04</div>
+    <div class="app-version">RegRally THOR v0.88.03</div>
   </div>
 </div>
 
@@ -2528,9 +2528,6 @@ function stopLeg(){
   const wasAutoDistance = !!leg.atDistance;
   const stopTime        = endedAt;  // exact stop timestamp
   
-  // Ensure legResults is long enough to hold this index
-  while(legResults.length <= curIdx) legResults.push(null);
-  while(legSubEvents.length <= curIdx) legSubEvents.push([]);
   legResults[curIdx]={leg:{...leg},tgtSecs,elSec,gpsDistM,gpsFixN,delta,avgAccuracy,startedAt,endedAt,wasAutoStart,wasAutoDistance,stopTime};
   buildResults();
 
@@ -2556,6 +2553,7 @@ function nextLeg(){
 function resetRally(){
   clearInterval(legTimer); clearAutoStart(); legRunning=false; curIdx=-1;
   _deactivateQL();
+  localStorage.removeItem(RES_KEY);
   legResults=[]; legSubEvents=[];
   gel('live-idle').style.display='flex'; gel('live-run').style.display='none';
   gel('live-legs-collapsible').classList.add('open');
@@ -2605,30 +2603,21 @@ function loadResultsManual(){
     const raw = localStorage.getItem(RES_KEY);
     if(!raw){ alert('No saved results found.'); return; }
     const data = JSON.parse(raw);
-    // Full replacement of in-memory results with saved data
     if(data.legResults && Array.isArray(data.legResults)){
       legResults = data.legResults.map(r => r || null);
-    } else {
-      legResults = [];
     }
     if(data.legSubEvents && Array.isArray(data.legSubEvents)){
       legSubEvents = data.legSubEvents;
-    } else {
-      legSubEvents = [];
     }
-    // Ensure arrays are at least as long as current leg list
-    while(legResults.length < legs.length) legResults.push(null);
-    while(legSubEvents.length < legs.length) legSubEvents.push([]);
     buildResults();
     const btn = gel('btn-load-results');
     if(btn){ const orig=btn.textContent; btn.textContent='✓ Loaded!'; btn.style.opacity='.6'; setTimeout(()=>{ btn.textContent=orig; btn.style.opacity=''; }, 1200); }
   } catch(e){ alert('Failed to load results: '+e.message); }
 }
 function clearResults(){
-  // Reset in-memory results and display only.
-  // Does NOT delete the local save — user must Save again to overwrite it.
-  legResults = [];
-  legSubEvents = [];
+  localStorage.removeItem(RES_KEY);
+  legResults = new Array(legs.length).fill(null);
+  legSubEvents = new Array(legs.length).fill(null).map(()=>[]);
   buildResults();
 }
 
@@ -2681,6 +2670,9 @@ function _buildResultsInner(){
     pg.insertBefore(empty, bottomBar);
     return;
   }
+
+  // Persist whenever we build
+  saveResults(legResults, legSubEvents, legs);
 
   let tot=0, realPenalty=0, rows='';
 
