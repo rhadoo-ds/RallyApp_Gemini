@@ -498,8 +498,8 @@ body{
 .delta::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--dc,var(--border2));transition:background .4s;}
 [data-theme="dark"] .delta::before{box-shadow:0 0 12px var(--dc,transparent);}
 .delta-in{padding:14px 14px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;}
-.dlbl{font-size:22px;font-weight:700;letter-spacing:0px;color:#fff;margin-bottom:1px;text-align:center;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word;max-width:100%;}
-.dlbl-sub{font-size:13px;font-weight:600;color:#fff;opacity:.85;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;letter-spacing:.1px;}
+.dlbl{font-size:22px;font-weight:700;letter-spacing:0px;color:#fff;margin-bottom:1px;text-align:center;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.dlbl-sub{font-size:13px;font-weight:600;color:#fff;opacity:.85;text-align:center;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;letter-spacing:.1px;}
 /* Two-column hero: seconds left, delta-dist right */
 .dhero-cols{display:flex;align-items:center;justify-content:center;gap:0;width:100%;}
 .dhero-sec{display:flex;flex-direction:column;align-items:center;flex:1;}
@@ -629,7 +629,7 @@ body{
   align-items: center;
   justify-content: center;
   font-family: 'DM Mono', monospace;
-  font-size: 39px;
+  font-size: 13px;
   font-weight: 700;
   border-radius: 5px;
   cursor: pointer;
@@ -664,7 +664,7 @@ body{
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 51px;
+  font-size: 17px;
   border-radius: 5px;
   cursor: pointer;
   border: 2px solid var(--border2);
@@ -675,12 +675,6 @@ body{
   width: 100%;
 }
 .qlimit-marshal-btn:active { transform: scale(0.94); background: var(--surf2); }
-@keyframes marshalFlash {
-  0%   { background: color-mix(in srgb, var(--ok) 55%, transparent); border-color: var(--ok); color: #fff; transform: scale(0.96); }
-  60%  { background: color-mix(in srgb, var(--ok) 30%, transparent); border-color: color-mix(in srgb, var(--ok) 60%, transparent); }
-  100% { background: var(--surf3); border-color: var(--border2); color: var(--txt2); transform: scale(1); }
-}
-.qlimit-marshal-btn.flashing { animation: marshalFlash 0.7s ease forwards; }
 
 /* Flashing states when quick limit active */
 @keyframes tgtFlash {
@@ -690,97 +684,7 @@ body{
 .tgt-speed-flashing .st { animation: tgtFlash 0.7s infinite; color: var(--txt3) !important; }
 .tgt-speed-flashing { border-color: color-mix(in srgb, var(--txt3) 35%, transparent) !important; background: color-mix(in srgb, var(--txt3) 8%, transparent) !important; }
 
-/* QL zone badge — top-right of Section E, same row as leg name */
-.dlbl-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  width: 100%;
-  gap: 6px;
-}
-.dlbl-row .dlbl {
-  flex: 1;
-  min-width: 0;
-}
-.ql-zone-badge {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 1px;
-  flex-shrink: 0;
-  padding: 3px 6px 3px 8px;
-  background: color-mix(in srgb, var(--txt3) 10%, transparent);
-  border: 1px solid color-mix(in srgb, var(--txt3) 25%, transparent);
-  border-radius: 5px;
-  transition: background 0.25s, border-color 0.25s;
-}
-.ql-zone-badge.active {
-  background: color-mix(in srgb, var(--behind) 18%, transparent);
-  border-color: color-mix(in srgb, var(--behind) 45%, transparent);
-}
-.ql-zone-badge-lbl {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--txt3);
-  line-height: 1;
-  transition: color 0.25s;
-}
-.ql-zone-badge.active .ql-zone-badge-lbl {
-  color: var(--behind);
-}
-.ql-zone-val {
-  font-family: 'DM Mono', monospace;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--txt3);
-  line-height: 1.2;
-  transition: color 0.25s;
-}
-.ql-zone-badge.active .ql-zone-val {
-  color: var(--txt1);
-}
-.ql-zone-badge-unit {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--txt3);
-  margin-left: 1px;
-  transition: color 0.25s;
-}
-
-/* Calibration factor badge — top-left of Section E */
-.calib-corner {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1px;
-  flex-shrink: 0;
-  padding: 3px 8px 3px 6px;
-  background: color-mix(in srgb, var(--warn) 10%, transparent);
-  border: 1px solid color-mix(in srgb, var(--warn) 30%, transparent);
-  border-radius: 5px;
-}
-.calib-corner-lbl {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--warn);
-  line-height: 1;
-}
-.calib-corner-val {
-  font-family: 'DM Mono', monospace;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--txt1);
-  line-height: 1.2;
-}
-
-/* Quick limit meters counter in Section E (legacy — kept for compat) */
+/* Quick limit meters counter in Section E */
 .ql-meters-row {
   display: flex;
   align-items: center;
@@ -859,7 +763,6 @@ body{
 .totval{font-family:'DM Mono',monospace;font-size:32px;font-weight:500;letter-spacing:-1px;line-height:1;}
 .totval-net{color:var(--ahead);}
 .totval-real{color:var(--behind);}
-.res-bottom-bar{background:var(--surf);border:1px solid var(--border2);border-radius:6px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;order:999;margin-top:auto;}
 /* ── CAT & MOUSE ── */
 .cm-config{background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;padding:10px;}
 .cm-config-info{font-family:'DM Mono',monospace;font-size:13px;color:var(--txt3);padding:8px 4px;text-align:center;border-top:1px solid var(--border);margin-top:8px;padding-top:10px;}
@@ -941,7 +844,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.88.03</div>
+    <div class="app-version">RegRally THOR v0.87.8</div>
   </div>
 </div>
 
@@ -1094,20 +997,14 @@ body{
 
     <div class="delta" id="delta" style="--dc:var(--border2)">
       <div class="delta-in">
-        <div class="dlbl-row">
-          <div class="calib-corner" id="calib-corner-badge">
-            <span class="calib-corner-lbl">⚙ Calib</span>
-            <span class="calib-corner-val" id="calib-corner-val">1.000</span>
-          </div>
-          <div class="dlbl" id="dlbl">— SELECT LEG —</div>
-          <!-- QL zone badge: top-right of section E, visible when QL active -->
-          <div id="ql-zone-badge" class="ql-zone-badge">
-            <span class="ql-zone-badge-lbl">⚠ LIMIT</span>
-            <span id="ql-meters-val" class="ql-zone-val">—</span><span class="ql-zone-badge-unit">m</span>
-            <span id="ql-time-val" class="ql-zone-val">—</span><span class="ql-zone-badge-unit">s</span>
-          </div>
-        </div>
+        <div class="dlbl" id="dlbl">— SELECT LEG —</div>
         <div class="dlbl-sub" id="dlbl-sub"></div>
+        <!-- QL meters row: only visible when quick limit active -->
+        <div id="ql-meters-row" class="ql-meters-row" style="display:none">
+          <span class="ql-meters-lbl">⚠ Limit zone:</span>
+          <span id="ql-meters-val">0</span>
+          <span class="ql-meters-lbl">m</span>
+        </div>
         <div class="dverd-text neutral" id="live-text-warning-label">WAITING</div>
         <div class="dhero-cols">
           <div class="dhero-sec">
@@ -1180,18 +1077,7 @@ body{
 
 <div class="pg" id="pg-res">
   <div class="sec-lbl">Stage Results</div>
-  <div class="res-bottom-bar" id="res-bottom-bar">
-    <div style="display:flex;align-items:center;gap:8px;">
-      <div class="totlbl" style="color:var(--txt3);font-size:14px;">Cal. Factor</div>
-      <div id="res-calib-val" style="font-family:'DM Mono',monospace;font-size:22px;font-weight:700;color:var(--warn);">1.000</div>
-    </div>
-    <div style="display:flex;gap:8px;margin-left:auto;flex-wrap:wrap;align-items:center;">
-      <button id="btn-save-results" onclick="saveResultsManual()" style="background:color-mix(in srgb,var(--ok) 14%,transparent);border:1px solid color-mix(in srgb,var(--ok) 45%,transparent);color:var(--ok);font-weight:700;font-size:12px;padding:8px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;transition:opacity .2s;">💾 Save Results</button>
-      <button id="btn-load-results" onclick="loadResultsManual()" style="background:color-mix(in srgb,var(--ahead) 14%,transparent);border:1px solid color-mix(in srgb,var(--ahead) 45%,transparent);color:var(--ahead);font-weight:700;font-size:12px;padding:8px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;transition:opacity .2s;">📂 Load Results</button>
-      <button onclick="clearResults()" style="background:color-mix(in srgb,var(--behind) 12%,transparent);border:1px solid color-mix(in srgb,var(--behind) 40%,transparent);color:var(--behind);font-weight:700;font-size:12px;padding:8px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;">↺ Reset Results</button>
-    </div>
-  </div>
-  <div class="empty-msg" id="res-empty-msg">No completed legs yet</div>
+  <div class="empty-msg">No completed legs yet</div>
 </div>
 
 <div class="pg" id="pg-cm">
@@ -1744,12 +1630,6 @@ let qlPressedAtDist    = 0;      // gpsDistM when QL was pressed
 let qlPressedAtTime    = 0;      // performance.now() when QL was pressed
 let qlAccumDistM       = 0;      // meters driven while QL active in this press
 let qlFlashInterval    = null;
-// Accumulated completed QL zones (persist across multiple QL presses in one leg)
-// Each finished zone contributes: its distance driven at QL speed, and the
-// time-delta contribution it introduced vs the original target speed.
-let qlCompletedDistM      = 0;      // total distance covered in all finished QL zones
-let qlCompletedTimeSec    = 0;      // total actual time spent in all finished QL zones
-let qlCompletedExpTimeSec = 0;      // total expected time in all finished QL zones (dist / QL speed)
 
 const QL_SPEEDS = [10, 15, 20, 30, 40, 50];
 
@@ -1778,11 +1658,9 @@ function _activateQL(spd) {
   const tgtBlock = gel('tgt-spd-block');
   if (tgtBlock) tgtBlock.classList.add('tgt-speed-flashing');
 
-  // Activate QL zone badge in Section E (always visible; switch to active/red state)
-  const qlBadge = gel('ql-zone-badge');
-  if (qlBadge) qlBadge.classList.add('active');
-  if (gel('ql-meters-val')) gel('ql-meters-val').textContent = '0';
-  if (gel('ql-time-val'))   gel('ql-time-val').textContent   = '0.0';
+  // Show QL meters row in Section E
+  const qlRow = gel('ql-meters-row');
+  if (qlRow) { qlRow.style.display = 'flex'; gel('ql-meters-val').textContent = '0'; }
 
   // Log to results sub-row (press event)
   _qlLogToResults(spd, 'press');
@@ -1793,15 +1671,6 @@ function _deactivateQL() {
   const spd = activeQuickLimit;
   const durationSec = (performance.now() - qlPressedAtTime) / 1000;
   const distM = gpsDistM - qlPressedAtDist;
-
-  // Accumulate this completed zone into leg totals
-  // (distance driven at QL speed, time actually spent in that zone)
-  const zoneDist = Math.max(0, distM);
-  const zoneTime = Math.max(0, durationSec);
-  const zoneExpTime = zoneDist / (spd / 3.6);   // expected time at this zone's QL speed
-  qlCompletedDistM      += zoneDist;
-  qlCompletedTimeSec    += zoneTime;
-  qlCompletedExpTimeSec += zoneExpTime;
 
   // Log to results sub-row (release event)
   _qlLogToResults(spd, 'release', distM, durationSec);
@@ -1819,22 +1688,12 @@ function _deactivateQL() {
   const tgtBlock = gel('tgt-spd-block');
   if (tgtBlock) tgtBlock.classList.remove('tgt-speed-flashing');
 
-  // Revert QL zone badge to inactive (gray) state
-  const qlBadge = gel('ql-zone-badge');
-  if (qlBadge) qlBadge.classList.remove('active');
-  if (gel('ql-meters-val')) gel('ql-meters-val').textContent = '—';
-  if (gel('ql-time-val'))   gel('ql-time-val').textContent   = '—';
+  // Hide QL meters row
+  const qlRow = gel('ql-meters-row');
+  if (qlRow) qlRow.style.display = 'none';
 }
 
 function marshalAction() {
-  // Visual feedback: flash green
-  const btn = gel('ql-marshal');
-  if (btn) {
-    btn.classList.remove('flashing');
-    void btn.offsetWidth; // reflow to restart animation
-    btn.classList.add('flashing');
-    btn.addEventListener('animationend', () => btn.classList.remove('flashing'), { once: true });
-  }
   // Log marshal event as sub-row
   _qlLogToResults(null, 'marshal');
 }
@@ -1883,15 +1742,8 @@ function launch(){
   if(!valid.length){alert('Add complete legs first.');return;}
   legs=valid; renderLegs();
   curIdx=0; legRunning=false;
-  // Preserve existing results — only grow the array, never reset it.
-  // Results accumulate across launches; only clearResults() wipes them.
-  if(legResults.length < legs.length){
-    const extra = new Array(legs.length - legResults.length).fill(null);
-    legResults = legResults.concat(extra);
-  }
-  if(legSubEvents.length < legs.length){
-    while(legSubEvents.length < legs.length) legSubEvents.push([]);
-  }
+  legResults=new Array(legs.length).fill(null);
+  legSubEvents=new Array(legs.length).fill(null).map(()=>[]);
   _deactivateQL();
   showTab('live');
   gel('live-idle').style.display='none'; gel('live-run').style.display='flex';
@@ -1990,9 +1842,7 @@ function loadLeg(idx){
     const asDate = computeAutoStartDate(leg);
     if(asDate) autoStr = '  ⏰ '+pad(asDate.getHours())+':'+pad(asDate.getMinutes())+':'+pad(asDate.getSeconds())+'  '+pad(asDate.getDate())+'/'+pad(asDate.getMonth()+1);
   }
-  const dlblSubText = [km, spd, t].filter(Boolean).join('  ') + autoStr;
-  gel('dlbl-sub').textContent = dlblSubText;
-  gel('dlbl-sub').style.display = dlblSubText.trim() ? '' : 'none';
+  gel('dlbl-sub').textContent = [km, spd, t].filter(Boolean).join('  ') + autoStr;
   gel('live-leg-target-dist-hero').textContent=distKm;
   gel('live-leg-remaining-dist').textContent=distKm;
   setDelta(0,'neutral',false);
@@ -2012,8 +1862,6 @@ function loadLeg(idx){
   gel('ddist-hero').textContent='0.000'; gel('ddist-hero').style.color=''; gel('ddist-sign').textContent=''; gel('ddist-sign').style.color='';
   gel('spd-tgt').textContent=parseFloat(leg.spdKmh).toFixed(2);
   gel('spd-diff').textContent=''; gel('spd-diff').className='sdiff';
-  const calibCornerVal = gel('calib-corner-val');
-  if(calibCornerVal) calibCornerVal.textContent = getCalibFactor().toFixed(3);
   updateControlsState();
 }
 
@@ -2337,7 +2185,6 @@ function startLeg(){
   gpsDistM=0; gpsFixN=0; totalAccPointsThisStage=0;
   if(!legSubEvents[curIdx]) legSubEvents[curIdx]=[];
   lastDeltaSnap={sec:0,m:0};
-  qlCompletedDistM=0; qlCompletedTimeSec=0; qlCompletedExpTimeSec=0;
   _deactivateQL();
   gel('live-legs-collapsible').classList.remove('open');
   renderChips(); updateControlsState(); updateSbar();
@@ -2354,69 +2201,37 @@ function tick(){
   const elSec=(performance.now()-legStartTs)/1000;
 
   // ── Quick Limit delta calculation ──────────────────────────────────────
-  // Principle: QL zones permanently alter the leg's effective target.
-  // After a QL zone, we do NOT revert to the original target speed for
-  // the remaining leg — the QL has consumed real time and distance.
-  //
-  // We split the leg into:
-  //   • Completed QL zones  : qlCompletedDistM / qlCompletedTimeSec (accumulated across all finished zones)
-  //   • Active QL zone      : currentQLDistM / currentQLTimeSec (if a QL is currently pressed)
-  //   • Normal (non-QL) distance : gpsDistM - qlCompletedDistM - currentQLDistM
-  //
-  // Expected time for the leg up to now:
-  //   normalExpTime   = normalDist / tgtSpdMs          (target speed for non-QL distance)
-  //   qlZonesExpTime  = qlCompletedDistM / qlZoneAvgSpdMs  (can't know per-zone speed after; use actual time = qlCompletedTimeSec — but we need expected, so use dist / each QL spd)
-  //   → Since we can't easily store per-zone QL speed after the fact, we track:
-  //     qlCompletedTimeSec = actual time spent in completed zones (already accumulated)
-  //     qlCompletedExpTimeSec = expected time in completed zones at their QL speeds
-  //     → Both are accumulated in _deactivateQL (see below).
-  //
-  // For simplicity and correctness, we pre-accumulate in _deactivateQL:
-  //   qlCompletedDistM      = total distance in finished QL zones
-  //   qlCompletedTimeSec    = actual seconds spent in finished QL zones
-  //   qlCompletedExpTimeSec = expected seconds in finished QL zones (dist / QL speed)
-  //
-  // Delta = (normalActualTime - normalExpTime)
-  //       + sum_completed_zones(actualTime - expectedTime)
-  //       + activeZone(actualTime - expectedTime)
-
+  // When QL active: effective target time = time for (normal distance) + time for (QL distance)
+  // normalDist = totalDist - qlDist, normalTime = normalDist / tgtSpeed
+  // qlDist from current press = gpsDistM - qlPressedAtDist
+  // totalExpectedTime = (normalDist / spdMs) + (qlDist / qlSpdMs)
   let delta=0, state='neutral';
-  const activeQLDistM  = activeQuickLimit !== null ? Math.max(0, gpsDistM - qlPressedAtDist) : 0;
-  const activeQLTimeSec = activeQuickLimit !== null ? (performance.now() - qlPressedAtTime) / 1000 : 0;
-
-  // Update QL zone distance display
+  const qlDistM = activeQuickLimit !== null ? Math.max(0, gpsDistM - qlPressedAtDist) : 0;
   if(activeQuickLimit !== null && gel('ql-meters-val')) {
-    const totalQLDistDisplay = qlCompletedDistM + activeQLDistM;
-    gel('ql-meters-val').textContent = Math.round(activeQLDistM);
-    if(gel('ql-time-val')) gel('ql-time-val').textContent = activeQLTimeSec.toFixed(1);
+    gel('ql-meters-val').textContent = Math.round(qlDistM);
   }
 
   if(gpsFixN>0 && gpsDistM>5 && spdMs>0){
-    // Total distance covered in all QL zones (completed + active)
-    const totalQLDistM = qlCompletedDistM + activeQLDistM;
-    // Non-QL distance
-    const normalDistM  = Math.max(0, gpsDistM - totalQLDistM);
-    // Expected time for normal (non-QL) distance at target speed
-    const normalExpTimeSec = normalDistM / spdMs;
-    // Actual time spent outside QL zones
-    const normalActualTimeSec = elSec - qlCompletedTimeSec - activeQLTimeSec;
-
-    // Delta from completed QL zones (stored)
-    const completedQLDelta = qlCompletedTimeSec - qlCompletedExpTimeSec;
-
-    // Delta from active QL zone
-    let activeQLDelta = 0;
     if(activeQuickLimit !== null){
+      // GPS + QL mode: delta counts relative to active QL speed for the QL section
       const qlSpdMs = activeQuickLimit / 3.6;
-      const activeQLExpTimeSec = activeQLDistM / qlSpdMs;
-      activeQLDelta = activeQLTimeSec - activeQLExpTimeSec;
+      // Time that should have been spent on the QL distance at QL speed
+      const qlExpTimeSec = qlDistM / qlSpdMs;
+      // Time actually spent since QL was pressed
+      const qlActualTimeSec = (performance.now() - qlPressedAtTime) / 1000;
+      // Delta contribution from QL section
+      const qlDelta = qlActualTimeSec - qlExpTimeSec;
+      // Normal section delta (before QL was pressed):
+      const normalDistM = Math.max(0, qlPressedAtDist);
+      const normalIdealTime = normalDistM / spdMs;
+      const normalActualTime = qlPressedAtTime - legStartTs; // ms → convert
+      const normalDeltaSec = (normalActualTime / 1000) - normalIdealTime;
+      delta = normalDeltaSec + qlDelta;
+    } else {
+      const idealTime=gpsDistM/spdMs;
+      delta=elSec-idealTime;
     }
-
-    // Normal section delta
-    const normalDelta = normalActualTimeSec - normalExpTimeSec;
-
-    delta = normalDelta + completedQLDelta + activeQLDelta;
-    state = Math.abs(delta)<0.3?'ontime':delta>0?'behind':'ahead';
+    state=Math.abs(delta)<0.3?'ontime':delta>0?'behind':'ahead';
   } else {
     delta = Math.max(0, elSec - tgtSecs);
     state = delta < 0.3 ? (elSec < tgtSecs ? 'neutral' : 'ontime') : 'behind';
@@ -2424,9 +2239,7 @@ function tick(){
   setDelta(Math.abs(delta),state,true);
 
   // Snapshot for sub-event logging
-  // QL-adjusted expected distance: normal expected dist + QL zone distances
-  const normalExpDistM = spdMs * (elSec - qlCompletedTimeSec - activeQLTimeSec);
-  const expDistM = Math.max(0, normalExpDistM) + qlCompletedDistM + activeQLDistM;
+  const expDistM = spdMs * elSec;
   const deltaDistM = (gpsDistM - expDistM);
   lastDeltaSnap = { sec: delta, m: deltaDistM };
 
@@ -2441,9 +2254,6 @@ function tick(){
   ddistEl.style.color = ddistColor; ddistSign.style.color = ddistColor;
 
   const gpsKmh=gpsSpeedMs!=null?gpsSpeedMs*3.6:null;
-  // Update calibration corner badge
-  const calibCornerVal = gel('calib-corner-val');
-  if(calibCornerVal) calibCornerVal.textContent = getCalibFactor().toFixed(3);
   if(gpsKmh!=null){
     // When QL active, compare GPS speed to QL speed instead of target
     const refKmh = activeQuickLimit !== null ? activeQuickLimit : tgtKmh;
@@ -2551,10 +2361,8 @@ function nextLeg(){
 }
 
 function resetRally(){
-  clearInterval(legTimer); clearAutoStart(); legRunning=false; curIdx=-1;
+  clearInterval(legTimer); clearAutoStart(); legRunning=false; curIdx=-1; legResults=[]; legSubEvents=[];
   _deactivateQL();
-  localStorage.removeItem(RES_KEY);
-  legResults=[]; legSubEvents=[];
   gel('live-idle').style.display='flex'; gel('live-run').style.display='none';
   gel('live-legs-collapsible').classList.add('open');
   buildResults();
@@ -2592,28 +2400,6 @@ function loadResults(){
     buildResults();
   } catch(e) { /* corrupt data — ignore */ }
 }
-function saveResultsManual(){
-  saveResults(legResults, legSubEvents, legs);
-  // Brief visual feedback
-  const btn = gel('btn-save-results');
-  if(btn){ const orig=btn.textContent; btn.textContent='✓ Saved!'; btn.style.opacity='.6'; setTimeout(()=>{ btn.textContent=orig; btn.style.opacity=''; }, 1200); }
-}
-function loadResultsManual(){
-  try {
-    const raw = localStorage.getItem(RES_KEY);
-    if(!raw){ alert('No saved results found.'); return; }
-    const data = JSON.parse(raw);
-    if(data.legResults && Array.isArray(data.legResults)){
-      legResults = data.legResults.map(r => r || null);
-    }
-    if(data.legSubEvents && Array.isArray(data.legSubEvents)){
-      legSubEvents = data.legSubEvents;
-    }
-    buildResults();
-    const btn = gel('btn-load-results');
-    if(btn){ const orig=btn.textContent; btn.textContent='✓ Loaded!'; btn.style.opacity='.6'; setTimeout(()=>{ btn.textContent=orig; btn.style.opacity=''; }, 1200); }
-  } catch(e){ alert('Failed to load results: '+e.message); }
-}
 function clearResults(){
   localStorage.removeItem(RES_KEY);
   legResults = new Array(legs.length).fill(null);
@@ -2626,7 +2412,7 @@ function buildResults(){
     console.error('buildResults error:', e);
     try {
       const pg=gel('pg-res');
-      while(pg.children.length > 2) pg.removeChild(pg.lastChild);
+      while(pg.children.length > 1) pg.removeChild(pg.lastChild);
       const err=document.createElement('div');
       err.className='empty-msg'; err.style.color='var(--behind)';
       err.textContent='Results error: '+e.message;
@@ -2636,15 +2422,11 @@ function buildResults(){
 }
 function _buildResultsInner(){
   const pg=gel('pg-res');
-  // Keep children[0] (sec-lbl) and children[1] (res-bottom-bar); remove everything after
-  while(pg.children.length > 2) pg.removeChild(pg.lastChild);
-
-  // Always update the calib value in the permanent bar
-  const calibFactor = getCalibFactor();
-  const calibEl = gel('res-calib-val');
-  if(calibEl) calibEl.textContent = calibFactor.toFixed(3);
+  // Remove all previous result nodes (keep only the sec-lbl heading at index 0)
+  while(pg.children.length > 1) pg.removeChild(pg.lastChild);
 
   const done=legResults.filter(r=>r!=null);
+  const calibFactor = getCalibFactor();
   const pad=n=>String(n).padStart(2,'0');
   const fmtTime=d=>{
     if(!d) return '—';
@@ -2657,8 +2439,7 @@ function _buildResultsInner(){
     const empty=document.createElement('div');
     empty.className='empty-msg';
     empty.textContent='No completed legs yet';
-    // Insert before the bottom bar so bar stays last
-    pg.insertBefore(empty, pg.children[1]);
+    pg.appendChild(empty);
     return;
   }
 
@@ -2760,10 +2541,15 @@ function _buildResultsInner(){
       <th>Penalty</th>
     </tr></thead><tbody>${rows}</tbody></table></div>
     <div class="totcard"><div class="totlbl totlbl-net">Net Penalty</div><div class="totval totval-net">${netSign}${Math.abs(tot).toFixed(3)}s</div></div>
-    <div class="totcard"><div class="totlbl totlbl-real">Real Penalty</div><div class="totval totval-real">${realPenalty.toFixed(3)}s</div></div>`;
-  // Insert dynamic content before the permanent bottom bar (last child)
-  const bottomBar = gel('res-bottom-bar');
-  while(_tmp.firstChild) pg.insertBefore(_tmp.firstChild, bottomBar);
+    <div class="totcard"><div class="totlbl totlbl-real">Real Penalty</div><div class="totval totval-real">${realPenalty.toFixed(3)}s</div></div>
+    <div class="totcard" style="justify-content:flex-start;gap:16px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="totlbl" style="color:var(--txt3);font-size:14px;">Cal. Factor Used</div>
+        <div style="font-family:'DM Mono',monospace;font-size:22px;font-weight:700;color:var(--warn);">${calibFactor.toFixed(3)}</div>
+      </div>
+      <button onclick="clearResults()" style="margin-left:auto;background:color-mix(in srgb,var(--behind) 12%,transparent);border:1px solid color-mix(in srgb,var(--behind) 40%,transparent);color:var(--behind);font-weight:700;font-size:12px;padding:8px 16px;border-radius:6px;cursor:pointer;white-space:nowrap;">↺ Reset Results</button>
+    </div>`;
+  while(_tmp.firstChild) pg.appendChild(_tmp.firstChild);
 }
 
 /* ── DATA FILE SYNC IO ── */

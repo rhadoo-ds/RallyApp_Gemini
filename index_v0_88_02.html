@@ -859,7 +859,6 @@ body{
 .totval{font-family:'DM Mono',monospace;font-size:32px;font-weight:500;letter-spacing:-1px;line-height:1;}
 .totval-net{color:var(--ahead);}
 .totval-real{color:var(--behind);}
-.res-bottom-bar{background:var(--surf);border:1px solid var(--border2);border-radius:6px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;order:999;margin-top:auto;}
 /* ── CAT & MOUSE ── */
 .cm-config{background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;padding:10px;}
 .cm-config-info{font-family:'DM Mono',monospace;font-size:13px;color:var(--txt3);padding:8px 4px;text-align:center;border-top:1px solid var(--border);margin-top:8px;padding-top:10px;}
@@ -941,7 +940,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.88.03</div>
+    <div class="app-version">RegRally THOR v0.88.02</div>
   </div>
 </div>
 
@@ -1180,18 +1179,7 @@ body{
 
 <div class="pg" id="pg-res">
   <div class="sec-lbl">Stage Results</div>
-  <div class="res-bottom-bar" id="res-bottom-bar">
-    <div style="display:flex;align-items:center;gap:8px;">
-      <div class="totlbl" style="color:var(--txt3);font-size:14px;">Cal. Factor</div>
-      <div id="res-calib-val" style="font-family:'DM Mono',monospace;font-size:22px;font-weight:700;color:var(--warn);">1.000</div>
-    </div>
-    <div style="display:flex;gap:8px;margin-left:auto;flex-wrap:wrap;align-items:center;">
-      <button id="btn-save-results" onclick="saveResultsManual()" style="background:color-mix(in srgb,var(--ok) 14%,transparent);border:1px solid color-mix(in srgb,var(--ok) 45%,transparent);color:var(--ok);font-weight:700;font-size:12px;padding:8px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;transition:opacity .2s;">💾 Save Results</button>
-      <button id="btn-load-results" onclick="loadResultsManual()" style="background:color-mix(in srgb,var(--ahead) 14%,transparent);border:1px solid color-mix(in srgb,var(--ahead) 45%,transparent);color:var(--ahead);font-weight:700;font-size:12px;padding:8px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;transition:opacity .2s;">📂 Load Results</button>
-      <button onclick="clearResults()" style="background:color-mix(in srgb,var(--behind) 12%,transparent);border:1px solid color-mix(in srgb,var(--behind) 40%,transparent);color:var(--behind);font-weight:700;font-size:12px;padding:8px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;">↺ Reset Results</button>
-    </div>
-  </div>
-  <div class="empty-msg" id="res-empty-msg">No completed legs yet</div>
+  <div class="empty-msg">No completed legs yet</div>
 </div>
 
 <div class="pg" id="pg-cm">
@@ -2614,7 +2602,6 @@ function loadResultsManual(){
     if(btn){ const orig=btn.textContent; btn.textContent='✓ Loaded!'; btn.style.opacity='.6'; setTimeout(()=>{ btn.textContent=orig; btn.style.opacity=''; }, 1200); }
   } catch(e){ alert('Failed to load results: '+e.message); }
 }
-function clearResults(){
   localStorage.removeItem(RES_KEY);
   legResults = new Array(legs.length).fill(null);
   legSubEvents = new Array(legs.length).fill(null).map(()=>[]);
@@ -2626,7 +2613,7 @@ function buildResults(){
     console.error('buildResults error:', e);
     try {
       const pg=gel('pg-res');
-      while(pg.children.length > 2) pg.removeChild(pg.lastChild);
+      while(pg.children.length > 1) pg.removeChild(pg.lastChild);
       const err=document.createElement('div');
       err.className='empty-msg'; err.style.color='var(--behind)';
       err.textContent='Results error: '+e.message;
@@ -2636,15 +2623,11 @@ function buildResults(){
 }
 function _buildResultsInner(){
   const pg=gel('pg-res');
-  // Keep children[0] (sec-lbl) and children[1] (res-bottom-bar); remove everything after
-  while(pg.children.length > 2) pg.removeChild(pg.lastChild);
-
-  // Always update the calib value in the permanent bar
-  const calibFactor = getCalibFactor();
-  const calibEl = gel('res-calib-val');
-  if(calibEl) calibEl.textContent = calibFactor.toFixed(3);
+  // Remove all previous result nodes (keep only the sec-lbl heading at index 0)
+  while(pg.children.length > 1) pg.removeChild(pg.lastChild);
 
   const done=legResults.filter(r=>r!=null);
+  const calibFactor = getCalibFactor();
   const pad=n=>String(n).padStart(2,'0');
   const fmtTime=d=>{
     if(!d) return '—';
@@ -2657,8 +2640,7 @@ function _buildResultsInner(){
     const empty=document.createElement('div');
     empty.className='empty-msg';
     empty.textContent='No completed legs yet';
-    // Insert before the bottom bar so bar stays last
-    pg.insertBefore(empty, pg.children[1]);
+    pg.appendChild(empty);
     return;
   }
 
@@ -2760,10 +2742,19 @@ function _buildResultsInner(){
       <th>Penalty</th>
     </tr></thead><tbody>${rows}</tbody></table></div>
     <div class="totcard"><div class="totlbl totlbl-net">Net Penalty</div><div class="totval totval-net">${netSign}${Math.abs(tot).toFixed(3)}s</div></div>
-    <div class="totcard"><div class="totlbl totlbl-real">Real Penalty</div><div class="totval totval-real">${realPenalty.toFixed(3)}s</div></div>`;
-  // Insert dynamic content before the permanent bottom bar (last child)
-  const bottomBar = gel('res-bottom-bar');
-  while(_tmp.firstChild) pg.insertBefore(_tmp.firstChild, bottomBar);
+    <div class="totcard"><div class="totlbl totlbl-real">Real Penalty</div><div class="totval totval-real">${realPenalty.toFixed(3)}s</div></div>
+    <div class="totcard" style="justify-content:flex-start;gap:10px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="totlbl" style="color:var(--txt3);font-size:14px;">Cal. Factor Used</div>
+        <div style="font-family:'DM Mono',monospace;font-size:22px;font-weight:700;color:var(--warn);">${calibFactor.toFixed(3)}</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-left:auto;flex-wrap:wrap;align-items:center;">
+        <button id="btn-save-results" onclick="saveResultsManual()" style="background:color-mix(in srgb,var(--ok) 14%,transparent);border:1px solid color-mix(in srgb,var(--ok) 45%,transparent);color:var(--ok);font-weight:700;font-size:12px;padding:8px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;transition:opacity .2s;">💾 Save Results</button>
+        <button id="btn-load-results" onclick="loadResultsManual()" style="background:color-mix(in srgb,var(--ahead) 14%,transparent);border:1px solid color-mix(in srgb,var(--ahead) 45%,transparent);color:var(--ahead);font-weight:700;font-size:12px;padding:8px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;transition:opacity .2s;">📂 Load Results</button>
+        <button onclick="clearResults()" style="background:color-mix(in srgb,var(--behind) 12%,transparent);border:1px solid color-mix(in srgb,var(--behind) 40%,transparent);color:var(--behind);font-weight:700;font-size:12px;padding:8px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;">↺ Reset Results</button>
+      </div>
+    </div>`;
+  while(_tmp.firstChild) pg.appendChild(_tmp.firstChild);
 }
 
 /* ── DATA FILE SYNC IO ── */
