@@ -2626,26 +2626,18 @@ function buildResults(){
     console.error('buildResults error:', e);
     try {
       const pg=gel('pg-res');
-      Array.from(pg.children).forEach(ch => {
-        if(ch.classList.contains('sec-lbl')) return;
-        if(ch.id === 'res-bottom-bar') return;
-        pg.removeChild(ch);
-      });
+      while(pg.children.length > 2) pg.removeChild(pg.lastChild);
       const err=document.createElement('div');
       err.className='empty-msg'; err.style.color='var(--behind)';
       err.textContent='Results error: '+e.message;
-      pg.insertBefore(err, gel('res-bottom-bar'));
+      pg.appendChild(err);
     } catch(_){}
   }
 }
 function _buildResultsInner(){
   const pg=gel('pg-res');
-  // Remove all dynamic children — keep only sec-lbl and res-bottom-bar (identified by id/class)
-  Array.from(pg.children).forEach(ch => {
-    if(ch.classList.contains('sec-lbl')) return;
-    if(ch.id === 'res-bottom-bar') return;
-    pg.removeChild(ch);
-  });
+  // Keep children[0] (sec-lbl) and children[1] (res-bottom-bar); remove everything after
+  while(pg.children.length > 2) pg.removeChild(pg.lastChild);
 
   // Always update the calib value in the permanent bar
   const calibFactor = getCalibFactor();
@@ -2661,13 +2653,12 @@ function _buildResultsInner(){
     return `${pad(dt.getHours())}:${pad(dt.getMinutes())}:${pad(dt.getSeconds())}`;
   };
 
-  const bottomBar = gel('res-bottom-bar');
-
   if(!done.length){
     const empty=document.createElement('div');
     empty.className='empty-msg';
     empty.textContent='No completed legs yet';
-    pg.insertBefore(empty, bottomBar);
+    // Insert before the bottom bar so bar stays last
+    pg.insertBefore(empty, pg.children[1]);
     return;
   }
 
@@ -2771,6 +2762,7 @@ function _buildResultsInner(){
     <div class="totcard"><div class="totlbl totlbl-net">Net Penalty</div><div class="totval totval-net">${netSign}${Math.abs(tot).toFixed(3)}s</div></div>
     <div class="totcard"><div class="totlbl totlbl-real">Real Penalty</div><div class="totval totval-real">${realPenalty.toFixed(3)}s</div></div>`;
   // Insert dynamic content before the permanent bottom bar (last child)
+  const bottomBar = gel('res-bottom-bar');
   while(_tmp.firstChild) pg.insertBefore(_tmp.firstChild, bottomBar);
 }
 
