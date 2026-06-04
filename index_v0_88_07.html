@@ -960,7 +960,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.88.08</div>
+    <div class="app-version">RegRally THOR v0.88.07</div>
   </div>
 </div>
 
@@ -2823,10 +2823,8 @@ function _buildResultsInner(){
 
   const netSign = tot>0.005?'+':tot<-0.005?'\u2212':'';
   html += `
-    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-      <div class="totcard" style="flex:1;min-width:140px;"><div class="totlbl totlbl-net">Net Penalty</div><div class="totval totval-net">${netSign}${Math.abs(tot).toFixed(3)}s</div></div>
-      <div class="totcard" style="flex:1;min-width:140px;"><div class="totlbl totlbl-real">Real Penalty</div><div class="totval totval-real">${realPenalty.toFixed(3)}s</div></div>
-    </div>`;
+    <div class="totcard"><div class="totlbl totlbl-net">Net Penalty</div><div class="totval totval-net">${netSign}${Math.abs(tot).toFixed(3)}s</div></div>
+    <div class="totcard"><div class="totlbl totlbl-real">Real Penalty</div><div class="totval totval-real">${realPenalty.toFixed(3)}s</div></div>`;
 
   _tmp.innerHTML = html;
   while(_tmp.firstChild) pg.insertBefore(_tmp.firstChild, bottomBar);
