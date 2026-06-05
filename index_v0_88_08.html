@@ -370,30 +370,30 @@ body{
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
   border-bottom:1px solid var(--border);
-  padding-bottom:3px;
+  padding-bottom:5px;
   display:flex;
   flex-direction:row;
   align-items:center;
   justify-content:space-between;
-  gap:4px;
+  gap:8px;
   white-space:nowrap;
   min-width:0;
 }
 .sbar::-webkit-scrollbar{display:none;}
-.sbar-half{display:flex;align-items:center;gap:4px;flex-shrink:0;overflow:hidden;}
+.sbar-half{display:flex;align-items:center;gap:6px;flex-shrink:0;overflow:hidden;}
 .sbar-half.left{justify-content:flex-start;}
 .sbar-half.right{justify-content:flex-end;}
 .sbar-sep{width:1px;height:20px;background:var(--border);flex-shrink:0;}
 .sbar-badge{
-  font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
   flex-shrink:0;padding:2px 6px;border-radius:3px;
 }
 .sbar-badge.cur{color:var(--bg);background:#fff;}
 .sbar-badge.nxt{color:var(--txt3);background:var(--surf3);border:1px solid var(--border);}
-.sbar-text{font-size:17px;font-weight:700;letter-spacing:.05em;flex-shrink:0;}
+.sbar-text{font-size:11px;font-weight:700;letter-spacing:.05em;flex-shrink:0;}
 .sbar-text.cur{color:#fff;}
 .sbar-text.nxt{color:var(--txt3);}
-.sdot{width:10px;height:10px;border-radius:50%;background:var(--txt3);flex-shrink:0;transition:all .3s;}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--txt3);flex-shrink:0;transition:all .3s;}
 .sdot.run{background:var(--ok);box-shadow:0 0 8px var(--ok);animation:blink 1s infinite;}
 .sdot.done{background:var(--behind);}
 .sdot.auto{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:blink .6s infinite;}
@@ -864,8 +864,6 @@ body{
 .res-ql-table tr.ql-press td{color:var(--warn);}
 .res-ql-table tr.ql-release td{color:var(--behind);}
 .res-ql-table tr.ql-marshal td{color:var(--ok);}
-.res-ql-table tr.leg-start td{color:var(--ahead);font-weight:600;}
-.res-ql-table tr.leg-stop td{color:var(--txt1);font-weight:600;border-top:1px solid var(--border2);}
 .res-ql-table td.ev-action{text-align:left;font-weight:600;}
 .res-ql-table td.ev-penalty{font-weight:700;color:var(--behind);}
 .res-leg-block{background:var(--surf);border:1px solid var(--border2);border-radius:8px;padding:12px 14px;margin-bottom:8px;}
@@ -875,6 +873,7 @@ body{
 .res-penalty-lbl{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);}
 .res-penalty-val{font-family:'DM Mono',monospace;font-size:18px;font-weight:700;}
 .totlbl{font-size:19.8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
+.totlbl-net{color:var(--ahead);}
 .totlbl-real{color:var(--behind);}
 .totval{font-family:'DM Mono',monospace;font-size:32px;font-weight:500;letter-spacing:-1px;line-height:1;}
 .totval-net{color:var(--ahead);}
@@ -961,7 +960,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.89.01</div>
+    <div class="app-version">RegRally THOR v0.88.08</div>
   </div>
 </div>
 
@@ -1175,7 +1174,7 @@ body{
     <div class="ctrlg-three">
       <button class="bc bgo"   id="btn-go"   onclick="lastStartType='manual';startLeg()">▶ Start</button>
       <button class="bc bstop" id="btn-stop" onclick="stopLeg()">■ Stop</button>
-      <button class="bc bnext" id="btn-next" onclick="nextLeg()">Stop &amp; Next ▶▶</button>
+      <button class="bc bnext" id="btn-next" onclick="nextLeg()">Next ▶</button>
     </div>
     <div style="display:flex; justify-content:center; margin-top:-2px;">
        <button class="bc brst" style="width:100%; max-width:180px; padding:8px 4px; font-size:11px;" onclick="resetRally()">↺ Reset Rally</button>
@@ -1201,11 +1200,11 @@ body{
 <div class="pg" id="pg-res">
   <div class="sec-lbl">Stage Results</div>
   <div class="res-bottom-bar" id="res-bottom-bar">
-    <div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;flex-shrink:0;">
-      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);">Rally Penalty</div>
-      <div id="res-rally-penalty" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:700;color:var(--behind);line-height:1;">—</div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="totlbl" style="color:var(--txt3);font-size:14px;">Cal. Factor</div>
+      <div id="res-calib-val" style="font-family:'DM Mono',monospace;font-size:22px;font-weight:700;color:var(--warn);">1.000</div>
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-left:auto;">
+    <div style="display:flex;gap:8px;margin-left:auto;flex-wrap:wrap;align-items:center;">
       <button id="btn-save-results" onclick="saveResultsManual()" style="background:color-mix(in srgb,var(--ok) 14%,transparent);border:1px solid color-mix(in srgb,var(--ok) 45%,transparent);color:var(--ok);font-weight:700;font-size:12px;padding:8px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;transition:opacity .2s;">💾 Save Results</button>
       <button id="btn-load-results" onclick="loadResultsManual()" style="background:color-mix(in srgb,var(--ahead) 14%,transparent);border:1px solid color-mix(in srgb,var(--ahead) 45%,transparent);color:var(--ahead);font-weight:700;font-size:12px;padding:8px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;transition:opacity .2s;">📂 Load Results</button>
       <button onclick="clearResults()" style="background:color-mix(in srgb,var(--behind) 12%,transparent);border:1px solid color-mix(in srgb,var(--behind) 40%,transparent);color:var(--behind);font-weight:700;font-size:12px;padding:8px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;">↺ Reset Results</button>
@@ -2360,8 +2359,6 @@ function startLeg(){
   lastDeltaSnap={sec:0,m:0};
   qlCompletedDistM=0; qlCompletedTimeSec=0; qlCompletedExpTimeSec=0;
   _deactivateQL();
-  // Log leg start as first sub-event
-  _qlLogToResults(null, 'leg_start');
   gel('live-legs-collapsible').classList.remove('open');
   renderChips(); updateControlsState(); updateSbar();
   clearInterval(legTimer); legTimer=setInterval(tick,100);
@@ -2563,14 +2560,6 @@ function stopLeg(){
   while(legSubEvents.length <= curIdx) legSubEvents.push([]);
   const legCalibFactor = getCalibFactor();
   legResults[curIdx]={leg:{...leg},tgtSecs,elSec,gpsDistM,gpsFixN,delta,avgAccuracy,startedAt,endedAt,wasAutoStart,wasAutoDistance,stopTime,startType,calcEndAt,marshalPenalty,totalPenalty,calibFactor:legCalibFactor};
-  // Log leg stop as final sub-event — delta is the live delta at the moment of stop
-  const stopType = wasAutoDistance ? 'auto' : 'manual';
-  legSubEvents[curIdx].push({
-    type: 'leg_stop', ts: (()=>{ const p=n=>String(n).padStart(2,'0'); const d=new Date(); return p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds()); })(),
-    spd: null, distFromStart: gpsDistM, timeFromStart: elSec,
-    deltaSec: delta, deltaM: gpsFixN>0&&parseFloat(leg.spdKmh)>0 ? gpsDistM-(parseFloat(leg.spdKmh)/3.6*elSec) : 0,
-    stopType, qlDistM: 0, qlSec: 0,
-  });
   buildResults();
 
   const nextIdx=curIdx+1;
@@ -2588,18 +2577,8 @@ function stopLeg(){
 }
 
 function nextLeg(){
-  if(!legRunning && curIdx+1 >= legs.length) return;
-  if(legRunning){
-    stopLeg();
-    // stopLeg already advanced curIdx and called loadLeg for the next leg.
-    // Cancel any pending auto-start timer and start immediately.
-    if(!legRunning && curIdx < legs.length){
-      clearAutoStart();
-      gel('as-banner') && (gel('as-banner').style.display='none');
-      lastStartType = 'manual';
-      startLeg();
-    }
-  }
+  if(legRunning) { stopLeg(); return; }
+  if(curIdx+1<legs.length){ curIdx++; loadLeg(curIdx); renderChips(); updateSbar(); scheduleAutoStart(curIdx); }
 }
 
 function resetRally(){
@@ -2710,9 +2689,6 @@ function _buildResultsInner(){
   const calibEl = gel('res-calib-val');
   if(calibEl) calibEl.textContent = calibFactor.toFixed(3);
 
-  const rallyPenEl = gel('res-rally-penalty');
-  if(rallyPenEl) rallyPenEl.textContent = '—';
-
   const done = legResults.filter(r => r != null);
   const pad  = n => String(n).padStart(2,'0');
   const fmtTime = d => {
@@ -2740,7 +2716,7 @@ function _buildResultsInner(){
     const leg = r.leg || (legs[i] || {});
     const penalty = r.totalPenalty != null ? r.totalPenalty : Math.abs(r.delta);
     tot += r.delta;
-    realPenalty += penalty;
+    realPenalty += Math.abs(r.delta);
 
     const actSpd   = r.elSec > 0 ? (r.gpsDistM / 1000) / (r.elSec / 3600) : 0;
     const tgtSpd   = parseFloat(leg.spdKmh) || 0;
@@ -2815,15 +2791,7 @@ function _buildResultsInner(){
         const dMSign   = ev.deltaM   >  5     ? '+' : ev.deltaM   < -5     ? '\u2212' : '';
         let rowCls = '', actionName = '', qlExtra = '', penaltyCell = '\u2014';
 
-        if(ev.type === 'leg_start'){
-          rowCls = 'leg-start';
-          const anno = (r.startType||'manual')==='time' ? '(t)' : (r.startType||'manual')==='linked' ? '(a)' : '(m)';
-          actionName = `\u25b6 Leg Start <span class="anno">${anno}</span>`;
-        } else if(ev.type === 'leg_stop'){
-          rowCls = 'leg-stop';
-          const anno = r.wasAutoDistance ? '(a)' : '(m)';
-          actionName = `\u25a0 Leg Stop <span class="anno">${anno}</span>`;
-        } else if(ev.type === 'press'){
+        if(ev.type === 'press'){
           rowCls = 'ql-press';
           actionName = `\u2691 QL ${ev.spd} km/h ON`;
         } else if(ev.type === 'release'){
@@ -2853,9 +2821,12 @@ function _buildResultsInner(){
     html += `</div>`; // close res-leg-block
   });
 
-  // Update the always-visible Rally Penalty in the bottom bar
-  const rallyPenaltyEl = gel('res-rally-penalty');
-  if(rallyPenaltyEl) rallyPenaltyEl.textContent = done.length ? realPenalty.toFixed(3) + 's' : '—';
+  const netSign = tot>0.005?'+':tot<-0.005?'\u2212':'';
+  html += `
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <div class="totcard" style="flex:1;min-width:140px;"><div class="totlbl totlbl-net">Net Penalty</div><div class="totval totval-net">${netSign}${Math.abs(tot).toFixed(3)}s</div></div>
+      <div class="totcard" style="flex:1;min-width:140px;"><div class="totlbl totlbl-real">Real Penalty</div><div class="totval totval-real">${realPenalty.toFixed(3)}s</div></div>
+    </div>`;
 
   _tmp.innerHTML = html;
   while(_tmp.firstChild) pg.insertBefore(_tmp.firstChild, bottomBar);
