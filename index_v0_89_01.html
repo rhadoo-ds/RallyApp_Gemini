@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" id="theme-color-meta" content="#07090c">
-<title>RegRally THOR v0.89.02</title>
+<title>RegRally THOR</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ── THEME TOKENS ── */
@@ -961,7 +961,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.89.02</div>
+    <div class="app-version">RegRally THOR v0.89.01</div>
   </div>
 </div>
 
@@ -2448,13 +2448,8 @@ function tick(){
 
   // Snapshot for sub-event logging
   // QL-adjusted expected distance: normal expected dist + QL zone distances
-  // For active QL zone: use time-based expected distance (activeQLTimeSec * qlSpdMs)
-  // so that Delta Meters keeps counting even when the car is stopped (GPS dist = 0).
-  const activeQLExpDistM = activeQuickLimit !== null
-    ? activeQLTimeSec * (activeQuickLimit / 3.6)
-    : 0;
   const normalExpDistM = spdMs * (elSec - qlCompletedTimeSec - activeQLTimeSec);
-  const expDistM = Math.max(0, normalExpDistM) + qlCompletedDistM + activeQLExpDistM;
+  const expDistM = Math.max(0, normalExpDistM) + qlCompletedDistM + activeQLDistM;
   const deltaDistM = (gpsDistM - expDistM);
   lastDeltaSnap = { sec: delta, m: deltaDistM };
 
