@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" id="theme-color-meta" content="#07090c">
-<title>RegRally THOR v0.89.04</title>
+<title>RegRally THOR v0.89.02</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ── THEME TOKENS ── */
@@ -961,7 +961,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.89.04</div>
+    <div class="app-version">RegRally THOR v0.89.02</div>
   </div>
 </div>
 
@@ -1767,8 +1767,7 @@ let qlFlashInterval    = null;
 // Accumulated completed QL zones (persist across multiple QL presses in one leg)
 // Each finished zone contributes: its distance driven at QL speed, and the
 // time-delta contribution it introduced vs the original target speed.
-let qlCompletedExpDistM   = 0;      // total EXPECTED distance (zoneTime × QL speed) — used in expDistM for seamless Delta Meters continuity
-let qlCompletedGpsDistM   = 0;      // total GPS distance covered in all finished QL zones — used for delta-seconds normal/QL split
+let qlCompletedDistM      = 0;      // total distance covered in all finished QL zones
 let qlCompletedTimeSec    = 0;      // total actual time spent in all finished QL zones
 let qlCompletedExpTimeSec = 0;      // total expected time in all finished QL zones (dist / QL speed)
 
@@ -1820,8 +1819,7 @@ function _deactivateQL() {
   const zoneDist = Math.max(0, distM);
   const zoneTime = Math.max(0, durationSec);
   const zoneExpTime = zoneDist / (spd / 3.6);   // expected time at this zone's QL speed
-  qlCompletedExpDistM   += zoneTime * (spd / 3.6);  // expected dist = time × QL speed (keeps expDistM continuous on deactivation)
-  qlCompletedGpsDistM   += zoneDist;                  // GPS dist — for delta-seconds normal/QL split
+  qlCompletedDistM      += zoneDist;
   qlCompletedTimeSec    += zoneTime;
   qlCompletedExpTimeSec += zoneExpTime;
 
@@ -2360,7 +2358,7 @@ function startLeg(){
   gpsDistM=0; gpsFixN=0; totalAccPointsThisStage=0;
   if(!legSubEvents[curIdx]) legSubEvents[curIdx]=[];
   lastDeltaSnap={sec:0,m:0};
-  qlCompletedExpDistM=0; qlCompletedGpsDistM=0; qlCompletedTimeSec=0; qlCompletedExpTimeSec=0;
+  qlCompletedDistM=0; qlCompletedTimeSec=0; qlCompletedExpTimeSec=0;
   _deactivateQL();
   // Log leg start as first sub-event
   _qlLogToResults(null, 'leg_start');
@@ -2411,14 +2409,14 @@ function tick(){
 
   // Update QL zone distance display
   if(activeQuickLimit !== null && gel('ql-meters-val')) {
-    const totalQLDistDisplay = qlCompletedGpsDistM + activeQLDistM;
+    const totalQLDistDisplay = qlCompletedDistM + activeQLDistM;
     gel('ql-meters-val').textContent = Math.round(activeQLDistM);
     if(gel('ql-time-val')) gel('ql-time-val').textContent = activeQLTimeSec.toFixed(1);
   }
 
   if(gpsFixN>0 && gpsDistM>5 && spdMs>0){
     // Total distance covered in all QL zones (completed + active)
-    const totalQLDistM = qlCompletedGpsDistM + activeQLDistM;
+    const totalQLDistM = qlCompletedDistM + activeQLDistM;
     // Non-QL distance
     const normalDistM  = Math.max(0, gpsDistM - totalQLDistM);
     // Expected time for normal (non-QL) distance at target speed
@@ -2449,14 +2447,14 @@ function tick(){
   setDelta(Math.abs(delta),state,true);
 
   // Snapshot for sub-event logging
-  // QL-adjusted expected distance: normal expected dist + QL zone distances.
-  // Use time-based expected QL distance so Delta Meters keeps counting even
-  // when the car is stopped (GPS dist frozen) — v0.89.02 fix.
+  // QL-adjusted expected distance: normal expected dist + QL zone distances
+  // For active QL zone: use time-based expected distance (activeQLTimeSec * qlSpdMs)
+  // so that Delta Meters keeps counting even when the car is stopped (GPS dist = 0).
   const activeQLExpDistM = activeQuickLimit !== null
     ? activeQLTimeSec * (activeQuickLimit / 3.6)
     : 0;
   const normalExpDistM = spdMs * (elSec - qlCompletedTimeSec - activeQLTimeSec);
-  const expDistM = Math.max(0, normalExpDistM) + qlCompletedExpDistM + activeQLExpDistM;
+  const expDistM = Math.max(0, normalExpDistM) + qlCompletedDistM + activeQLExpDistM;
   const deltaDistM = (gpsDistM - expDistM);
   lastDeltaSnap = { sec: delta, m: deltaDistM };
 
@@ -2830,7 +2828,6 @@ function _buildResultsInner(){
           rowCls = 'leg-stop';
           const anno = r.wasAutoDistance ? '(a)' : '(m)';
           actionName = `\u25a0 Leg Stop <span class="anno">${anno}</span>`;
-          penaltyCell = `<b>${dSecSign}${Math.abs(ev.deltaSec||0).toFixed(3)}s</b>`;
         } else if(ev.type === 'press'){
           rowCls = 'ql-press';
           actionName = `\u2691 QL ${ev.spd} km/h ON`;
