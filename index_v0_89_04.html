@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" id="theme-color-meta" content="#07090c">
-<title>RegRally THOR v0.89.05</title>
+<title>RegRally THOR v0.89.04</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ── THEME TOKENS ── */
@@ -961,7 +961,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.89.05</div>
+    <div class="app-version">RegRally THOR v0.89.04</div>
   </div>
 </div>
 
@@ -2542,18 +2542,13 @@ function tick(){
 
 function stopLeg(){
   if(!legRunning) return;
-  // Capture the live QL-aware delta (exactly what the driver sees on screen)
-  // BEFORE clearing the timer or calling _deactivateQL. lastDeltaSnap is
-  // written every tick() with the full QL formula, so this is the correct value.
-  const liveDelta = lastDeltaSnap.sec;
   clearInterval(legTimer); legRunning=false;
   _deactivateQL();
   const leg=legs[curIdx];
   const tgtSecs=calcSecs(leg.distM,leg.spdKmh);
   const elSec=(performance.now()-legStartTs)/1000;
   const spdMs=parseFloat(leg.spdKmh)/3.6;
-  // Use the live delta instead of recomputing without QL context.
-  const delta = liveDelta;
+  const delta=gpsFixN>0 && gpsDistM>5&&spdMs>0?elSec-(gpsDistM/spdMs):elSec-tgtSecs;
   const avgAccuracy = gpsFixN > 0 ? (totalAccPointsThisStage / gpsFixN) : 0.0;
   
   // Record start/end metadata
@@ -2580,7 +2575,7 @@ function stopLeg(){
   legSubEvents[curIdx].push({
     type: 'leg_stop', ts: (()=>{ const p=n=>String(n).padStart(2,'0'); const d=new Date(); return p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds()); })(),
     spd: null, distFromStart: gpsDistM, timeFromStart: elSec,
-    deltaSec: delta, deltaM: lastDeltaSnap.m,
+    deltaSec: delta, deltaM: gpsFixN>0&&parseFloat(leg.spdKmh)>0 ? gpsDistM-(parseFloat(leg.spdKmh)/3.6*elSec) : 0,
     stopType, qlDistM: 0, qlSec: 0,
   });
   buildResults();
