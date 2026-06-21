@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" id="theme-color-meta" content="#07090c">
-<title>RegRally THOR v0.89.06</title>
+<title>RegRally THOR v0.89.05</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ── THEME TOKENS ── */
@@ -961,7 +961,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.89.06</div>
+    <div class="app-version">RegRally THOR v0.89.05</div>
   </div>
 </div>
 
@@ -2361,19 +2361,7 @@ function startLeg(){
   if(!legSubEvents[curIdx]) legSubEvents[curIdx]=[];
   lastDeltaSnap={sec:0,m:0};
   qlCompletedExpDistM=0; qlCompletedGpsDistM=0; qlCompletedTimeSec=0; qlCompletedExpTimeSec=0;
-  // If a Quick Limit was pressed BEFORE the leg started (pre-armed), keep it
-  // active rather than deactivating it against stale pre-start GPS data.
-  // Re-anchor it to the leg's actual start (dist=0, time=now) so the QL zone
-  // calculation is correct from the very first tick.
-  if (activeQuickLimit !== null) {
-    qlPressedAtDist = gpsDistM;     // = 0, just reset above
-    qlPressedAtTime = legStartTs;   // zone starts exactly when the leg starts
-    qlAccumDistM    = 0;
-    if (gel('ql-meters-val')) gel('ql-meters-val').textContent = '0';
-    if (gel('ql-time-val'))   gel('ql-time-val').textContent   = '0.0';
-  } else {
-    _deactivateQL();
-  }
+  _deactivateQL();
   // Log leg start as first sub-event
   _qlLogToResults(null, 'leg_start');
   gel('live-legs-collapsible').classList.remove('open');
@@ -2390,100 +2378,86 @@ function tick(){
   const spdMs=tgtKmh/3.6;
   const elSec=(performance.now()-legStartTs)/1000;
 
-  // ── Quick Limit delta calculation (UNIFIED — single source of truth) ───
+  // ── Quick Limit delta calculation ──────────────────────────────────────
   // Principle: QL zones permanently alter the leg's effective target.
   // After a QL zone, we do NOT revert to the original target speed for
-  // the remaining leg — the QL has consumed real time at the QL speed.
+  // the remaining leg — the QL has consumed real time and distance.
   //
-  // v0.89.06: Delta Seconds and Delta Meters previously used two different
-  // algorithms (one distance-anchored, one time-anchored) which could
-  // disagree at the same instant. Both are now derived from ONE time-based
-  // "expected distance at this instant" function, expDistM(t):
+  // We split the leg into:
+  //   • Completed QL zones  : qlCompletedDistM / qlCompletedTimeSec (accumulated across all finished zones)
+  //   • Active QL zone      : currentQLDistM / currentQLTimeSec (if a QL is currently pressed)
+  //   • Normal (non-QL) distance : gpsDistM - qlCompletedDistM - currentQLDistM
   //
-  //   expDistM(t) = (time spent outside any QL zone) × targetSpeed
-  //               + (time spent inside completed QL zones, each at ITS OWN QL speed)
-  //               + (time spent inside the currently active QL zone) × activeQLSpeed
+  // Expected time for the leg up to now:
+  //   normalExpTime   = normalDist / tgtSpdMs          (target speed for non-QL distance)
+  //   qlZonesExpTime  = qlCompletedDistM / qlZoneAvgSpdMs  (can't know per-zone speed after; use actual time = qlCompletedTimeSec — but we need expected, so use dist / each QL spd)
+  //   → Since we can't easily store per-zone QL speed after the fact, we track:
+  //     qlCompletedTimeSec = actual time spent in completed zones (already accumulated)
+  //     qlCompletedExpTimeSec = expected time in completed zones at their QL speeds
+  //     → Both are accumulated in _deactivateQL (see below).
   //
-  // This is purely a function of ELAPSED TIME (never of live GPS distance),
-  // so it advances smoothly every tick regardless of GPS fixes, stops, or
-  // dropouts — and both deltas below are simply two views of the same gap:
+  // For simplicity and correctness, we pre-accumulate in _deactivateQL:
+  //   qlCompletedDistM      = total distance in finished QL zones
+  //   qlCompletedTimeSec    = actual seconds spent in finished QL zones
+  //   qlCompletedExpTimeSec = expected seconds in finished QL zones (dist / QL speed)
   //
-  //   Delta Meters  = gpsDistM − expDistM(t)                         (distance domain)
-  //   Delta Seconds = elapsed time − time needed to reach expDistM(t) along
-  //                   the SAME schedule the driver is actually following
-  //                   at gpsDistM, i.e. how far ahead/behind in TIME that
-  //                   distance gap represents at the currently relevant pace.
-  //
-  // To keep the seconds figure exact (not an approximation through a single
-  // "current speed"), we compute it the same way expDistM is built: split
-  // elapsed time into (non-QL) + (completed QL zones) + (active QL zone),
-  // each contributing its own (actualTime − expectedTimeForDistanceCovered).
-  // Both functions share the exact same qlCompleted*/active* inputs, so the
-  // moment a QL zone is pressed or released, both deltas update from the
-  // identical accumulators — no drift between them.
+  // Delta = (normalActualTime - normalExpTime)
+  //       + sum_completed_zones(actualTime - expectedTime)
+  //       + activeZone(actualTime - expectedTime)
 
-  let delta=0, state='neutral', deltaDistM=0;
+  let delta=0, state='neutral';
   const activeQLDistM  = activeQuickLimit !== null ? Math.max(0, gpsDistM - qlPressedAtDist) : 0;
   const activeQLTimeSec = activeQuickLimit !== null ? (performance.now() - qlPressedAtTime) / 1000 : 0;
-  const activeQLSpdMs  = activeQuickLimit !== null ? (activeQuickLimit / 3.6) : 0;
 
-  // Time-based expected distance contributed by the active QL zone right now.
-  // (Time-anchored, not GPS-distance-anchored, so it keeps advancing even
-  // when the car is stationary — v0.89.02 fix — and is the SAME basis used
-  // for the seconds calculation below — v0.89.06 fix.)
-  const activeQLExpDistM = activeQuickLimit !== null ? (activeQLTimeSec * activeQLSpdMs) : 0;
-
-  // Update QL zone distance display (driver-facing live GPS distance in the
-  // current zone — display only, does not feed into delta calculations)
+  // Update QL zone distance display
   if(activeQuickLimit !== null && gel('ql-meters-val')) {
+    const totalQLDistDisplay = qlCompletedGpsDistM + activeQLDistM;
     gel('ql-meters-val').textContent = Math.round(activeQLDistM);
     if(gel('ql-time-val')) gel('ql-time-val').textContent = activeQLTimeSec.toFixed(1);
   }
 
-  // Time actually spent outside any QL zone (completed or active) up to now
-  const normalActualTimeSec = Math.max(0, elSec - qlCompletedTimeSec - activeQLTimeSec);
-  // Expected distance covered during that non-QL time, at the leg's target speed
-  const normalExpDistM = spdMs * normalActualTimeSec;
-  // Single unified expected-position function — pure function of elapsed time
-  const expDistM = normalExpDistM + qlCompletedExpDistM + activeQLExpDistM;
+  if(gpsFixN>0 && gpsDistM>5 && spdMs>0){
+    // Total distance covered in all QL zones (completed + active)
+    const totalQLDistM = qlCompletedGpsDistM + activeQLDistM;
+    // Non-QL distance
+    const normalDistM  = Math.max(0, gpsDistM - totalQLDistM);
+    // Expected time for normal (non-QL) distance at target speed
+    const normalExpTimeSec = normalDistM / spdMs;
+    // Actual time spent outside QL zones
+    const normalActualTimeSec = elSec - qlCompletedTimeSec - activeQLTimeSec;
 
-  if(gpsFixN>0 && spdMs>0){
-    // Delta Meters: how far ahead(+)/behind(−) of the expected position the
-    // car actually is, right now, in metres.
-    const deltaDistM_live = gpsDistM - expDistM;
-
-    // Delta Seconds: the SAME gap expressed in time, built from the SAME
-    // three components as expDistM (non-QL / completed QL / active QL),
-    // each as (actual time in that segment − expected time in that segment).
-    // Expected time for the non-QL segment uses the GPS distance actually
-    // covered while NOT in any QL zone (gpsDistM minus all QL-zone GPS
-    // distance, completed + active), at the leg's target speed.
-    const totalQLGpsDistM = qlCompletedGpsDistM + activeQLDistM;
-    const normalGpsDistM  = Math.max(0, gpsDistM - totalQLGpsDistM);
-    const normalExpTimeSec = normalGpsDistM / spdMs;
-    const normalDelta = normalActualTimeSec - normalExpTimeSec;
-
-    // Completed QL zones: stored actual vs expected time per zone (accumulated in _deactivateQL)
+    // Delta from completed QL zones (stored)
     const completedQLDelta = qlCompletedTimeSec - qlCompletedExpTimeSec;
 
-    // Active QL zone: actual time in zone vs expected time for the GPS
-    // distance actually covered in zone, at the QL speed.
+    // Delta from active QL zone
     let activeQLDelta = 0;
-    if(activeQuickLimit !== null && activeQLSpdMs > 0){
-      const activeQLExpTimeSec = activeQLDistM / activeQLSpdMs;
+    if(activeQuickLimit !== null){
+      const qlSpdMs = activeQuickLimit / 3.6;
+      const activeQLExpTimeSec = activeQLDistM / qlSpdMs;
       activeQLDelta = activeQLTimeSec - activeQLExpTimeSec;
     }
 
+    // Normal section delta
+    const normalDelta = normalActualTimeSec - normalExpTimeSec;
+
     delta = normalDelta + completedQLDelta + activeQLDelta;
     state = Math.abs(delta)<0.3?'ontime':delta>0?'behind':'ahead';
-
-    deltaDistM = deltaDistM_live;
   } else {
     delta = Math.max(0, elSec - tgtSecs);
     state = delta < 0.3 ? (elSec < tgtSecs ? 'neutral' : 'ontime') : 'behind';
-    deltaDistM = gpsDistM - expDistM;
   }
   setDelta(Math.abs(delta),state,true);
+
+  // Snapshot for sub-event logging
+  // QL-adjusted expected distance: normal expected dist + QL zone distances.
+  // Use time-based expected QL distance so Delta Meters keeps counting even
+  // when the car is stopped (GPS dist frozen) — v0.89.02 fix.
+  const activeQLExpDistM = activeQuickLimit !== null
+    ? activeQLTimeSec * (activeQuickLimit / 3.6)
+    : 0;
+  const normalExpDistM = spdMs * (elSec - qlCompletedTimeSec - activeQLTimeSec);
+  const expDistM = Math.max(0, normalExpDistM) + qlCompletedExpDistM + activeQLExpDistM;
+  const deltaDistM = (gpsDistM - expDistM);
   lastDeltaSnap = { sec: delta, m: deltaDistM };
 
   const deltaDistanceKm = deltaDistM / 1000;
