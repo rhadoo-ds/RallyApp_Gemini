@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" id="theme-color-meta" content="#07090c">
-<title>RegRally THOR v0.89.08</title>
+<title>RegRally THOR v0.89.07</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ── THEME TOKENS ── */
@@ -961,7 +961,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.89.08</div>
+    <div class="app-version">RegRally THOR v0.89.07</div>
   </div>
 </div>
 
@@ -2234,7 +2234,7 @@ function cmTick(){
   // ddist
   const ddKm = (cmLapDist - expDist)/1000;
   gel('cm-ddist-val').textContent  = Math.abs(ddKm).toFixed(3);
-  gel('cm-ddist-sign').textContent = ddKm >= 0 ? '+' : '−';
+  gel('cm-ddist-sign').textContent = ddKm>0.005?'+':ddKm<-0.005?'−':'';
   const dc = Math.abs(ddKm)<0.005?'var(--ok)':ddKm>0?'var(--ahead)':'var(--behind)';
   gel('cm-ddist-val').style.color = dc; gel('cm-ddist-sign').style.color = dc;
 
@@ -2279,7 +2279,7 @@ function cmSetDelta(absSec, state, running){
   const col = c[state]||c.neutral;
   gel('cm-delta-panel').style.setProperty('--dc', col);
   gel('cm-drow').style.setProperty('--dc', col);
-  gel('cm-dsign').textContent = running?(state==='behind'?'+':state==='ahead'?'−':'+'):'';
+  gel('cm-dsign').textContent = running?(state==='behind'?'+':state==='ahead'?'−':''):'';
   gel('cm-dint').textContent  = Math.floor(absSec);
   gel('cm-ddec').textContent  = '.'+(Math.round(absSec*10)%10);
 }
@@ -2341,7 +2341,7 @@ function setDelta(absSec,state,running){
   const c={behind:'var(--behind)',ahead:'var(--ahead)',ontime:'var(--ok)',neutral:'var(--border2)'};
   gel('delta').style.setProperty('--dc',c[state]||c.neutral);
   gel('drow-hero').style.setProperty('--dc',c[state]||c.neutral);
-  gel('dsign').textContent=running?(state==='behind'?'+':state==='ahead'?'−':'+'):'';
+  gel('dsign').textContent=running?(state==='behind'?'+':state==='ahead'?'−':''):'';
   gel('dint').textContent=Math.floor(absSec);
   gel('ddec').textContent='.'+String(Math.round((absSec%1)*1000)).padStart(3,'0');
   
@@ -2505,7 +2505,7 @@ function tick(){
   const ddistEl = gel('ddist-hero');
   const ddistSign = gel('ddist-sign');
   ddistEl.textContent = Math.abs(deltaDistanceKm).toFixed(3);
-  ddistSign.textContent = deltaDistanceKm >= 0 ? '+' : '−';
+  ddistSign.textContent = deltaDistanceKm > 0.005 ? '+' : deltaDistanceKm < -0.005 ? '−' : '';
   const ddistColor = Math.abs(deltaDistanceKm) < 0.005 ? 'var(--ok)' : deltaDistanceKm > 0 ? 'var(--ahead)' : 'var(--behind)';
   ddistEl.style.color = ddistColor; ddistSign.style.color = ddistColor;
 
