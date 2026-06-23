@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" id="theme-color-meta" content="#07090c">
-<title>RegRally THOR v0.89.10</title>
+<title>RegRally THOR v0.89.09</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ── THEME TOKENS ── */
@@ -961,7 +961,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.89.10</div>
+    <div class="app-version">RegRally THOR v0.89.09</div>
   </div>
 </div>
 
@@ -1770,7 +1770,7 @@ let qlFlashInterval    = null;
 let qlCompletedGpsDistM   = 0;      // total GPS distance covered in all finished QL zones
 let qlCompletedTimeSec    = 0;      // total actual time spent in all finished QL zones
 let qlCompletedExpTimeSec = 0;      // total expected time in all finished QL zones (dist / QL speed)
-let qlCompletedDistSpeedSum = 0;    // sum of (zoneDist × QL_speed) for all finished QL zones — used for distance-weighted avg speed in deltaDistM formula
+let qlCompletedExpGpsDistM = 0;     // sum of (zoneTime × QL_speed) for all finished zones — expected GPS dist per zone at that zone's own speed, used for deltaDistM with no cross-speed rescaling
 
 const QL_SPEEDS = [10, 15, 20, 30, 40, 50];
 
@@ -1823,7 +1823,7 @@ function _deactivateQL() {
   qlCompletedGpsDistM    += zoneDist;
   qlCompletedTimeSec     += zoneTime;
   qlCompletedExpTimeSec  += zoneExpTime;
-  qlCompletedDistSpeedSum += zoneDist * (spd / 3.6);  // dist × speed contribution for weighted avg
+  qlCompletedExpGpsDistM += zoneTime * (spd / 3.6);   // expected GPS dist at this zone's own speed
 
   // Log to results sub-row (release event)
   _qlLogToResults(spd, 'release', distM, durationSec);
@@ -2360,7 +2360,7 @@ function startLeg(){
   gpsDistM=0; gpsFixN=0; totalAccPointsThisStage=0;
   if(!legSubEvents[curIdx]) legSubEvents[curIdx]=[];
   lastDeltaSnap={sec:0,m:0};
-  qlCompletedGpsDistM=0; qlCompletedDistSpeedSum=0; qlCompletedTimeSec=0; qlCompletedExpTimeSec=0;
+  qlCompletedGpsDistM=0; qlCompletedExpGpsDistM=0; qlCompletedTimeSec=0; qlCompletedExpTimeSec=0;
   // If a Quick Limit was pressed BEFORE the leg started (pre-armed), keep it
   // active rather than deactivating it against stale pre-start GPS data.
   // Re-anchor it to the leg's actual start (dist=0, time=now) so the QL zone
@@ -2483,27 +2483,21 @@ function tick(){
     delta = normalDelta + completedQLDelta + activeQLDelta;
     state = Math.abs(delta) < 0.3 ? 'ontime' : delta > 0 ? 'behind' : 'ahead';
 
-    // ── DELTA METERS — distance-weighted average speed formula ───────────
-    // Derivation confirmed against spreadsheet data (v0.89.10):
+    // ── DELTA METERS — per-segment, each zone uses its own speed ─────────
+    // Mirrors the delta_sec split exactly so both are the same gap.
+    // Using per-segment speeds prevents the cross-speed rescaling jump that
+    // occurred in v0.89.08 when a QL zone ended (effectiveSpdMs changed
+    // instantly from QL speed to target speed, scaling the same delta_sec
+    // into a different deltaDistM value — visible as the 0096→0231 jump).
     //
-    //   deltaDistM = −deltaSec × weightedAvgSpeed
-    //
-    // where weightedAvgSpeed = Σ(sub_dist_i × sub_speed_i) / total_gps_dist
-    // Each sub-section (normal or QL) contributes dist×speed to the sum.
-    // This is the distance-weighted harmonic mean of all sub-section speeds,
-    // and it ensures deltaDistM and deltaSec are always the same gap in
-    // different units, scaled by the ACTUAL mix of speeds driven so far —
-    // not by whichever single speed happens to be "current" at this tick.
-    //
-    // Components of distSpeedSum:
-    //   • Normal (non-QL) GPS distance × leg target speed
-    //   • Completed QL zones: accumulated in _deactivateQL (zoneDist × QL_speed)
-    //   • Active QL zone: activeQLDistM × active QL speed
-    const distSpeedSum = normalGpsDistM * spdMs
-                       + qlCompletedDistSpeedSum
-                       + activeQLDistM * activeQLSpdMs;
-    const weightedAvgSpdMs = gpsDistM > 0 ? distSpeedSum / gpsDistM : spdMs;
-    deltaDistM = -delta * weightedAvgSpdMs;
+    // 1. Normal segment: GPS dist covered in non-QL time vs expected at target speed
+    const normalDistGap = normalGpsDistM - spdMs * normalActualTimeSec;
+    // 2. Completed QL zones: GPS dist vs expected (zoneTime × zone's own QL speed)
+    const completedQLDistGap = qlCompletedGpsDistM - qlCompletedExpGpsDistM;
+    // 3. Active QL zone: GPS dist vs expected (activeTime × active QL speed)
+    const activeQLDistGap = activeQLDistM - activeQLSpdMs * activeQLTimeSec;
+    // Sum — positive = ahead, negative = behind (same sign convention as delta_sec reversed)
+    deltaDistM = normalDistGap + completedQLDistGap + activeQLDistGap;
 
   } else {
     delta = Math.max(0, elSec - tgtSecs);
