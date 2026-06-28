@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" id="theme-color-meta" content="#07090c">
-<title>RegRally THOR v0.90.02</title>
+<title>RegRally THOR v0.90.03</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ── THEME TOKENS ── */
@@ -975,7 +975,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.90.02</div>
+    <div class="app-version">RegRally THOR v0.90.03</div>
   </div>
 </div>
 
@@ -1825,6 +1825,7 @@ let qlCompletedGpsDistM   = 0;      // total GPS distance covered in all finishe
 let qlCompletedTimeSec    = 0;      // total actual time spent in all finished QL zones
 let qlCompletedExpTimeSec = 0;      // total expected time in all finished QL zones (dist / QL speed)
 let qlCompletedDistSpeedSum = 0;    // sum of (zoneDist × QL_speed) for all finished QL zones — used for distance-weighted avg speed in deltaDistM formula
+let qlCompletedTimeSpeedSum = 0;    // sum of (zoneTime × QL_speed) for all finished QL zones — used for expDistM (QL-schedule-aware expected position)
 
 const QL_SPEEDS = [10, 15, 20, 30, 40, 50];
 
@@ -1904,6 +1905,7 @@ function _deactivateQL() {
   qlCompletedTimeSec     += zoneTime;
   qlCompletedExpTimeSec  += zoneExpTime;
   qlCompletedDistSpeedSum += zoneDist * (spd / 3.6);  // dist × speed contribution for weighted avg
+  qlCompletedTimeSpeedSum += zoneTime * (spd / 3.6); // time × speed = expected dist at QL speed for expDistM
 
   // Log to results sub-row (release event)
   _qlLogToResults(spd, 'release', distM, durationSec);
@@ -2440,7 +2442,7 @@ function startLeg(){
   gpsDistM=0; gpsFixN=0; totalAccPointsThisStage=0;
   if(!legSubEvents[curIdx]) legSubEvents[curIdx]=[];
   lastDeltaSnap={sec:0,m:0};
-  qlCompletedGpsDistM=0; qlCompletedDistSpeedSum=0; qlCompletedTimeSec=0; qlCompletedExpTimeSec=0;
+  qlCompletedGpsDistM=0; qlCompletedDistSpeedSum=0; qlCompletedTimeSpeedSum=0; qlCompletedTimeSec=0; qlCompletedExpTimeSec=0;
   // If a Quick Limit was pressed BEFORE the leg started (pre-armed), keep it
   // active rather than deactivating it against stale pre-start GPS data.
   // Re-anchor it to the leg's actual start (dist=0, time=now) so the QL zone
@@ -2522,7 +2524,7 @@ function tick(){
   // currentEffectiveSpeed: the speed the driver is "supposed" to be doing
   // right now — QL speed if inside an active zone, leg target speed otherwise.
 
-  let delta=0, state='neutral', deltaDistM=0;
+  let delta=0, state='neutral', deltaDistM=0, expDistM=0;
   const activeQLDistM   = activeQuickLimit !== null ? Math.max(0, gpsDistM - qlPressedAtDist) : 0;
   const activeQLTimeSec = activeQuickLimit !== null ? (performance.now() - qlPressedAtTime) / 1000 : 0;
   const activeQLSpdMs   = activeQuickLimit !== null ? (activeQuickLimit / 3.6) : 0;
@@ -2564,32 +2566,38 @@ function tick(){
     state = Math.abs(delta) < 0.3 ? 'ontime' : delta > 0 ? 'behind' : 'ahead';
 
     // ── DELTA METERS — distance-weighted average speed formula ───────────
-    // Derivation confirmed against spreadsheet data (v0.89.10):
-    //
-    //   deltaDistM = −deltaSec × weightedAvgSpeed
-    //
+    // deltaDistM = −deltaSec × weightedAvgSpeed
     // where weightedAvgSpeed = Σ(sub_dist_i × sub_speed_i) / total_gps_dist
-    // Each sub-section (normal or QL) contributes dist×speed to the sum.
-    // This is the distance-weighted harmonic mean of all sub-section speeds,
-    // and it ensures deltaDistM and deltaSec are always the same gap in
-    // different units, scaled by the ACTUAL mix of speeds driven so far —
-    // not by whichever single speed happens to be "current" at this tick.
-    //
-    // Components of distSpeedSum:
-    //   • Normal (non-QL) GPS distance × leg target speed
-    //   • Completed QL zones: accumulated in _deactivateQL (zoneDist × QL_speed)
-    //   • Active QL zone: activeQLDistM × active QL speed
     const distSpeedSum = normalGpsDistM * spdMs
                        + qlCompletedDistSpeedSum
                        + activeQLDistM * activeQLSpdMs;
     const weightedAvgSpdMs = gpsDistM > 0 ? distSpeedSum / gpsDistM : spdMs;
     deltaDistM = -delta * weightedAvgSpdMs;
 
+    // ── EXPECTED POSITION (QL-schedule-aware) — used by telem Row 3 ──────
+    // expDistM: where the driver SHOULD be at this exact elapsed time,
+    // given the leg target speed for non-QL time and each QL zone's own
+    // speed for time spent inside that zone. Pure function of elapsed time
+    // (not GPS distance), so it advances smoothly every tick.
+    //
+    // Formula mirrors the delta_sec split in reverse:
+    //   Normal segment expected dist  = normalActualTimeSec × spdMs
+    //   Completed QL zones exp dist   = sum(zoneTime × QLspeed) = qlCompletedExpGpsDistM_time
+    //   Active QL zone exp dist       = activeQLTimeSec × activeQLSpdMs
+    //
+    // Note: qlCompletedDistSpeedSum stores sum(zoneDist × QLspeed) — for delta_m.
+    // For expDistM we need sum(zoneTime × QLspeed). We track that separately as
+    // qlCompletedTimeSpeedSum (accumulated in _deactivateQL alongside others).
+    expDistM = normalActualTimeSec * spdMs
+             + qlCompletedTimeSpeedSum
+             + activeQLTimeSec * activeQLSpdMs;
+
   } else {
     delta = Math.max(0, elSec - tgtSecs);
     state = delta < 0.3 ? (elSec < tgtSecs ? 'neutral' : 'ontime') : 'behind';
-    // No GPS: time-based gap at target speed
+    // No GPS: time-based expected position at target speed
     deltaDistM = -delta * spdMs;
+    expDistM = elSec * spdMs;
   }
   setDelta(Math.abs(delta),state,true);
   lastDeltaSnap = { sec: delta, m: deltaDistM };
@@ -2636,33 +2644,42 @@ function tick(){
   gel('live-leg-remaining-dist').textContent = remainKm.toFixed(3);
 
   // ── Telem table Row 2 (actual — colour coded) ──
-  // Colour: compare elapsed vs target (time), actual dist vs expected (dist), actual speed vs target (speed)
+  // Row 2 col 1: Stopwatch — elapsed time since leg start, coloured vs target time
   const timeDiff = elSec - tgtSecs;
   const actTimeC = Math.abs(timeDiff)<0.3?'var(--ok)':timeDiff>0?'var(--behind)':'var(--ahead)';
   gel('tt-act-time').innerHTML = `<small>Stopwatch</small>${fmtEl(elSec*1000)}`;
   gel('tt-act-time').style.cssText = `color:#fff;font-weight:700;background:${actTimeC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
 
+  // Row 2 col 2: Traveled Dist — GPS distance since leg start, coloured vs expected position
   const distDiff = gpsDistM - expDistM;
   const actDistC = Math.abs(distDiff)<5?'var(--ok)':distDiff>0?'var(--ahead)':'var(--behind)';
   gel('tt-act-dist').innerHTML = `<small>Traveled Dist</small>${km3(gpsDistM)} km`;
   gel('tt-act-dist').style.cssText = `color:#fff;font-weight:700;background:${actDistC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
 
+  // Row 2 col 3: Avg Speed — actual average since leg start (GPS dist / elapsed time)
   const actSpdDiff = realAvgKmh - tgtKmh;
   const actSpdC = elSec<2?'var(--txt3)':Math.abs(actSpdDiff)<0.5?'var(--ok)':actSpdDiff>0?'var(--ahead)':'var(--behind)';
-  gel('tt-act-spd').innerHTML = `<small>Avg Speed</small>${realAvgKmh.toFixed(3)} km/h`;
+  gel('tt-act-spd').innerHTML = `<small>Avg Speed</small>${elSec>1 ? realAvgKmh.toFixed(3)+' km/h' : '—'}`;
   gel('tt-act-spd').style.cssText = elSec<2?'':`color:#fff;font-weight:700;background:${actSpdC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
 
   // ── Telem table Row 3 (QL-schedule-aware expected values — grey) ──
-  // expDistM is already the QL-aware expected position at this elapsed time,
-  // computed in the unified delta block above using normalExpDist + completedQL + activeQL.
-  // Expected Time = how long it should take to cover expDistM along the schedule
-  //              = elSec + delta  (if you are 4s ahead, expected time for your GPS dist = elSec - 4s)
-  // Expected Speed = expDistM / elSec expressed in km/h (QL-schedule-aware avg)
-  const expTimeQLSec = elSec - delta;   // scheduled time to cover actual GPS distance
-  const expDistQLM   = Math.min(expDistM, tgtDistM);
-  const expSpdKmh    = elSec > 0 ? (expDistQLM / 1000) / (elSec / 3600) : tgtKmh;
-  gel('tt-exp-time').innerHTML = `<small>Expected Time</small>${fmtMMSSdd(Math.max(0, expTimeQLSec))}`;
-  gel('tt-exp-dist').innerHTML = `<small>Expected Dist</small>${km3(expDistQLM)} km`;
+  // expDistM: where the driver should be at elSec given target speed + all QL zones.
+  //   = normalActualTimeSec × spdMs + qlCompletedTimeSpeedSum + activeQLTimeSec × activeQLSpdMs
+  // (computed in the unified delta block above)
+  //
+  // Expected Time: the elapsed time corresponding to being at expDistM on the schedule.
+  //   Since expDistM IS defined as "position at elSec", expected time = elSec always.
+  //   We display it as a countdown-style formatted time so the driver can compare
+  //   it directly against the Stopwatch above.
+  //
+  // Expected Dist: expDistM clamped to leg total distance.
+  //
+  // Expected Avg Speed: how fast the schedule requires you to have gone on average
+  //   from start to now, i.e. expDistM / elSec. This accounts for all QL slow zones.
+  const expDistClamped = Math.min(expDistM, tgtDistM);
+  const expSpdKmh = elSec > 1 ? (expDistClamped / 1000) / (elSec / 3600) : tgtKmh;
+  gel('tt-exp-time').innerHTML = `<small>Expected Time</small>${fmtEl(elSec*1000)}`;
+  gel('tt-exp-dist').innerHTML = `<small>Expected Dist</small>${km3(expDistClamped)} km`;
   gel('tt-exp-spd').innerHTML  = `<small>Expected Spd</small>${expSpdKmh.toFixed(1)} km/h`;
 
   const pctVal = tgtDistM > 0 ? Math.min((gpsDistM/tgtDistM)*100, 100) : 0;
