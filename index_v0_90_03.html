@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" id="theme-color-meta" content="#07090c">
-<title>RegRally THOR v0.90.05</title>
+<title>RegRally THOR v0.90.03</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ── THEME TOKENS ── */
@@ -592,7 +592,7 @@ body{
 
 /* Controls Layout: 3 Columns fixed size buttons */
 .ctrlg-three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-.bc{font-weight:700;font-size:26px;padding:30px 8px;border-radius:8px;cursor:pointer;border:none;transition:all .2s; text-align:center;}
+.bc{font-weight:700;font-size:13px;padding:30px 8px;border-radius:8px;cursor:pointer;border:none;transition:all .2s; text-align:center;}
 .bc:active{transform:scale(.97);opacity:.9;}
 .bgo{background:var(--ok);color:#fff;}
 .bstop{background:var(--behind);color:#fff;}
@@ -975,7 +975,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.90.05</div>
+    <div class="app-version">RegRally THOR v0.90.03</div>
   </div>
 </div>
 
@@ -1827,7 +1827,7 @@ let qlCompletedExpTimeSec = 0;      // total expected time in all finished QL zo
 let qlCompletedDistSpeedSum = 0;    // sum of (zoneDist × QL_speed) for all finished QL zones — used for distance-weighted avg speed in deltaDistM formula
 let qlCompletedTimeSpeedSum = 0;    // sum of (zoneTime × QL_speed) for all finished QL zones — used for expDistM (QL-schedule-aware expected position)
 
-const QL_SPEEDS = [10, 15, 20, 30, 40, 50, 60, 70];
+const QL_SPEEDS = [10, 15, 20, 30, 40, 50];
 
 function toggleQuickLimit(spd) {
   // Check if QL speed >= leg target average speed — if so, reject and flash orange
@@ -2643,49 +2643,44 @@ function tick(){
   const remainKm = Math.max(0, (tgtDistM - gpsDistM) / 1000);
   gel('live-leg-remaining-dist').textContent = remainKm.toFixed(3);
 
-  // ── Telem table Row 2 ────────────────────────────────────────────────────
-  // Delta colour: same mapping as setDelta() uses
-  const deltaC = {behind:'var(--behind)',ahead:'var(--ahead)',ontime:'var(--ok)',neutral:'var(--border2)'}[state]||'var(--border2)';
-  // Warn colour (same as tgt-spd-block): used for Stopwatch background while leg is active
-  const warnC = 'color-mix(in srgb,var(--warn) 55%,transparent)';
-
-  // Col 1: Stopwatch — coloured in target-speed-block amber while leg runs
+  // ── Telem table Row 2 (actual — colour coded) ──
+  // Row 2 col 1: Stopwatch — elapsed time since leg start, coloured vs target time
+  const timeDiff = elSec - tgtSecs;
+  const actTimeC = Math.abs(timeDiff)<0.3?'var(--ok)':timeDiff>0?'var(--behind)':'var(--ahead)';
   gel('tt-act-time').innerHTML = `<small>Stopwatch</small>${fmtEl(elSec*1000)}`;
-  gel('tt-act-time').style.cssText = `color:#fff;font-weight:700;background:${warnC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
+  gel('tt-act-time').style.cssText = `color:#fff;font-weight:700;background:${actTimeC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
 
-  // Col 2: Traveled Dist — same colour as Delta Seconds
+  // Row 2 col 2: Traveled Dist — GPS distance since leg start, coloured vs expected position
+  const distDiff = gpsDistM - expDistM;
+  const actDistC = Math.abs(distDiff)<5?'var(--ok)':distDiff>0?'var(--ahead)':'var(--behind)';
   gel('tt-act-dist').innerHTML = `<small>Traveled Dist</small>${km3(gpsDistM)} km`;
-  gel('tt-act-dist').style.cssText = `color:#fff;font-weight:700;background:${deltaC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
+  gel('tt-act-dist').style.cssText = `color:#fff;font-weight:700;background:${actDistC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
 
-  // Col 3: Avg Speed — same colour as Delta Seconds
+  // Row 2 col 3: Avg Speed — actual average since leg start (GPS dist / elapsed time)
+  const actSpdDiff = realAvgKmh - tgtKmh;
+  const actSpdC = elSec<2?'var(--txt3)':Math.abs(actSpdDiff)<0.5?'var(--ok)':actSpdDiff>0?'var(--ahead)':'var(--behind)';
   gel('tt-act-spd').innerHTML = `<small>Avg Speed</small>${elSec>1 ? realAvgKmh.toFixed(3)+' km/h' : '—'}`;
-  gel('tt-act-spd').style.cssText = `color:#fff;font-weight:700;background:${deltaC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
+  gel('tt-act-spd').style.cssText = elSec<2?'':`color:#fff;font-weight:700;background:${actSpdC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
 
-  // ── Telem table Row 3 ────────────────────────────────────────────────────
-  // Col 1: Expected Time = Stopwatch − DeltaSeconds
-  //   Expected time = how long the leg *should* take to reach the current GPS position.
-  //   delta > 0 (behind / late)  → car is slower than schedule → expected time is LESS
-  //                                 e.g. 5:33.6 − (+5) = 5:28.6  (should have been there sooner)
-  //   delta < 0 (ahead / early) → car is faster than schedule → expected time is MORE
-  //                                 e.g. 4:46.6 − (−5) = 4:51.6  (schedule needed more time)
-  //   i.e. Expected Time = elSec − delta
-  const expTimeSec = Math.max(0, elSec - delta);
-  gel('tt-exp-time').innerHTML = `<small>Expected Time</small>${fmtEl(expTimeSec*1000)}`;
-  gel('tt-exp-time').style.cssText = `color:#fff;font-weight:700;background:${deltaC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
-
-  // Col 2: Expected Distance = Traveled Distance - DeltaMeters
-  //   deltaDistM > 0 (ahead, car is ahead of expected) → expected position is BEHIND car → expDist = gps - delta_m
-  //   deltaDistM < 0 (behind) → expected position is AHEAD of car → expDist = gps - delta_m (still the same formula)
-  //   i.e. Expected Dist = gpsDistM - deltaDistM
-  const expDistFromDelta = Math.max(0, gpsDistM - deltaDistM);
-  gel('tt-exp-dist').innerHTML = `<small>Expected Dist</small>${km3(expDistFromDelta)} km`;
-  gel('tt-exp-dist').style.cssText = `color:#fff;font-weight:700;background:${deltaC};text-shadow:0 1px 3px rgba(0,0,0,.35)`;
-
-  // Col 3: Expected Avg Speed = Expected Distance / Stopwatch time
-  //   This is the QL-schedule-aware average speed (what the schedule requires on avg so far)
-  const expSpdKmh = expTimeSec > 0 ? (expDistFromDelta / 1000) / (expTimeSec / 3600) : tgtKmh;
-  gel('tt-exp-spd').innerHTML = `<small>Expected Spd</small>${elSec>1 ? expSpdKmh.toFixed(1)+' km/h' : tgtKmh.toFixed(1)+' km/h'}`;
-  gel('tt-exp-spd').style.cssText = '';
+  // ── Telem table Row 3 (QL-schedule-aware expected values — grey) ──
+  // expDistM: where the driver should be at elSec given target speed + all QL zones.
+  //   = normalActualTimeSec × spdMs + qlCompletedTimeSpeedSum + activeQLTimeSec × activeQLSpdMs
+  // (computed in the unified delta block above)
+  //
+  // Expected Time: the elapsed time corresponding to being at expDistM on the schedule.
+  //   Since expDistM IS defined as "position at elSec", expected time = elSec always.
+  //   We display it as a countdown-style formatted time so the driver can compare
+  //   it directly against the Stopwatch above.
+  //
+  // Expected Dist: expDistM clamped to leg total distance.
+  //
+  // Expected Avg Speed: how fast the schedule requires you to have gone on average
+  //   from start to now, i.e. expDistM / elSec. This accounts for all QL slow zones.
+  const expDistClamped = Math.min(expDistM, tgtDistM);
+  const expSpdKmh = elSec > 1 ? (expDistClamped / 1000) / (elSec / 3600) : tgtKmh;
+  gel('tt-exp-time').innerHTML = `<small>Expected Time</small>${fmtEl(elSec*1000)}`;
+  gel('tt-exp-dist').innerHTML = `<small>Expected Dist</small>${km3(expDistClamped)} km`;
+  gel('tt-exp-spd').innerHTML  = `<small>Expected Spd</small>${expSpdKmh.toFixed(1)} km/h`;
 
   const pctVal = tgtDistM > 0 ? Math.min((gpsDistM/tgtDistM)*100, 100) : 0;
   gel('pfill').style.width = pctVal.toFixed(1)+'%';
