@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" id="theme-color-meta" content="#07090c">
-<title>RegRally THOR v0.90.06</title>
+<title>RegRally THOR v0.90.05</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ── THEME TOKENS ── */
@@ -975,7 +975,7 @@ body{
   
   <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.90.06</div>
+    <div class="app-version">RegRally THOR v0.90.05</div>
   </div>
 </div>
 
@@ -1550,42 +1550,6 @@ function haversine(la1,lo1,la2,lo2){
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
-// ── GPS outlier rejection ──
-// watchPosition can occasionally deliver a "bad" fix (multipath, a brief
-// dropout, or — as with mock-location bridges like GPS Connector feeding
-// an external receiver — a duplicated/out-of-order NMEA sentence). Because
-// distance is accumulated cumulatively (gpsDistM += delta), a single bad
-// fix that is far from the previous one adds a permanent, un-correctable
-// spike to the total. Worse, if we then update the baseline to that bad
-// position, the *next* (good) fix jumps back — which also gets counted as
-// real distance, producing the double-jump pattern (e.g. 20m→35m→50m).
-// To fix this we validate each fix before letting it contribute to
-// distance, and only advance the distance baseline (lastGoodPos) when a
-// fix passes validation — so a rejected fix is skipped entirely rather
-// than corrupting the next delta too.
-const GPS_MAX_ACCURACY_M          = 30;   // ignore fixes with a very large reported accuracy radius
-const GPS_MAX_PLAUSIBLE_SPEED_MS  = 83;   // ~300km/h hard ceiling — catches outright teleports
-const GPS_SPEED_DISAGREEMENT_MULT = 2.5;  // implied speed vs device-reported (Doppler) speed
-const GPS_SPEED_DISAGREEMENT_MARGIN_MS = 3; // + small absolute allowance for low-speed noise
-let lastGoodPos = null; // last position accepted as a valid basis for distance accumulation
-
-function isGpsFixAcceptable(d, dtSec, c){
-  if(!(dtSec > 0)) return false;
-  if(!(d >= 0 && d < 200)) return false; // existing sanity net for a single fix-to-fix jump
-  const impliedSpeedMs = d / dtSec;
-  if(impliedSpeedMs > GPS_MAX_PLAUSIBLE_SPEED_MS) return false;
-  if(isFinite(c.accuracy) && c.accuracy > GPS_MAX_ACCURACY_M) return false;
-  // Cross-check against the receiver's own Doppler-derived speed (c.speed),
-  // which is not subject to the kind of single-fix position "teleport"
-  // we're filtering here. A big disagreement means the position delta,
-  // not the device, is lying.
-  if(c.speed != null && c.speed >= 0){
-    const allowedMs = c.speed * GPS_SPEED_DISAGREEMENT_MULT + GPS_SPEED_DISAGREEMENT_MARGIN_MS;
-    if(impliedSpeedMs > allowedMs) return false;
-  }
-  return true;
-}
-
 function gpsSuccess(pos){
   gpsGranted = true;
   const c = pos.coords;
@@ -1595,10 +1559,9 @@ function gpsSuccess(pos){
   gpsSpeedMs = (c.speed!=null&&c.speed>=0)?c.speed:null;
   
   accumulatedFixesThisSec++;
-  if(lastGoodPos){
-    const d = haversine(lastGoodPos.coords.latitude,lastGoodPos.coords.longitude,c.latitude,c.longitude);
-    const dtSec = (currentTimeStamp - lastFixTime) / 1000;
-    if(isGpsFixAcceptable(d, dtSec, c)){
+  if(lastPos){
+    const d = haversine(lastPos.coords.latitude,lastPos.coords.longitude,c.latitude,c.longitude);
+    if(d>=0&&d<200){
       // Apply calibration factor: real distance = gps distance / calibFactor
       const cf = legRunning ? getCalibFactor() : 1.0;
       const dCal = d / cf;
@@ -1609,18 +1572,7 @@ function gpsSuccess(pos){
         gpsFixN++;
         totalAccPointsThisStage += c.accuracy;
       }
-      lastGoodPos  = pos;
-      lastFixTime  = currentTimeStamp;
-    } else {
-      // Reject this fix for distance purposes and DO NOT advance the
-      // baseline — the next fix is compared against the last known-good
-      // position instead, so a single glitch can't also poison the fix
-      // that follows it.
-      console.warn('GPS fix rejected as outlier (dist='+d.toFixed(1)+'m, dt='+dtSec.toFixed(2)+'s, acc='+c.accuracy+'m)');
     }
-  } else {
-    lastGoodPos = pos;
-    lastFixTime = currentTimeStamp;
   }
   
   if(lastHzIntervalCheckTs == null) {
