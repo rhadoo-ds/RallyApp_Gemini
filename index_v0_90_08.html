@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" id="theme-color-meta" content="#07090c">
-<title>RegRally THOR v0.91.03</title>
+<title>RegRally THOR v0.90.08</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ── THEME TOKENS ── */
@@ -47,11 +47,11 @@ body{
 /* ── HEADER ── */
 #hdr{
   flex-shrink:0;
-  padding:calc(env(safe-area-inset-top,0px) + 5px) 7px 5px;
+  padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 10px;
   background:var(--surf);border-bottom:1px solid var(--border);
   display:flex;
   align-items:center;
-  gap:clamp(3px,1.5vw,6px);
+  gap:12px;
   position:relative;
   z-index:50;
   overflow-x:auto;
@@ -65,7 +65,7 @@ body{
   background:linear-gradient(90deg,transparent,var(--ahead) 30%,var(--ok) 70%,transparent);opacity:.5;
 }
 .hdr-clock-container { display: flex; align-items: center; flex-shrink: 0; }
-.hdr-clock{font-family:'DM Mono',monospace;font-size:clamp(9px,3.25vw,13px);font-weight:700;letter-spacing:0.5px;color:var(--warn); line-height:1;}
+.hdr-clock{font-family:'DM Mono',monospace;font-size:26px;font-weight:700;letter-spacing:1px;color:var(--warn); line-height:1;}
 [data-theme="dark"] .hdr-clock{text-shadow:0 0 12px color-mix(in srgb,var(--warn) 40%,transparent);}
 
 /* Telemetry Fixed Row Columns (Prevents elements shifting layout) */
@@ -73,9 +73,9 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: clamp(2px,1vw,4px);
+  gap: 8px;
   font-family: 'DM Mono', monospace;
-  font-size: clamp(7px,2.4vw,9.75px);
+  font-size: 19.5px;
   font-weight: 500;
   white-space: nowrap;
   text-align: center;
@@ -85,26 +85,26 @@ body{
 .hdr-telemetry-item { 
   display: inline-flex; 
   align-items: center; 
-  gap: 1px; 
+  gap: 2px; 
   justify-content: flex-start;
 }
-.hdr-telemetry-item.item-pr { min-width: clamp(24px,5.9vw,47px); }
-.hdr-telemetry-item.item-sp { min-width: clamp(35px,8.75vw,70px); }
-.hdr-telemetry-item.item-alt { min-width: clamp(26px,6.6vw,53px); }
-.hdr-telemetry-item.item-fix { min-width: clamp(22px,5.6vw,45px); }
-.hdr-telemetry-item.item-hz { min-width: clamp(16px,4vw,33px); }
-.hdr-lbl { color: var(--txt3); font-weight: 400; margin-right: 1px; }
+.hdr-telemetry-item.item-pr { min-width: 95px; }
+.hdr-telemetry-item.item-sp { min-width: 140px; }
+.hdr-telemetry-item.item-alt { min-width: 105px; }
+.hdr-telemetry-item.item-fix { min-width: 90px; }
+.hdr-telemetry-item.item-hz { min-width: 65px; }
+.hdr-lbl { color: var(--txt3); font-weight: 400; margin-right: 2px; }
 
 .app-version{
   font-family:'DM Mono',monospace;
-  font-size:clamp(7px,2.4vw,9.6px);
+  font-size:19.25px;
   font-weight:700;
   color: var(--txt);
   background: var(--surf3);
-  padding: clamp(2px,0.75vw,3px) clamp(4px,1.5vw,6px);
-  border-radius: 2px;
+  padding: 6px 12px;
+  border-radius: 4px;
   border: 1px solid var(--border2);
-  letter-spacing: 0.25px;
+  letter-spacing: 0.5px;
   white-space: nowrap;
 }
 
@@ -269,41 +269,6 @@ body{
 .fu{font-size:10px;color:var(--txt3);letter-spacing:.5px;font-weight:500;}
 .fv{font-family:'DM Mono',monospace;font-size:16px;color:var(--ahead);min-height:20px;font-weight:500;}
 
-/* ── Sub-legs (v0.91.00) ── */
-.ssl-list{padding:8px 10px 4px;display:flex;flex-direction:column;gap:6px;}
-.ssl-row{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:stretch;
-  gap:1px;
-  background:var(--border);
-  border:1px solid var(--border2);
-  border-radius:6px;
-  overflow:hidden;
-}
-.ssl-idx{background:var(--surf2);padding:9px 8px;font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--txt3);text-transform:uppercase;white-space:nowrap;display:flex;align-items:center;}
-.ssl-known-cb{background:var(--surf2);padding:9px 8px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--txt2);white-space:nowrap;cursor:pointer;}
-.ssl-known-cb input[type=checkbox]{accent-color:var(--ahead);width:15px;height:15px;cursor:pointer;flex-shrink:0;}
-.ssl-f{background:var(--surf);padding:7px 9px;flex:1 1 110px;min-width:100px;}
-.ssl-f .fi{font-size:15px;}
-.ssl-f .fi:disabled{color:var(--txt3);}
-.ssl-f .fv{font-size:14px;}
-.ssl-del{background:var(--surf2);border:none;color:var(--behind);font-size:20px;font-weight:700;cursor:pointer;padding:0 12px;flex-shrink:0;}
-.ssl-add{
-  align-self:flex-start;
-  background:color-mix(in srgb,var(--ahead) 10%,transparent);
-  border:1px dashed color-mix(in srgb,var(--ahead) 45%,transparent);
-  color:var(--ahead);
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:.03em;
-  border-radius:6px;
-  padding:7px 12px;
-  cursor:pointer;
-  margin-top:2px;
-}
-.lgrid-summary{grid-template-columns:1fr;}
-
 /* ── EXPORT / IMPORT ── */
 .io-section{
   background:var(--surf);border:1px solid var(--border);
@@ -419,27 +384,27 @@ body{
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
   border-bottom:1px solid var(--border);
-  padding-bottom:2px;
+  padding-bottom:3px;
   display:flex;
   flex-direction:row;
   align-items:center;
   justify-content:space-between;
-  gap:clamp(2px,0.5vw,4px);
+  gap:4px;
   white-space:nowrap;
   min-width:0;
 }
 .sbar::-webkit-scrollbar{display:none;}
-.sbar-half{display:flex;align-items:center;gap:clamp(2px,0.5vw,4px);flex-shrink:0;overflow:hidden;}
+.sbar-half{display:flex;align-items:center;gap:4px;flex-shrink:0;overflow:hidden;}
 .sbar-half.left{justify-content:flex-start;}
 .sbar-half.right{justify-content:flex-end;}
-.sbar-sep{width:1px;height:10px;background:var(--border);flex-shrink:0;}
+.sbar-sep{width:1px;height:20px;background:var(--border);flex-shrink:0;}
 .sbar-badge{
-  font-size:clamp(5px,1.75vw,7px);font-weight:700;letter-spacing:0.75px;text-transform:uppercase;
-  flex-shrink:0;padding:clamp(1px,0.375vw,2px) clamp(2px,0.75vw,3px);border-radius:2px;
+  font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  flex-shrink:0;padding:2px 6px;border-radius:3px;
 }
 .sbar-badge.cur{color:var(--bg);background:#fff;}
 .sbar-badge.nxt{color:var(--txt3);background:var(--surf3);border:1px solid var(--border);}
-.sbar-text{font-size:clamp(6px,2.1vw,8.5px);font-weight:700;letter-spacing:.05em;flex-shrink:0;}
+.sbar-text{font-size:17px;font-weight:700;letter-spacing:.05em;flex-shrink:0;}
 .sbar-text.cur{color:#fff;}
 .sbar-text.nxt{color:var(--txt3);}
 .sdot{width:10px;height:10px;border-radius:50%;background:var(--txt3);flex-shrink:0;transition:all .3s;}
@@ -515,28 +480,27 @@ body{
 .chip-icons{font-size:9px;opacity:.85;letter-spacing:1px;}
 
 /* Speed panel */
-.spanel{background:var(--surf);border:1px solid var(--border);border-radius:6px;padding:8px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px;width:100%;box-sizing:border-box;}
-.sb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:1;height:40px;box-sizing:border-box;padding:2px 4px;}
-.slb{font-size:8px;font-weight:600;letter-spacing:0.5px;color:var(--txt3);text-transform:uppercase;margin-bottom:1px;}
-.spd-row{display:flex;align-items:baseline;gap:4px;justify-content:center;}
-.sn{font-family:'DM Mono',monospace;font-size:15px;font-weight:500;line-height:1;letter-spacing:-0.5px;color:var(--ahead);transition:color .3s;}
+.spanel{background:var(--surf);border:1px solid var(--border);border-radius:6px;padding:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;width:100%;box-sizing:border-box;}
+.sb{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;}
+.slb{font-size:12px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;margin-bottom:2px;}
+.spd-row{display:flex;align-items:baseline;gap:8px;justify-content:center;}
+.sn{font-family:'DM Mono',monospace;font-size:45.6px;font-weight:500;line-height:1;letter-spacing:-1px;color:var(--ahead);transition:color .3s;}
 [data-theme="dark"] .sn{text-shadow:0 0 16px color-mix(in srgb,var(--ahead) 40%,transparent);}
 .sn.over{color:var(--behind);}.sn.good{color:var(--ok);}.sn.near{color:var(--warn);}
-.su{font-size:8px;font-weight:600;color:var(--txt3);}
-.sdiv{width:1px;background:var(--border);height:34px;margin:0 3px;flex-shrink:0;}
+.su{font-size:12px;font-weight:600;color:var(--txt3);}
+.sdiv{width:1px;background:var(--border);height:52px;margin:0 4px;flex-shrink:0;}
 /* Target speed block */
 .tgt-block{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:1;
-  height:40px;box-sizing:border-box;
+  display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;
   background:color-mix(in srgb,var(--warn) 10%,transparent);
   border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);
-  border-radius:5px;padding:2px 5px;margin:0 1px;
+  border-radius:5px;padding:6px 10px;margin:0 2px;
 }
 .tgt-block .slb{color:var(--warn);}
-.st{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--warn);letter-spacing:-0.5px;line-height:1;}
+.st{font-family:'DM Mono',monospace;font-size:33.6px;font-weight:700;color:var(--warn);letter-spacing:-1px;line-height:1;}
 [data-theme="dark"] .st{text-shadow:0 0 12px color-mix(in srgb,var(--warn) 40%,transparent);}
 /* sdiff: in [brackets], reversed colour (red=slower, blue=faster) */
-.sdiff{font-family:'DM Mono',monospace;font-size:12px;font-weight:600;line-height:1;letter-spacing:-0.5px;}
+.sdiff{font-family:'DM Mono',monospace;font-size:34.2px;font-weight:600;line-height:1;letter-spacing:-1px;}
 /* p = positive diff = faster than target = AHEAD = blue */
 .sdiff.p{color:var(--ahead);}
 /* n = negative diff = slower than target = BEHIND = red */
@@ -597,8 +561,8 @@ body{
 .telem-table td{
   font-family:'DM Mono',monospace;
   text-align:center;
-  padding:4.5px 3px;
-  font-size:12px;
+  padding:9px 6px;
+  font-size:23.9px;
   font-weight:600;
   border:1px solid var(--border);
   line-height:1.2;
@@ -606,12 +570,12 @@ body{
 .telem-table td small{
   display:block;
   font-family:'DM Sans',sans-serif;
-  font-size:7px;
+  font-size:10px;
   font-weight:600;
   letter-spacing:1px;
   text-transform:uppercase;
   opacity:.7;
-  margin-bottom:1px;
+  margin-bottom:2px;
 }
 /* Row 1 — white target values */
 .telem-table tr:nth-child(1) td{color:#fff;background:color-mix(in srgb,var(--txt3) 12%,transparent);}
@@ -642,7 +606,7 @@ body{
 
 /* Controls Layout: 3 Columns fixed size buttons */
 .ctrlg-three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-.bc{font-weight:700;font-size:11.7px;line-height:1;padding:7.05px 2.4px;border-radius:2.4px;cursor:pointer;border:none;transition:all .2s; text-align:center;}
+.bc{font-weight:700;font-size:26px;padding:30px 8px;border-radius:8px;cursor:pointer;border:none;transition:all .2s; text-align:center;}
 .bc:active{transform:scale(.97);opacity:.9;}
 .bgo{background:var(--ok);color:#fff;}
 .bstop{background:var(--behind);color:#fff;}
@@ -665,15 +629,13 @@ body{
   gap: 5px;
 }
 .sec-h {
-  width: 7.5%;
+  width: 15%;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 4px;
   align-self: stretch;
 }
-.sec-h-spacer { flex: 0 0 15%; }
-.sec-h-buttons { flex: 0 0 70%; display: flex; flex-direction: column; gap: 2px; min-height: 0; }
 .qlimit-btn {
   flex: 1;
   min-height: 0;
@@ -681,11 +643,11 @@ body{
   align-items: center;
   justify-content: center;
   font-family: 'DM Mono', monospace;
-  font-size: 15px;
+  font-size: 30px;
   font-weight: 700;
-  border-radius: 2.5px;
+  border-radius: 5px;
   cursor: pointer;
-  border: 1px solid var(--border2);
+  border: 2px solid var(--border2);
   background: var(--surf2);
   color: var(--txt2);
   transition: all 0.15s;
@@ -694,7 +656,7 @@ body{
   -webkit-user-select: none;
   text-align: center;
   line-height: 1.1;
-  padding: 1px 1px;
+  padding: 2px 2px;
   box-sizing: border-box;
   width: 100%;
 }
@@ -716,14 +678,14 @@ body{
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  border-radius: 2.5px;
+  font-size: 40px;
+  border-radius: 5px;
   cursor: pointer;
-  border: 1px solid var(--border2);
+  border: 2px solid var(--border2);
   background: var(--surf3);
   color: var(--txt2);
   transition: all 0.15s;
-  padding: 1px;
+  padding: 2px;
   width: 100%;
 }
 .qlimit-marshal-btn:active { transform: scale(0.94); background: var(--surf2); }
@@ -756,43 +718,6 @@ body{
 }
 .ql-reject-flashing { animation: tgtRejectFlash 1.2s ease forwards !important; }
 
-/* ── Sub-leg activation buttons (v0.91.00, restyled v0.91.01 for stronger contrast) ── */
-.ssl-btn-row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;}
-.ssl-btn{
-  flex:1 1 auto;
-  min-width:90px;
-  background:var(--surf3);
-  border:2px solid var(--border2);
-  color:var(--txt);
-  font-family:'DM Mono',monospace;
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:.02em;
-  border-radius:8px;
-  padding:10px 8px;
-  cursor:pointer;
-  text-align:center;
-  line-height:1.3;
-  box-shadow: 0 1px 4px rgba(0,0,0,.18);
-  transition:background-color .2s,border-color .2s,color .2s,box-shadow .2s,transform .15s;
-}
-.ssl-btn:hover{
-  border-color: var(--ahead);
-  color: var(--ahead);
-  transform: translateY(-1px);
-}
-@keyframes sslGlow {
-  0%,100% { box-shadow: 0 0 0 1px color-mix(in srgb, var(--ok) 60%, transparent), 0 0 8px 1px color-mix(in srgb, var(--ok) 55%, transparent); }
-  50%     { box-shadow: 0 0 0 1px color-mix(in srgb, var(--ok) 80%, transparent), 0 0 18px 5px color-mix(in srgb, var(--ok) 80%, transparent); }
-}
-.ssl-btn.active{
-  background:linear-gradient(180deg, color-mix(in srgb, var(--ok) 38%, var(--surf2)), color-mix(in srgb, var(--ok) 16%, var(--surf2)));
-  border-color:var(--ok);
-  border-width:2px;
-  color:#fff;
-  animation:sslGlow 1.8s ease-in-out infinite;
-}
-
 /* QL zone badge — top-right of Section E, same row as leg name */
 .dlbl-row {
   display: flex;
@@ -807,14 +732,14 @@ body{
 }
 .ql-zone-badge {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 4px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
   flex-shrink: 0;
-  padding: 1.5px 3px 1.5px 4px;
+  padding: 3px 6px 3px 8px;
   background: color-mix(in srgb, var(--txt3) 10%, transparent);
   border: 1px solid color-mix(in srgb, var(--txt3) 25%, transparent);
-  border-radius: 3px;
+  border-radius: 5px;
   transition: background 0.25s, border-color 0.25s;
 }
 .ql-zone-badge.active {
@@ -823,9 +748,9 @@ body{
 }
 .ql-zone-badge-lbl {
   font-family: 'DM Sans', sans-serif;
-  font-size: 6px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.75px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--txt3);
   line-height: 1;
@@ -836,7 +761,7 @@ body{
 }
 .ql-zone-val {
   font-family: 'DM Mono', monospace;
-  font-size: 10px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--txt3);
   line-height: 1.2;
@@ -847,14 +772,43 @@ body{
 }
 .ql-zone-badge-unit {
   font-family: 'DM Sans', sans-serif;
-  font-size: 5.5px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--txt3);
   margin-left: 1px;
   transition: color 0.25s;
 }
 
-/* Rally Configuration (Legs) page row: Measured/Real distance + Find CF + Calibration Factor */
+/* Calibration factor badge — top-left of Section E */
+.calib-corner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  flex-shrink: 0;
+  padding: 3px 8px 3px 6px;
+  background: color-mix(in srgb, var(--warn) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--warn) 30%, transparent);
+  border-radius: 5px;
+}
+.calib-corner-lbl {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--warn);
+  line-height: 1;
+}
+.calib-corner-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--txt1);
+  line-height: 1.2;
+}
+
+/* Live-page row: Measured/Real distance + Find CF + Calibration Factor */
 .cf-tune-row {
   display: flex;
   align-items: center;
@@ -933,14 +887,14 @@ body{
 .ql-meters-lbl { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--txt3); }
 
 /* Expanded High-Visibility Results Matrix Table Grid */
-.rtable{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:clamp(7px,1.7vw,10px);}
+.rtable{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:clamp(10px,2.5vw,17.1px);}
 .rtable th{
-  font-size:clamp(6px,1.4vw,8px);
+  font-size:clamp(9px,2vw,13.8px);
   font-weight:700;
-  letter-spacing:.25px;
+  letter-spacing:.5px;
   color:var(--txt3);
   text-transform:uppercase;
-  padding:3px 2px;
+  padding:6px 4px;
   background:var(--surf2);
   text-align:right;
   border-bottom:1px solid var(--border);
@@ -949,16 +903,16 @@ body{
 .rtable th:first-child{text-align:left;}
 .rtable td{
   font-family:'DM Mono',monospace;
-  font-size:clamp(7px,1.7vw,10px);
-  padding:3px 2px;
+  font-size:clamp(10px,2.5vw,17.1px);
+  padding:6px 4px;
   border-bottom:1px solid var(--border);
   color:var(--txt);
   text-align:right;
   vertical-align:middle;
   white-space:nowrap;
 }
-.rtable td:first-child{font-family:'DM Sans',sans-serif;font-weight:700;font-size:clamp(7px,1.7vw,10px);text-align:left;white-space:normal;word-break:break-word;min-width:80px;max-width:160px;}
-.rtable .subrow td { font-size: clamp(6px,1.4vw,8px); color: var(--txt3); background: var(--surf3); }
+.rtable td:first-child{font-family:'DM Sans',sans-serif;font-weight:700;font-size:clamp(10px,2.5vw,17.1px);text-align:left;white-space:normal;word-break:break-word;min-width:80px;max-width:160px;}
+.rtable .subrow td { font-size: clamp(9px,2vw,13px); color: var(--txt3); background: var(--surf3); }
 .rtable tr:last-child td{border-bottom:none;}
 /* Linked stage name cell — light green outline */
 .rtable td.linked-stage{
@@ -1003,8 +957,6 @@ body{
 .res-ql-table tr.ql-marshal td{color:var(--ok);}
 .res-ql-table tr.leg-start td{color:var(--ahead);font-weight:600;}
 .res-ql-table tr.leg-stop td{color:var(--txt1);font-weight:600;border-top:1px solid var(--border2);}
-.res-ql-table tr.ssl-start td{color:var(--ok);}
-.res-ql-table tr.ssl-end td{color:var(--ok);opacity:.8;}
 .res-ql-table td.ev-action{text-align:left;font-weight:600;}
 .res-ql-table td.ev-penalty{font-weight:700;color:var(--behind);}
 .res-leg-block{background:var(--surf);border:1px solid var(--border2);border-radius:8px;padding:12px 14px;margin-bottom:8px;}
@@ -1099,9 +1051,9 @@ body{
     <span id="gtxt" style="display:none">NO GPS</span>
   </div>
   
-  <div class="hdr-right" style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
-    <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:12px;padding:2px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.91.03</div>
+  <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+    <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
+    <div class="app-version">RegRally THOR v0.90.08</div>
   </div>
 </div>
 
@@ -1115,19 +1067,22 @@ body{
 <div class="pg on" id="pg-legs">
   <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
     <div class="sec-lbl" style="border-bottom:none;padding-bottom:0;">Rally Configuration</div>
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+      <label style="font-size:12px;font-weight:600;letter-spacing:.05em;color:var(--txt3);white-space:nowrap;">Calibration Factor</label>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <input type="number" id="calib-factor" min="0.00001" max="9.99999" step="0.00001"
+          value="1.00000"
+          style="width:158px;font-family:'DM Mono',monospace;font-size:20px;font-weight:700;text-align:center;background:var(--surf);border:1px solid var(--border2);border-radius:5px;padding:9px 8px;color:var(--warn);"
+          oninput="clampCalibFactor(this)">
+        <div style="display:flex;flex-direction:column;gap:3px;">
+          <button id="cf-up" onmousedown="startCalibStep(1)" onmouseup="stopCalibStep()" onmouseleave="stopCalibStep()" ontouchstart="startCalibStep(1);event.preventDefault()" ontouchend="stopCalibStep()"
+            style="width:32px;height:32px;font-size:18px;font-weight:700;line-height:1;border-radius:5px;border:1px solid var(--border2);background:var(--surf2);color:var(--warn);cursor:pointer;display:flex;align-items:center;justify-content:center;user-select:none;">▲</button>
+          <button id="cf-dn" onmousedown="startCalibStep(-1)" onmouseup="stopCalibStep()" onmouseleave="stopCalibStep()" ontouchstart="startCalibStep(-1);event.preventDefault()" ontouchend="stopCalibStep()"
+            style="width:32px;height:32px;font-size:18px;font-weight:700;line-height:1;border-radius:5px;border:1px solid var(--border2);background:var(--surf2);color:var(--warn);cursor:pointer;display:flex;align-items:center;justify-content:center;user-select:none;">▼</button>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <!-- Calibration Factor tuning (moved here from Live page in v0.91.01) -->
-  <div class="cf-tune-row" id="cf-tune-row">
-    <label class="cf-tune-lbl" for="calib-measured-dist">Measured</label>
-    <input type="number" id="calib-measured-dist" class="cf-tune-input" placeholder="m" step="0.01" min="0" inputmode="decimal">
-    <label class="cf-tune-lbl" for="calib-real-dist">Real</label>
-    <input type="number" id="calib-real-dist" class="cf-tune-input" placeholder="m" step="0.01" min="0" inputmode="decimal">
-    <button class="cf-tune-find-btn" onclick="findCalibFactor()">Find CF</button>
-    <label class="cf-tune-lbl cf-tune-cf-lbl" for="calib-factor">Calibration Factor</label>
-    <input type="number" id="calib-factor" class="cf-tune-cf-input" min="0.00001" max="9.99999" step="0.00001" value="1.00000" inputmode="decimal" oninput="clampCalibFactor(this)">
-  </div>
-
   <div id="legs-list"></div>
   <button class="btn-add" onclick="addLeg()">＋ Add Leg</button>
 
@@ -1215,6 +1170,16 @@ body{
       </div>
     </div>
 
+    <div class="cf-tune-row" id="cf-tune-row">
+      <label class="cf-tune-lbl" for="live-measured-dist">Measured</label>
+      <input type="number" id="live-measured-dist" class="cf-tune-input" placeholder="m" step="0.01" min="0" inputmode="decimal">
+      <label class="cf-tune-lbl" for="live-real-dist">Real</label>
+      <input type="number" id="live-real-dist" class="cf-tune-input" placeholder="m" step="0.01" min="0" inputmode="decimal">
+      <button class="cf-tune-find-btn" onclick="findCalibFactor()">Find CF</button>
+      <label class="cf-tune-lbl cf-tune-cf-lbl" for="live-calib-factor">Calibration Factor</label>
+      <input type="number" id="live-calib-factor" class="cf-tune-cf-input" min="0.00001" max="9.99999" step="0.00001" value="1.00000" inputmode="decimal" oninput="onLiveCalibFactorInput(this)">
+    </div>
+
     <button class="btn-gps-run" id="btn-gps-run" onclick="doRequestGPS()" style="display:none">📍 Grant GPS Permission</button>
 
     <!-- Sections E, F, G + Section H side column -->
@@ -1260,7 +1225,11 @@ body{
     <div class="delta" id="delta" style="--dc:var(--border2)">
       <div class="delta-in">
         <div class="dlbl-row">
-          <div class="dlbl" id="live-stage-name">—</div>
+          <div class="calib-corner" id="calib-corner-badge">
+            <span class="calib-corner-lbl">⚙ Calib</span>
+            <span class="calib-corner-val" id="calib-corner-val">1.00000</span>
+          </div>
+          <div class="dlbl" id="dlbl">— SELECT LEG —</div>
           <!-- QL zone badge: top-right of section E, visible when QL active -->
           <div id="ql-zone-badge" class="ql-zone-badge">
             <span class="ql-zone-badge-lbl">⚠ LIMIT</span>
@@ -1268,6 +1237,7 @@ body{
             <span id="ql-time-val" class="ql-zone-val">—</span><span class="ql-zone-badge-unit">s</span>
           </div>
         </div>
+        <div class="dlbl-sub" id="dlbl-sub"></div>
         <div class="dverd-text neutral" id="live-text-warning-label">WAITING</div>
         <div class="dhero-cols">
           <div class="dhero-sec">
@@ -1286,10 +1256,6 @@ body{
         </div>
       </div>
     </div>
-
-    <!-- Sub-leg activation buttons (v0.91.00) — one per sub-leg defined on
-         the Legs page for the current stage; click to make it active. -->
-    <div class="ssl-btn-row" id="ssl-btn-row"></div>
 
     <table class="telem-table" id="telem-table">
       <tbody>
@@ -1327,19 +1293,15 @@ body{
 
       <!-- Section H: Quick Limits -->
       <div class="sec-h" id="sec-h">
-        <div class="sec-h-spacer"></div>
-        <div class="sec-h-buttons">
-          <button class="qlimit-btn" id="ql-10"  onclick="toggleQuickLimit(10)"  data-spd="10">10</button>
-          <button class="qlimit-btn" id="ql-15"  onclick="toggleQuickLimit(15)"  data-spd="15">15</button>
-          <button class="qlimit-btn" id="ql-20"  onclick="toggleQuickLimit(20)"  data-spd="20">20</button>
-          <button class="qlimit-btn" id="ql-30"  onclick="toggleQuickLimit(30)"  data-spd="30">30</button>
-          <button class="qlimit-btn" id="ql-40"  onclick="toggleQuickLimit(40)"  data-spd="40">40</button>
-          <button class="qlimit-btn" id="ql-50"  onclick="toggleQuickLimit(50)"  data-spd="50">50</button>
-          <button class="qlimit-btn" id="ql-60"  onclick="toggleQuickLimit(60)"  data-spd="60">60</button>
-          <button class="qlimit-btn" id="ql-70"  onclick="toggleQuickLimit(70)"  data-spd="70">70</button>
-          <button class="qlimit-marshal-btn" id="ql-marshal" onclick="marshalAction()" title="Marshal">⏱</button>
-        </div>
-        <div class="sec-h-spacer"></div>
+        <button class="qlimit-btn" id="ql-10"  onclick="toggleQuickLimit(10)"  data-spd="10">10</button>
+        <button class="qlimit-btn" id="ql-15"  onclick="toggleQuickLimit(15)"  data-spd="15">15</button>
+        <button class="qlimit-btn" id="ql-20"  onclick="toggleQuickLimit(20)"  data-spd="20">20</button>
+        <button class="qlimit-btn" id="ql-30"  onclick="toggleQuickLimit(30)"  data-spd="30">30</button>
+        <button class="qlimit-btn" id="ql-40"  onclick="toggleQuickLimit(40)"  data-spd="40">40</button>
+        <button class="qlimit-btn" id="ql-50"  onclick="toggleQuickLimit(50)"  data-spd="50">50</button>
+        <button class="qlimit-btn" id="ql-60"  onclick="toggleQuickLimit(60)"  data-spd="60">60</button>
+        <button class="qlimit-btn" id="ql-70"  onclick="toggleQuickLimit(70)"  data-spd="70">70</button>
+        <button class="qlimit-marshal-btn" id="ql-marshal" onclick="marshalAction()" title="Marshal">⏱</button>
       </div>
 
     </div><!-- end .live-with-h -->
@@ -1470,20 +1432,21 @@ function toggleLiveLivePanel(){
 }
 
 /* ── LIVE SYSTEM CLOCK ── */
-/* ── CALIBRATION FACTOR (v0.91.01: lives entirely on the Legs page) ──
- * Single source of truth is the #calib-factor input on the Legs page,
- * alongside the Measured/Real/Find CF tuning row. The Results CF column
- * mirrors it via refreshCalibDisplays(), and every entry point that can
- * change it (typing, Find CF, importing leg data) funnels through
- * setCalibFactor() so they all stay in sync and are always shown to 5
- * decimal places.
+/* ── CALIBRATION FACTOR ──
+ * Single source of truth is the #calib-factor input on the Legs page.
+ * Every other display (Live-page corner badge, the Live-page CF row,
+ * Results CF column) mirrors it via refreshCalibDisplays(), and every
+ * entry point that can change it (typing, the ▲▼ steppers, Find CF,
+ * importing leg data) funnels through setCalibFactor() so they all stay
+ * in sync and are always shown to 5 decimal places.
  */
 function getCalibFactor(){
   const v = parseFloat(gel('calib-factor').value);
   return (!isNaN(v) && v > 0) ? v : 1.00000;
 }
 // Authoritative setter — clamps, writes the Legs-page input, and
-// refreshes every mirrored display. Used by Find CF and leg import.
+// refreshes every mirrored display. Used by the steppers, Find CF, and
+// leg import.
 function setCalibFactor(v){
   const n = parseFloat(v);
   if(isNaN(n) || n <= 0) return;
@@ -1493,24 +1456,71 @@ function setCalibFactor(v){
   refreshCalibDisplays();
 }
 // Pushes the current CF value out to every read-only/mirrored display.
+// Skips the Live-page CF input while the user is actively typing in it
+// (see onLiveCalibFactorInput) so we don't fight their cursor.
 function refreshCalibDisplays(){
   const v = getCalibFactor().toFixed(5);
+  const ccv = gel('calib-corner-val'); if(ccv) ccv.textContent = v;
   const resCF = gel('res-calib-val'); if(resCF) resCF.textContent = v;
+  const liveCF = gel('live-calib-factor');
+  if(liveCF && document.activeElement !== liveCF) liveCF.value = v;
 }
 function clampCalibFactor(inp){
   // Keep it as typed; clamp silently on read
   inp.value = inp.value.replace(/[^0-9.]/g,'');
   refreshCalibDisplays();
 }
+// Mirrors edits made directly in the Live-page CF field back to the
+// Legs-page input (the single source of truth) and every other display.
+function onLiveCalibFactorInput(inp){
+  inp.value = inp.value.replace(/[^0-9.]/g,'');
+  const n = parseFloat(inp.value);
+  if(isNaN(n) || n <= 0) return;
+  const clamped = Math.max(0.00001, Math.min(9.99999, n));
+  const cfInput = gel('calib-factor');
+  if(cfInput) cfInput.value = clamped.toFixed(5);
+  const ccv = gel('calib-corner-val'); if(ccv) ccv.textContent = clamped.toFixed(5);
+  const resCF = gel('res-calib-val'); if(resCF) resCF.textContent = clamped.toFixed(5);
+}
 // Calibration Factor = Measured distance / Real distance
 function findCalibFactor(){
-  const measured = parseFloat(gel('calib-measured-dist').value);
-  const real = parseFloat(gel('calib-real-dist').value);
+  const measured = parseFloat(gel('live-measured-dist').value);
+  const real = parseFloat(gel('live-real-dist').value);
   if(isNaN(measured) || isNaN(real) || measured <= 0 || real <= 0){
     alert('Enter both Measured Distance and Real Distance (both greater than 0) first.');
     return;
   }
   setCalibFactor(measured / real);
+}
+
+let _calibStepTimer = null;
+let _calibStepDir   = 0;
+let _calibStepDelay = 400;   // ms before acceleration kicks in
+function _doCalibStep(){
+  const inp = gel('calib-factor');
+  let v = parseFloat(inp.value);
+  if(isNaN(v)) v = 1.00000;
+  v = Math.round((v + _calibStepDir * 0.00001) * 100000) / 100000;
+  v = Math.max(0.00001, Math.min(9.99999, v));
+  inp.value = v.toFixed(5);
+  refreshCalibDisplays();
+}
+function startCalibStep(dir){
+  stopCalibStep();
+  _calibStepDir = dir;
+  _doCalibStep();   // immediate first step
+  // Accelerating repeat: start slow, speed up after 400ms
+  function schedule(delay){
+    _calibStepTimer = setTimeout(() => {
+      _doCalibStep();
+      schedule(Math.max(50, delay * 0.75));  // accelerate down to 50ms
+    }, delay);
+  }
+  schedule(_calibStepDelay);
+}
+function stopCalibStep(){
+  if(_calibStepTimer){ clearTimeout(_calibStepTimer); _calibStepTimer = null; }
+  _calibStepDir = 0;
 }
 
 function updateSystemClock(){
@@ -1634,54 +1644,6 @@ function calcSecs(distM, spdKmh){
   const d = parseFloat(distM), s = parseFloat(spdKmh);
   if(!d||!s||s<=0||isNaN(d)||isNaN(s)) return null;
   return (d/1000)/s*3600;
-}
-
-/* ── SUB-LEGS (v0.91.00) ──
- * A Stage (leg) is made of one or more sub-legs, run back-to-back inside
- * a single stage timing run. Each sub-leg has a MANDATORY average speed;
- * distance is OPTIONAL (gated by the "Known Distance" checkbox) — an
- * unknown-distance sub-leg is "floating" and only ends when the driver
- * (or another auto-advancing sub-leg boundary) switches away from it.
- */
-function subLegValid(sl){
-  const spd = parseFloat(sl.spdKmh);
-  if(!spd || isNaN(spd) || spd<=0) return false;
-  if(sl.knownDist){
-    const d = parseFloat(sl.distM);
-    if(!d || isNaN(d) || d<=0) return false;
-  }
-  return true;
-}
-function legValid(leg){
-  const subs = (leg.subLegs && leg.subLegs.length) ? leg.subLegs : [];
-  return subs.length > 0 && subs.every(subLegValid);
-}
-// Aggregate stage-level summary across all sub-legs — used for the Legs
-// page "Required Time" line and (best-effort) the Live-page progress bar.
-// secs/distM only cover sub-legs with a KNOWN distance; allKnown tells you
-// whether that sum represents the WHOLE stage or just part of it.
-function calcLegSummary(leg){
-  const subs = (leg.subLegs && leg.subLegs.length) ? leg.subLegs : [];
-  let secs = 0, distM = 0, anyKnown = false, allKnown = true, allValid = subs.length>0;
-  subs.forEach(sl=>{
-    if(!subLegValid(sl)) allValid = false;
-    if(sl.knownDist && subLegValid(sl)){
-      secs  += calcSecs(sl.distM, sl.spdKmh) || 0;
-      distM += parseFloat(sl.distM) || 0;
-      anyKnown = true;
-    } else {
-      allKnown = false;
-    }
-  });
-  return { secs: anyKnown ? secs : null, distM: anyKnown ? distM : null, allKnown, allValid };
-}
-// Legacy leg objects (pre-v0.91.00) had flat distM/spdKmh and no sub-legs.
-// Migrate them into a single sub-leg so every leg has a consistent shape.
-function migrateLegToSubLegs(leg){
-  if(leg.subLegs && leg.subLegs.length) return leg;
-  sslId++;
-  leg.subLegs = [{ id: sslId, spdKmh: leg.spdKmh||'', distM: leg.distM||'', knownDist: !!leg.distM }];
-  return leg;
 }
 function fmtMMSSdd(s){
   if(s==null||isNaN(s)) return '—';
@@ -1903,21 +1865,10 @@ function gpsSuccess(pos){
 
   if(legRunning && legs[curIdx]){
     const activeLeg = legs[curIdx];
-    const activeSub = getActiveSubLeg();
-    // Sub-legs are tied one after another — once the active sub-leg's own
-    // known distance is reached, advance automatically (no penalty, exactly
-    // like a Quick Limit switch). Only the LAST sub-leg reaching its known
-    // distance (with @distance enabled on the stage) auto-stops the stage.
-    if(activeSub && activeSub.knownDist && activeLeg.subLegs){
-      const subTargetM = parseFloat(activeSub.distM);
-      const gpsDistMInSubLeg = gpsDistM - subLegStartGpsDistM;
-      if(!isNaN(subTargetM) && subTargetM > 0 && gpsDistMInSubLeg >= subTargetM){
-        const isLastSubLeg = activeSubLegIdx >= activeLeg.subLegs.length - 1;
-        if(!isLastSubLeg){
-          switchSubLeg(activeSubLegIdx + 1);
-        } else if(activeLeg.atDistance){
-          stopLeg();
-        }
+    if(activeLeg.atDistance){
+      const targetLimitM = parseFloat(activeLeg.distM);
+      if(!isNaN(targetLimitM) && targetLimitM > 0 && gpsDistM >= targetLimitM){
+        stopLeg(); 
       }
     }
   }
@@ -2005,12 +1956,10 @@ function updateGpsBtns(state){
 /* ── FORM CONTROL MAPPERS (CORS SAFE CLEAN CONVERT) ── */
 let legs  = [];
 let legId = 0;
-let sslId = 0; // sub-leg id counter, shared across all legs
 
 function addLeg(){
-  legId++; sslId++;
-  legs.push({id:legId,name:'',linked:false,atDistance:false,autoStart:false,autoHH:'',autoMM:'',autoOffset:'0',
-    subLegs:[{id:sslId,spdKmh:'',distM:'',knownDist:true}]});
+  legId++;
+  legs.push({id:legId,name:'',distM:'',spdKmh:'',linked:false,atDistance:false,autoStart:false,autoHH:'',autoMM:'',autoOffset:'0'});
   renderLegs();
 }
 function delLeg(id){ legs=legs.filter(l=>l.id!==id); renderLegs(); }
@@ -2025,23 +1974,6 @@ function updLeg(id,field,val){
     refreshTime(id);
   }
 }
-function addSubLeg(legId){
-  const l=legs.find(l=>l.id===legId); if(!l) return;
-  sslId++;
-  l.subLegs.push({id:sslId,spdKmh:'',distM:'',knownDist:true});
-  renderLegs();
-}
-function delSubLeg(legId, id){
-  const l=legs.find(l=>l.id===legId); if(!l || l.subLegs.length<=1) return; // a stage always needs >=1 sub-leg
-  l.subLegs=l.subLegs.filter(sl=>sl.id!==id);
-  renderLegs();
-}
-function updSubLeg(legId,id,field,val){
-  const l=legs.find(l=>l.id===legId); if(!l) return;
-  const sl=l.subLegs.find(s=>s.id===id); if(!sl) return;
-  sl[field]=val;
-  if(field==='knownDist') renderLegs(); else refreshTime(legId);
-}
 
 /* Repaired and verified template literals structure to keep DOM completely crash-proof */
 function renderLegs(){
@@ -2049,12 +1981,11 @@ function renderLegs(){
   if(!legs.length){c.innerHTML='<div class="empty-msg">No legs defined yet</div>';return;}
   c.innerHTML='';
   legs.forEach((leg,idx)=>{
-    migrateLegToSubLegs(leg);
-    const sum = calcLegSummary(leg);
+    const s=calcSecs(leg.distM,leg.spdKmh);
     let sv, svColor='';
-    if(!sum.allValid){ sv='need speed on all sub-legs'; svColor='color:var(--warn)'; }
-    else if(sum.secs!=null){ sv=fmtMMSSdd(sum.secs)+(sum.allKnown?' ('+sum.secs.toFixed(2)+'s)':' + floating segment(s)'); }
-    else { sv='floating (no known distance)'; }
+    if(s!=null){ sv=fmtMMSSdd(s)+' ('+s.toFixed(2)+'s)'; }
+    else if(leg.distM||leg.spdKmh){ sv='need '+(leg.distM?'speed':'distance'); svColor='color:var(--warn)'; }
+    else { sv='—'; }
     const canLink=idx>0;
     const isLinked=leg.linked&&canLink;
     const gi=legGroupInfo(idx);
@@ -2085,60 +2016,10 @@ function renderLegs(){
         html += `<div class="ltime-row"><label>Ref Time:</label><input type="number" class="ltime-input" style="width:92px" placeholder="HH" min="0" max="23" value="${leg.autoHH}" oninput="updLeg(${leg.id},'autoHH',this.value)"><span class="ltime-sep">:</span><input type="number" class="ltime-input" style="width:92px" placeholder="MM" min="0" max="59" value="${leg.autoMM}" oninput="updLeg(${leg.id},'autoMM',this.value)"><label>Offset:</label><input type="number" class="ltime-input" style="width:104px" placeholder="0" value="${leg.autoOffset||0}" oninput="updLeg(${leg.id},'autoOffset',this.value)"><label>min</label><span class="ltime-result" id="al-${leg.id}">→ ${absLabel||'—'}</span>${copyBtn}</div>`;
       }
     }
-
-    // ── Sub-legs — tied one after another; only Avg Speed is mandatory ────
-    html += `<div class="ssl-list">`;
-    leg.subLegs.forEach((sl, sidx)=>{
-      const slS = subLegValid(sl) ? calcSecs(sl.distM, sl.spdKmh) : null;
-      let slTime, slColor='';
-      if(sl.knownDist){
-        if(slS!=null){ slTime=fmtMMSSdd(slS); } else { slTime = parseFloat(sl.spdKmh)>0?'need distance':'—'; slColor='color:var(--warn)'; }
-      } else {
-        slTime = parseFloat(sl.spdKmh)>0 ? 'floating' : '—';
-      }
-      const canDelSub = leg.subLegs.length>1;
-      html += `<div class="ssl-row">
-        <span class="ssl-idx">Sub-leg ${sidx+1}</span>
-        <label class="ssl-known-cb"><input type="checkbox" ${sl.knownDist?'checked':''} onchange="updSubLeg(${leg.id},${sl.id},'knownDist',this.checked)"><span>Known Distance</span></label>
-        <div class="lf ssl-f"><div class="fl">Distance</div><input class="fi" type="number" ${sl.knownDist?'':'disabled'} value="${sl.distM}" oninput="updSubLeg(${leg.id},${sl.id},'distM',this.value)"><div class="fu">metres</div></div>
-        <div class="lf ssl-f"><div class="fl">Avg Speed</div><input class="fi" type="number" value="${sl.spdKmh}" oninput="updSubLeg(${leg.id},${sl.id},'spdKmh',this.value)"><div class="fu">km/h</div></div>
-        <div class="lf ssl-f"><div class="fl">Required Time</div><div class="fv" id="lc-ssl-${sl.id}" style="${slColor}">${slTime}</div><div class="fu">mm:ss.ss</div></div>
-        ${canDelSub?`<button class="ssl-del" onclick="delSubLeg(${leg.id},${sl.id})" title="Remove sub-leg">&times;</button>`:''}
-      </div>`;
-    });
-    html += `<button class="ssl-add" onclick="addSubLeg(${leg.id})">+ Add Sub-leg</button></div>`;
-
-    html += `<div class="lgrid lgrid-summary"><div class="lf"><div class="fl">Stage Required Time</div><div class="fv" id="lc-${leg.id}" style="${svColor}">${sv}</div><div class="fu">mm:ss.ss (sum of known sub-legs)</div></div></div>`;
+    html += `<div class="lgrid"><div class="lf"><div class="fl">Distance</div><input class="fi" type="number" value="${leg.distM}" oninput="updLeg(${leg.id},'distM',this.value)"><div class="fu">metres</div></div><div class="lf"><div class="fl">Avg Speed</div><input class="fi" type="number" value="${leg.spdKmh}" oninput="updLeg(${leg.id},'spdKmh',this.value)"><div class="fu">km/h</div></div><div class="lf"><div class="fl">Required Time</div><div class="fv" id="lc-${leg.id}" style="${svColor}">${sv}</div><div class="fu">mm:ss.ss</div></div></div>`;
     div.innerHTML=html;
     c.appendChild(div);
   });
-}
-
-function refreshTime(legId){
-  const l=legs.find(l=>l.id===legId); if(!l) return;
-  // Per-sub-leg required time (live update while typing, no full re-render)
-  (l.subLegs||[]).forEach(sl=>{
-    const el=gel('lc-ssl-'+sl.id); if(!el) return;
-    const s = subLegValid(sl) ? calcSecs(sl.distM,sl.spdKmh) : null;
-    if(sl.knownDist){
-      el.textContent = s!=null ? fmtMMSSdd(s) : (parseFloat(sl.spdKmh)>0 ? 'need distance':'—');
-      el.style.color = s!=null ? '' : 'var(--warn)';
-    } else {
-      el.textContent = parseFloat(sl.spdKmh)>0 ? 'floating' : '—';
-      el.style.color = '';
-    }
-  });
-  // Stage-level summary
-  const sum = calcLegSummary(l);
-  const el=gel('lc-'+legId); if(!el) return;
-  if(!sum.allValid){
-    el.textContent='need speed on all sub-legs'; el.style.color='var(--warn)';
-  } else if(sum.secs!=null){
-    el.textContent = fmtMMSSdd(sum.secs)+(sum.allKnown?' ('+sum.secs.toFixed(2)+'s)':' + floating segment(s)');
-    el.style.color='';
-  } else {
-    el.textContent='floating (no known distance)'; el.style.color='';
-  }
 }
 
 function refreshAutoLabel(id){
@@ -2146,6 +2027,21 @@ function refreshAutoLabel(id){
   const absLabel=autoStartLabel(l);
   const el=gel('al-'+id); if(el) el.textContent=absLabel?'→ Starts at '+absLabel:'—';
   const badge=gel('ab-'+id); if(badge) badge.textContent=absLabel?'⏰ '+absLabel:'';
+}
+function refreshTime(id){
+  const l=legs.find(l=>l.id===id); if(!l) return;
+  const s=calcSecs(l.distM,l.spdKmh);
+  const el=gel('lc-'+id); if(!el) return;
+  if(s!=null){
+    el.textContent=fmtMMSSdd(s)+' ('+s.toFixed(2)+'s)';
+    el.style.color='';
+  } else if(l.distM||l.spdKmh){
+    el.textContent='need '+(l.distM?'speed':'distance');
+    el.style.color='var(--warn)';
+  } else {
+    el.textContent='—';
+    el.style.color='';
+  }
 }
 
 // Copy Ref Time (HH:MM) from the source leg to all other legs that have autoStart enabled.
@@ -2191,30 +2087,13 @@ let qlCompletedExpTimeSec = 0;      // total expected time in all finished QL zo
 let qlCompletedDistSpeedSum = 0;    // sum of (zoneDist × QL_speed) for all finished QL zones — used for distance-weighted avg speed in deltaDistM formula
 let qlCompletedTimeSpeedSum = 0;    // sum of (zoneTime × QL_speed) for all finished QL zones — used for expDistM (QL-schedule-aware expected position)
 
-/* ── SUB-LEGS — live run state (v0.91.00) ──
- * activeSubLegIdx points into legs[curIdx].subLegs. Switching sub-legs
- * behaves like setting a Quick Limit: no penalty at the moment of switch,
- * and any QL zone open at the time is force-closed first (a QL zone never
- * spans a sub-leg boundary). See switchSubLeg()/_closeActiveSubLeg().
- */
-let activeSubLegIdx     = 0;   // index of the currently active sub-leg
-let subLegStartElSec    = 0;   // elSec (since LEG start) when the active sub-leg began
-let subLegStartGpsDistM = 0;   // gpsDistM (since LEG start) when the active sub-leg began
-let subLegBaseDeltaSec  = 0;   // running total of delta_sec from ALL previously completed sub-legs this run
-
-function getActiveSubLeg(){
-  const leg = legs[curIdx];
-  if(!leg || !leg.subLegs || !leg.subLegs.length) return null;
-  return leg.subLegs[activeSubLegIdx] || leg.subLegs[0];
-}
-
 const QL_SPEEDS = [10, 15, 20, 30, 40, 50, 60, 70];
 
 function toggleQuickLimit(spd) {
-  // Check if QL speed >= the ACTIVE SUB-LEG's average speed — if so, reject and flash orange
-  const activeSub = getActiveSubLeg();
-  const subSpdKmh = activeSub ? parseFloat(activeSub.spdKmh) : 0;
-  if (subSpdKmh > 0 && spd >= subSpdKmh) {
+  // Check if QL speed >= leg target average speed — if so, reject and flash orange
+  const curLeg = legs[curIdx];
+  const legSpdKmh = curLeg ? parseFloat(curLeg.spdKmh) : 0;
+  if (legSpdKmh > 0 && spd >= legSpdKmh) {
     // Flash the pressed button AND the leg average speed display
     _flashQLReject(spd);
     return;
@@ -2311,89 +2190,6 @@ function _deactivateQL() {
   if (gel('ql-time-val'))   gel('ql-time-val').textContent   = '—';
 }
 
-/* ── SUB-LEG SWITCHING (v0.91.00) ──
- * Only one sub-leg is active at a time; clicking a button activates it.
- * Exactly like setting a Quick Limit, this carries NO penalty of its own —
- * it just re-anchors the schedule (see _closeActiveSubLeg). Sub-legs can
- * be activated in any order and reactivated at any time.
- */
-function switchSubLeg(newIdx){
-  if(!legRunning) return;
-  const leg = legs[curIdx];
-  if(!leg || !leg.subLegs || !leg.subLegs[newIdx]) return;
-  if(newIdx === activeSubLegIdx) return; // already active — no-op
-  _closeActiveSubLeg();
-  activeSubLegIdx     = newIdx;
-  subLegStartElSec    = (performance.now() - legStartTs) / 1000;
-  subLegStartGpsDistM = gpsDistM;
-  const sub = leg.subLegs[newIdx];
-  _qlLogToResults(parseFloat(sub.spdKmh)||null, 'sslstart', 0, 0, 'Sub-leg '+(newIdx+1));
-  renderSubLegButtons();
-  updateActiveSubLegTargets();
-}
-
-// Folds the currently-active sub-leg's contribution into subLegBaseDeltaSec
-// (a running total of delta_sec from all previously completed sub-legs)
-// and resets the QL accumulators, which are scoped to a single sub-leg
-// segment (a QL zone never spans a sub-leg boundary — see switchSubLeg).
-function _closeActiveSubLeg(){
-  // Force-close any open QL zone at the moment of switching, exactly like a normal QL release.
-  if(activeQuickLimit !== null) _deactivateQL();
-
-  const leg = legs[curIdx];
-  const sub = leg && leg.subLegs ? leg.subLegs[activeSubLegIdx] : null;
-  if(sub){
-    const spdMs = parseFloat(sub.spdKmh)/3.6;
-    const elSecInSubLeg    = (performance.now() - legStartTs)/1000 - subLegStartElSec;
-    const gpsDistMInSubLeg = gpsDistM - subLegStartGpsDistM;
-
-    if(spdMs > 0 && gpsFixN > 0){
-      const normalTimeSec  = Math.max(0, elSecInSubLeg - qlCompletedTimeSec);
-      const normalGpsDistM = Math.max(0, gpsDistMInSubLeg - qlCompletedGpsDistM);
-      const normalDelta    = normalTimeSec - normalGpsDistM/spdMs;
-      const completedQLDelta = qlCompletedTimeSec - qlCompletedExpTimeSec;
-      subLegBaseDeltaSec += normalDelta + completedQLDelta;
-    }
-    _qlLogToResults(parseFloat(sub.spdKmh)||null, 'sslend', gpsDistM-subLegStartGpsDistM, elSecInSubLeg, 'Sub-leg '+(activeSubLegIdx+1));
-  }
-
-  // QL accumulators are scoped to a single sub-leg segment — reset for the next one
-  qlCompletedGpsDistM=0; qlCompletedTimeSec=0; qlCompletedExpTimeSec=0;
-  qlCompletedDistSpeedSum=0; qlCompletedTimeSpeedSum=0;
-}
-
-function renderSubLegButtons(){
-  const row = gel('ssl-btn-row'); if(!row) return;
-  const leg = legs[curIdx];
-  if(!leg || !leg.subLegs || !leg.subLegs.length){ row.innerHTML=''; return; }
-  row.innerHTML = leg.subLegs.map((sl,i)=>{
-    const spd = parseFloat(sl.spdKmh)||0;
-    const label = (sl.knownDist && parseFloat(sl.distM)>0)
-      ? (parseFloat(sl.distM)/1000).toFixed(2)+'km @ '+spd.toFixed(1)+'km/h'
-      : 'Floating @ '+spd.toFixed(1)+'km/h';
-    const isActive = legRunning && i===activeSubLegIdx;
-    return `<button class="ssl-btn${isActive?' active':''}" onclick="switchSubLeg(${i})">${label}</button>`;
-  }).join('');
-}
-
-// Refreshes the Target Speed/Distance display for whichever sub-leg is
-// currently active. Distance shows a dash when the sub-leg is "floating"
-// (Known Distance unchecked).
-function updateActiveSubLegTargets(){
-  const sub = getActiveSubLeg(); if(!sub) return;
-  const spd = parseFloat(sub.spdKmh)||0;
-  const hasDist = sub.knownDist && parseFloat(sub.distM)>0;
-  const distKm = hasDist ? (parseFloat(sub.distM)/1000).toFixed(3) : null;
-  const secs = hasDist ? calcSecs(sub.distM, sub.spdKmh) : null;
-
-  gel('live-leg-target-dist-hero').textContent = distKm!=null ? distKm : '—';
-  gel('tt-tgt-time').innerHTML = `<small>Target Time</small>${secs!=null?fmtMMSSdd(secs):'—'}`;
-  gel('tt-tgt-dist').innerHTML = `<small>Target Dist</small>${distKm!=null?distKm+' km':'—'}`;
-  gel('tt-tgt-spd').innerHTML  = `<small>Target Speed</small>${spd.toFixed(1)} km/h`;
-  gel('tt-exp-spd').innerHTML  = `<small>Expected Spd</small>${spd.toFixed(1)} km/h`;
-  gel('spd-tgt').textContent   = spd.toFixed(2);
-}
-
 function marshalAction() {
   // Visual feedback: flash green
   const btn = gel('ql-marshal');
@@ -2407,7 +2203,7 @@ function marshalAction() {
   _qlLogToResults(null, 'marshal');
 }
 
-function _qlLogToResults(spd, type, distM, durSec, sslLabel) {
+function _qlLogToResults(spd, type, distM, durSec) {
   if (curIdx < 0) return;
   // Store sub-events on the run currently in progress (see startLeg/stopLeg)
   const now = new Date();
@@ -2424,7 +2220,6 @@ function _qlLogToResults(spd, type, distM, durSec, sslLabel) {
     deltaM:   deltaSnap.m,
     qlDistM:  distM || 0,
     qlSec:    durSec || 0,
-    sslLabel: sslLabel || null,
   });
   buildResults();
 }
@@ -2461,9 +2256,8 @@ function resetLegGPS(){
 }
 
 function launch(){
-  legs.forEach(migrateLegToSubLegs);
-  const valid=legs.filter(legValid);
-  if(!valid.length){alert('Add complete legs first (every sub-leg needs an Avg Speed, and Distance if Known Distance is checked).');return;}
+  const valid=legs.filter(l=>calcSecs(l.distM,l.spdKmh)!=null);
+  if(!valid.length){alert('Add complete legs first.');return;}
   legs=valid; renderLegs();
   curIdx=0; legRunning=false;
   // Results accumulate across launches as a flat run list — nothing to
@@ -2534,12 +2328,10 @@ function renderChips(){
 
 function legSummaryText(leg){
   if(!leg) return '—';
-  migrateLegToSubLegs(leg);
-  const sum = calcLegSummary(leg);
-  const first = leg.subLegs[0];
-  const km  = sum.distM!=null ? (sum.distM/1000).toFixed(2)+'km'+(sum.allKnown?'':'+') : '';
-  const spd = first && first.spdKmh ? '@'+parseFloat(first.spdKmh).toFixed(1)+'km/h' : '';
-  const t   = sum.secs != null ? 'in '+fmtMMSS(sum.secs) : '';
+  const km  = leg.distM   ? (parseFloat(leg.distM)/1000).toFixed(2)+'km' : '';
+  const spd = leg.spdKmh  ? '@'+parseFloat(leg.spdKmh).toFixed(1)+'km/h' : '';
+  const s   = calcSecs(leg.distM, leg.spdKmh);
+  const t   = s != null   ? 'in '+fmtMMSS(s) : '';
   // Use 3 non-breaking wide spaces as separator for triple spacing
   return [leg.name||'Unnamed', km, spd, t].filter(Boolean).join('\u2003\u2003\u2003');
 }
@@ -2549,17 +2341,36 @@ function updateSbar(){
   const nxt = legs[curIdx+1] || null;
   gel('sbar-cur').textContent = cur ? legSummaryText(cur) : '— SELECT LEG —';
   gel('sbar-nxt').textContent = nxt ? legSummaryText(nxt) : 'No more stages';
-  const stageNameEl = gel('live-stage-name');
-  if(stageNameEl) stageNameEl.textContent = cur ? (cur.name || 'Leg '+(curIdx+1)) : '—';
 }
 function jumpLeg(idx){ if(legRunning||asTimer)return; curIdx=idx; renderChips(); loadLeg(idx); updateSbar(); scheduleAutoStart(idx); }
 
 function loadLeg(idx){
   const leg=legs[idx];
-  migrateLegToSubLegs(leg);
-  activeSubLegIdx = 0;
+  const secs=calcSecs(leg.distM,leg.spdKmh);
+  const distKm=(parseFloat(leg.distM)/1000).toFixed(3);
+  
+  gel('dlbl').textContent = (leg.name||'Leg '+(idx+1));
+  const km = (parseFloat(leg.distM)/1000).toFixed(2)+'km';
+  const spd = '@'+parseFloat(leg.spdKmh).toFixed(1)+'km/h';
+  const t = secs != null ? 'in '+fmtMMSS(secs) : '';
+  // Append auto-start time if defined
+  const pad = n=>String(n).padStart(2,'0');
+  let autoStr = '';
+  if(leg.autoStart){
+    const asDate = computeAutoStartDate(leg);
+    if(asDate) autoStr = '  ⏰ '+pad(asDate.getHours())+':'+pad(asDate.getMinutes())+':'+pad(asDate.getSeconds())+'  '+pad(asDate.getDate())+'/'+pad(asDate.getMonth()+1);
+  }
+  const dlblSubText = [km, spd, t].filter(Boolean).join('  ') + autoStr;
+  gel('dlbl-sub').textContent = dlblSubText;
+  gel('dlbl-sub').style.display = dlblSubText.trim() ? '' : 'none';
+  gel('live-leg-target-dist-hero').textContent=distKm;
+  gel('live-leg-remaining-dist').textContent=distKm;
   setDelta(0,'neutral',false);
 
+  // Telem table row 1 — target values from leg definition
+  gel('tt-tgt-time').innerHTML = `<small>Target Time</small>${fmtMMSSdd(secs)}`;
+  gel('tt-tgt-dist').innerHTML = `<small>Target Dist</small>${distKm} km`;
+  gel('tt-tgt-spd').innerHTML  = `<small>Target Speed</small>${parseFloat(leg.spdKmh).toFixed(1)} km/h`;
   // Row 2 reset
   gel('tt-act-time').innerHTML = '<small>Stopwatch</small>0:00.0'; gel('tt-act-time').style.cssText='';
   gel('tt-act-dist').innerHTML = '<small>Traveled Dist</small>0.000 km'; gel('tt-act-dist').style.cssText='';
@@ -2567,18 +2378,11 @@ function loadLeg(idx){
   // Row 3 reset
   gel('tt-exp-time').innerHTML = '<small>Expected Time</small>—';
   gel('tt-exp-dist').innerHTML = '<small>Expected Dist</small>0.000 km';
+  gel('tt-exp-spd').innerHTML  = `<small>Expected Spd</small>${parseFloat(leg.spdKmh).toFixed(1)} km/h`;
   gel('ddist-hero').textContent='0.000'; gel('ddist-hero').style.color=''; gel('ddist-sign').textContent=''; gel('ddist-sign').style.color='';
+  gel('spd-tgt').textContent=parseFloat(leg.spdKmh).toFixed(2);
   gel('spd-diff').textContent=''; gel('spd-diff').className='sdiff';
   refreshCalibDisplays();
-
-  // Target Time/Dist/Speed + hero distance/remaining all come from whichever
-  // sub-leg is active (sub-leg 0 by default, until Start is pressed).
-  updateActiveSubLegTargets();
-  const sub = getActiveSubLeg();
-  const hasDist = sub && sub.knownDist && parseFloat(sub.distM)>0;
-  gel('live-leg-remaining-dist').textContent = hasDist ? (parseFloat(sub.distM)/1000).toFixed(3) : '—';
-
-  renderSubLegButtons();
   updateControlsState();
 }
 
@@ -2905,11 +2709,6 @@ function startLeg(){
   curRunSubEvents = [];
   lastDeltaSnap={sec:0,m:0};
   qlCompletedGpsDistM=0; qlCompletedDistSpeedSum=0; qlCompletedTimeSpeedSum=0; qlCompletedTimeSec=0; qlCompletedExpTimeSec=0;
-  // Sub-legs always start from the first one; re-anchor the schedule baseline.
-  activeSubLegIdx = 0;
-  subLegStartElSec = 0;
-  subLegStartGpsDistM = 0;
-  subLegBaseDeltaSec = 0;
   // If a Quick Limit was pressed BEFORE the leg started (pre-armed), keep it
   // active rather than deactivating it against stale pre-start GPS data.
   // Re-anchor it to the leg's actual start (dist=0, time=now) so the QL zone
@@ -2923,33 +2722,21 @@ function startLeg(){
   } else {
     _deactivateQL();
   }
-  // Log leg start as first sub-event, followed by the first sub-leg's own start
+  // Log leg start as first sub-event
   _qlLogToResults(null, 'leg_start');
-  const firstSub = getActiveSubLeg();
-  if(firstSub) _qlLogToResults(parseFloat(firstSub.spdKmh)||null, 'sslstart', 0, 0, 'Sub-leg 1');
   gel('live-legs-collapsible').classList.remove('open');
-  renderChips(); renderSubLegButtons(); updateActiveSubLegTargets(); updateControlsState(); updateSbar();
+  renderChips(); updateControlsState(); updateSbar();
   clearInterval(legTimer); legTimer=setInterval(tick,100);
 }
 
 function tick(){
   if(!legRunning) return;
   const leg=legs[curIdx];
-  const activeSub = getActiveSubLeg();
-  // Target values now come from the ACTIVE SUB-LEG, not the whole stage —
-  // distance is optional per sub-leg (dash/no auto-stop when unknown).
-  const subHasDist = activeSub && activeSub.knownDist && parseFloat(activeSub.distM)>0;
-  const tgtSecs = subHasDist ? calcSecs(activeSub.distM, activeSub.spdKmh) : null;
-  const tgtDistM = subHasDist ? parseFloat(activeSub.distM) : NaN;
-  const tgtKmh = activeSub ? parseFloat(activeSub.spdKmh) : 0;
+  const tgtSecs=calcSecs(leg.distM,leg.spdKmh);
+  const tgtDistM=parseFloat(leg.distM);
+  const tgtKmh=parseFloat(leg.spdKmh);
   const spdMs=tgtKmh/3.6;
   const elSec=(performance.now()-legStartTs)/1000;
-  // Time/distance since the ACTIVE sub-leg became active — the schedule
-  // baseline for delta math resets at each sub-leg boundary; everything
-  // from previously-completed sub-legs is already folded into
-  // subLegBaseDeltaSec (see switchSubLeg/_closeActiveSubLeg).
-  const elSecInSubLeg    = elSec - subLegStartElSec;
-  const gpsDistMInSubLeg = gpsDistM - subLegStartGpsDistM;
 
   // ── Quick Limit delta calculation (UNIFIED — single source of truth) ───
   // Principle: QL zones permanently alter the leg's effective target.
@@ -3015,24 +2802,21 @@ function tick(){
     if(gel('ql-time-val')) gel('ql-time-val').textContent = activeQLTimeSec.toFixed(1);
   }
 
-  // Time spent outside any QL zone (completed or active), WITHIN the active sub-leg
-  const normalActualTimeSec = Math.max(0, elSecInSubLeg - qlCompletedTimeSec - activeQLTimeSec);
+  // Time spent outside any QL zone (completed or active)
+  const normalActualTimeSec = Math.max(0, elSec - qlCompletedTimeSec - activeQLTimeSec);
 
   if(gpsFixN>0 && spdMs>0){
     // ── DELTA SECONDS ─────────────────────────────────────────────────────
-    // subLegBaseDeltaSec carries the total delta already "locked in" from
-    // every PREVIOUSLY completed sub-leg (see _closeActiveSubLeg — folded in
-    // exactly like a leg-to-leg handoff, with no penalty at the switch
-    // itself). The three segments below cover only the ACTIVE sub-leg:
+    // Splits the leg into three segments; each contributes (actual_time − expected_time):
     //
     // 1. Normal (non-QL) segment:
     //    actual time  = normalActualTimeSec
-    //    expected time = (GPS dist in non-QL time, within this sub-leg) / target_speed
+    //    expected time = (GPS dist in non-QL time) / target_speed
     const totalQLGpsDistM = qlCompletedGpsDistM + activeQLDistM;
-    const normalGpsDistM  = Math.max(0, gpsDistMInSubLeg - totalQLGpsDistM);
+    const normalGpsDistM  = Math.max(0, gpsDistM - totalQLGpsDistM);
     const normalDelta     = normalActualTimeSec - normalGpsDistM / spdMs;
 
-    // 2. Completed QL zones within this sub-leg (accumulated in _deactivateQL):
+    // 2. Completed QL zones (accumulated in _deactivateQL):
     //    actual time  = qlCompletedTimeSec
     //    expected time = sum(GPS_dist_in_zone / QL_speed_of_zone) = qlCompletedExpTimeSec
     const completedQLDelta = qlCompletedTimeSec - qlCompletedExpTimeSec;
@@ -3044,24 +2828,23 @@ function tick(){
       ? activeQLTimeSec - activeQLDistM / activeQLSpdMs
       : 0;
 
-    delta = subLegBaseDeltaSec + normalDelta + completedQLDelta + activeQLDelta;
+    delta = normalDelta + completedQLDelta + activeQLDelta;
     state = Math.abs(delta) < 0.3 ? 'ontime' : delta > 0 ? 'behind' : 'ahead';
 
     // ── DELTA METERS — distance-weighted average speed formula ───────────
     // deltaDistM = −deltaSec × weightedAvgSpeed
     // where weightedAvgSpeed = Σ(sub_dist_i × sub_speed_i) / total_gps_dist
-    // (scoped to the active sub-leg — deltaDistM is an instantaneous "how
-    // far off right now" gauge, so it uses the CURRENT segment's pace.)
     const distSpeedSum = normalGpsDistM * spdMs
                        + qlCompletedDistSpeedSum
                        + activeQLDistM * activeQLSpdMs;
-    const weightedAvgSpdMs = gpsDistMInSubLeg > 0 ? distSpeedSum / gpsDistMInSubLeg : spdMs;
+    const weightedAvgSpdMs = gpsDistM > 0 ? distSpeedSum / gpsDistM : spdMs;
     deltaDistM = -delta * weightedAvgSpdMs;
 
     // ── EXPECTED POSITION (QL-schedule-aware) — used by telem Row 3 ──────
-    // expDistM: where the driver SHOULD be within the active sub-leg at this
-    // exact elapsed time, given the sub-leg's target speed for non-QL time
-    // and each QL zone's own speed for time spent inside that zone.
+    // expDistM: where the driver SHOULD be at this exact elapsed time,
+    // given the leg target speed for non-QL time and each QL zone's own
+    // speed for time spent inside that zone. Pure function of elapsed time
+    // (not GPS distance), so it advances smoothly every tick.
     //
     // Formula mirrors the delta_sec split in reverse:
     //   Normal segment expected dist  = normalActualTimeSec × spdMs
@@ -3075,18 +2858,12 @@ function tick(){
              + qlCompletedTimeSpeedSum
              + activeQLTimeSec * activeQLSpdMs;
 
-  } else if(tgtSecs != null) {
-    delta = subLegBaseDeltaSec + Math.max(0, elSecInSubLeg - tgtSecs);
-    state = Math.abs(delta) < 0.3 ? (elSecInSubLeg < tgtSecs ? 'neutral' : 'ontime') : 'behind';
+  } else {
+    delta = Math.max(0, elSec - tgtSecs);
+    state = delta < 0.3 ? (elSec < tgtSecs ? 'neutral' : 'ontime') : 'behind';
     // No GPS: time-based expected position at target speed
     deltaDistM = -delta * spdMs;
-    expDistM = elSecInSubLeg * spdMs;
-  } else {
-    // No GPS AND no known distance for this sub-leg — nothing to measure against yet
-    delta = subLegBaseDeltaSec;
-    state = 'neutral';
-    deltaDistM = 0;
-    expDistM = 0;
+    expDistM = elSec * spdMs;
   }
   setDelta(Math.abs(delta),state,true);
   lastDeltaSnap = { sec: delta, m: deltaDistM };
@@ -3102,7 +2879,7 @@ function tick(){
   ddistEl.style.color = ddistColor; ddistSign.style.color = ddistColor;
 
   const gpsKmh=gpsSpeedMs!=null?gpsSpeedMs*3.6:null;
-  // Refresh calibration factor mirrored displays
+  // Update calibration corner badge
   refreshCalibDisplays();
   if(gpsKmh!=null){
     // When QL active, compare GPS speed to QL speed instead of target
@@ -3127,9 +2904,9 @@ function tick(){
   if(Math.abs(avgDiff)<0.5){ avgBlock.style.borderColor = 'color-mix(in srgb,var(--ok) 35%,transparent)'; }
   else { avgBlock.style.borderColor = avgDiff>0 ? 'color-mix(in srgb,var(--ahead) 35%,transparent)' : 'color-mix(in srgb,var(--behind) 35%,transparent)'; }
 
-  // Remaining distance (within the active sub-leg; dash if it has no known distance)
-  const remainKm = subHasDist ? Math.max(0, (tgtDistM - gpsDistMInSubLeg) / 1000) : null;
-  gel('live-leg-remaining-dist').textContent = remainKm!=null ? remainKm.toFixed(3) : '—';
+  // Remaining distance
+  const remainKm = Math.max(0, (tgtDistM - gpsDistM) / 1000);
+  gel('live-leg-remaining-dist').textContent = remainKm.toFixed(3);
 
   // ── Telem table Row 2 ────────────────────────────────────────────────────
   // Delta colour: same mapping as setDelta() uses
@@ -3175,48 +2952,36 @@ function tick(){
   gel('tt-exp-spd').innerHTML = `<small>Expected Spd</small>${elSec>1 ? expSpdKmh.toFixed(1)+' km/h' : tgtKmh.toFixed(1)+' km/h'}`;
   gel('tt-exp-spd').style.cssText = '';
 
-  const pctVal = subHasDist ? Math.min((gpsDistMInSubLeg/tgtDistM)*100, 100) : 0;
+  const pctVal = tgtDistM > 0 ? Math.min((gpsDistM/tgtDistM)*100, 100) : 0;
   gel('pfill').style.width = pctVal.toFixed(1)+'%';
-  gel('pexp').style.left = subHasDist ? ((expDistM/tgtDistM)*100).toFixed(1)+'%' : '0%';
-  gel('ppct').textContent = subHasDist ? pctVal.toFixed(1)+'%' : '—';
-  // Update subleg group progress bar (pre-existing linked-legs grouping — unrelated to v0.91.00 sub-legs)
+  gel('pexp').style.left=((expDistM/tgtDistM)*100).toFixed(1)+'%';
+  gel('ppct').textContent = pctVal.toFixed(1)+'%';
+  // Update subleg group progress bar
   const gi = legGroupInfo(curIdx);
   if(gi.size > 1){
     const groupPct = ((gi.posInGroup / gi.size)*100).toFixed(0);
     gel('subleg-fill').style.width = groupPct+'%';
-    gel('subleg-info').textContent = 'Leg '+(gi.posInGroup+1)+' of '+gi.size;
+    gel('subleg-info').textContent = 'Sub-leg '+(gi.posInGroup+1)+' of '+gi.size;
   } else {
     gel('subleg-fill').style.width = pctVal.toFixed(1)+'%';
     gel('subleg-info').textContent = '';
   }
-  // Safety auto-stop if running 4x beyond the active sub-leg's own target
-  // time — only meaningful when this sub-leg has a known distance/time.
-  if(tgtSecs != null && elSecInSubLeg > tgtSecs*4) stopLeg();
+  if(elSec>tgtSecs*4) stopLeg();
 }
 
 function stopLeg(){
   if(!legRunning) return;
-  // Capture the live QL+sub-leg-aware delta (exactly what the driver sees on
-  // screen) BEFORE clearing the timer. lastDeltaSnap is written every tick()
-  // with the full formula (including subLegBaseDeltaSec), so this is correct.
+  // Capture the live QL-aware delta (exactly what the driver sees on screen)
+  // BEFORE clearing the timer or calling _deactivateQL. lastDeltaSnap is
+  // written every tick() with the full QL formula, so this is the correct value.
   const liveDelta = lastDeltaSnap.sec;
   clearInterval(legTimer); legRunning=false;
   _deactivateQL();
-
   const leg=legs[curIdx];
-  // Log the final active sub-leg's end — for the Results sub-events table
-  // only. Delta math is already fully captured in liveDelta via tick(), so
-  // this does NOT get folded into subLegBaseDeltaSec (that would double-count).
-  const finalSub = getActiveSubLeg();
-  if(finalSub){
-    const elSecInFinalSub = (performance.now()-legStartTs)/1000 - subLegStartElSec;
-    _qlLogToResults(parseFloat(finalSub.spdKmh)||null, 'sslend', gpsDistM-subLegStartGpsDistM, elSecInFinalSub, 'Sub-leg '+(activeSubLegIdx+1));
-  }
-
-  const legSum = calcLegSummary(leg);
-  const tgtSecs = legSum.secs;
+  const tgtSecs=calcSecs(leg.distM,leg.spdKmh);
   const elSec=(performance.now()-legStartTs)/1000;
-  // Use the live delta instead of recomputing without QL/sub-leg context.
+  const spdMs=parseFloat(leg.spdKmh)/3.6;
+  // Use the live delta instead of recomputing without QL context.
   const delta = liveDelta;
   const avgAccuracy = gpsFixN > 0 ? (totalAccPointsThisStage / gpsFixN) : 0.0;
   
@@ -3426,15 +3191,12 @@ function _buildResultsInner(){
     if(!r) return;
     const legIdx = r.legIdx != null ? r.legIdx : i;
     const leg = r.leg || (legs[legIdx] || {});
-    migrateLegToSubLegs(leg);
-    const legSum = calcLegSummary(leg);
-    const firstSub = leg.subLegs && leg.subLegs[0];
     const penalty = r.totalPenalty != null ? r.totalPenalty : Math.abs(r.delta);
     tot += r.delta;
     realPenalty += penalty;
 
     const actSpd   = r.elSec > 0 ? (r.gpsDistM / 1000) / (r.elSec / 3600) : 0;
-    const tgtSpd   = firstSub ? (parseFloat(firstSub.spdKmh) || 0) : 0;
+    const tgtSpd   = parseFloat(leg.spdKmh) || 0;
     const timeDiff = r.elSec - r.tgtSecs;
     const spdDiff  = actSpd - tgtSpd;
 
@@ -3450,12 +3212,11 @@ function _buildResultsInner(){
     const stopAnno  = r.wasAutoDistance ? '(a)' : '(m)';
     const stopAt    = fmtTime(r.stopTime || r.endedAt);
     const legCF     = r.calibFactor != null ? r.calibFactor.toFixed(5) : calibFactor.toFixed(5);
-    // Set (target) distance/speed from the Leg definition (sum of known
-    // sub-legs; "+" marks a partly-floating stage), plus the exact
+    // Set (target) distance/speed from the Leg definition, plus the exact
     // date+time this run was started — makes repeated runs of the same
     // stage easy to tell apart in the results list.
-    const setDistKm = legSum.distM!=null ? (legSum.distM/1000).toFixed(3)+(legSum.allKnown?'':'+') : '—';
-    const setSpdKmh = firstSub && firstSub.spdKmh ? parseFloat(firstSub.spdKmh).toFixed(1) : '—';
+    const setDistKm = leg.distM ? (parseFloat(leg.distM)/1000).toFixed(3) : '—';
+    const setSpdKmh = leg.spdKmh ? parseFloat(leg.spdKmh).toFixed(1) : '—';
     const startedDateTime = fmtDateTime(r.startedAt);
 
     // ── Per-leg card ──────────────────────────────────────────────────────
@@ -3484,7 +3245,7 @@ function _buildResultsInner(){
             <td class="${actTimeCls}">${fmtMMSSdd(r.elSec)}</td>
             <td>${tgtSpd.toFixed(1)}</td>
             <td class="${actSpdCls}">${actSpd.toFixed(3)}</td>
-            <td>${legSum.distM!=null ? (legSum.distM/1000).toFixed(3) : '—'}</td>
+            <td>${(parseFloat(leg.distM||0)/1000).toFixed(3)}</td>
             <td>${(r.gpsDistM/1000).toFixed(3)}</td>
             <td style="color:var(--warn)">${legCF}</td>
             <td>\xb1${(r.avgAccuracy||0).toFixed(1)}m</td>
@@ -3534,15 +3295,6 @@ function _buildResultsInner(){
           rowCls = 'ql-marshal';
           actionName = '\u23f1 Marshal';
           penaltyCell = `<b>${Math.abs(ev.deltaSec||0).toFixed(3)}s</b>`;
-        } else if(ev.type === 'sslstart'){
-          rowCls = 'ssl-start';
-          actionName = `\u25b6 ${ev.sslLabel||'Sub-leg'} Start`;
-          penaltyCell = '\u2014'; // no penalty at a sub-leg change
-        } else if(ev.type === 'sslend'){
-          rowCls = 'ssl-end';
-          actionName = `\u25a0 ${ev.sslLabel||'Sub-leg'} End`;
-          qlExtra = ` <span style="opacity:.65;font-size:10px;">${(ev.qlDistM||0).toFixed(0)}m / ${(ev.qlSec||0).toFixed(1)}s</span>`;
-          penaltyCell = '\u2014'; // no penalty at a sub-leg change
         }
 
         html += `<tr class="${rowCls}">
@@ -3596,20 +3348,7 @@ function importLegs(input){
 function processImportedPayload(raw){
   const arr=Array.isArray(raw)?raw:raw.legs||[];
   legs=arr.map((l,i)=>{
-    legId++;
-    let subLegs;
-    if(Array.isArray(l.subLegs) && l.subLegs.length){
-      // New-format import (v0.91.00+) — re-issue ids to avoid collisions
-      subLegs = l.subLegs.map(sl=>{
-        sslId++;
-        return {id:sslId, spdKmh:String(sl.spdKmh||''), distM:String(sl.distM||''), knownDist:!!sl.knownDist};
-      });
-    } else {
-      // Legacy leg (flat distM/spdKmh, no sub-legs) — migrate to a single sub-leg
-      sslId++;
-      subLegs = [{id:sslId, spdKmh:String(l.spdKmh||''), distM:String(l.distM||''), knownDist:!!l.distM}];
-    }
-    return{id:legId,name:l.name||'Stage '+(i+1),linked:!!l.linked,atDistance:!!l.atDistance,autoStart:!!l.autoStart,autoHH:l.autoHH||'',autoMM:l.autoMM||'',autoOffset:String(l.autoOffset||'0'),subLegs};
+    legId++; return{id:legId,name:l.name||'Stage '+(i+1),distM:String(l.distM||''),spdKmh:String(l.spdKmh||''),linked:!!l.linked,atDistance:!!l.atDistance,autoStart:!!l.autoStart,autoHH:l.autoHH||'',autoMM:l.autoMM||'',autoOffset:String(l.autoOffset||'0')};
   }); renderLegs();
   // Honor an imported Calibration Factor, whatever the import path (file,
   // URL fetch, device save/load, or clipboard). It remains a normal,
@@ -3722,7 +3461,7 @@ async function fetchLegsFromUrl(){
   }
 }
 
-legId=1; sslId=1; legs.push({id:1,name:'Stage 1',linked:false,atDistance:false,autoStart:false,autoHH:'',autoMM:'',autoOffset:'0',subLegs:[{id:1,spdKmh:'',distM:'',knownDist:true}]});
+legId=1; legs.push({id:1,name:'Stage 1',distM:'',spdKmh:'',linked:false,atDistance:false,autoStart:false,autoHH:'',autoMM:'',autoOffset:'0'});
 renderLegs();
 // Try restoring previously persisted results
 loadResults();

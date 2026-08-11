@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" id="theme-color-meta" content="#07090c">
-<title>RegRally THOR v0.91.03</title>
+<title>RegRally THOR v0.91.02</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ── THEME TOKENS ── */
@@ -47,11 +47,11 @@ body{
 /* ── HEADER ── */
 #hdr{
   flex-shrink:0;
-  padding:calc(env(safe-area-inset-top,0px) + 5px) 7px 5px;
+  padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 10px;
   background:var(--surf);border-bottom:1px solid var(--border);
   display:flex;
   align-items:center;
-  gap:clamp(3px,1.5vw,6px);
+  gap:12px;
   position:relative;
   z-index:50;
   overflow-x:auto;
@@ -65,7 +65,7 @@ body{
   background:linear-gradient(90deg,transparent,var(--ahead) 30%,var(--ok) 70%,transparent);opacity:.5;
 }
 .hdr-clock-container { display: flex; align-items: center; flex-shrink: 0; }
-.hdr-clock{font-family:'DM Mono',monospace;font-size:clamp(9px,3.25vw,13px);font-weight:700;letter-spacing:0.5px;color:var(--warn); line-height:1;}
+.hdr-clock{font-family:'DM Mono',monospace;font-size:26px;font-weight:700;letter-spacing:1px;color:var(--warn); line-height:1;}
 [data-theme="dark"] .hdr-clock{text-shadow:0 0 12px color-mix(in srgb,var(--warn) 40%,transparent);}
 
 /* Telemetry Fixed Row Columns (Prevents elements shifting layout) */
@@ -73,9 +73,9 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: clamp(2px,1vw,4px);
+  gap: 8px;
   font-family: 'DM Mono', monospace;
-  font-size: clamp(7px,2.4vw,9.75px);
+  font-size: 19.5px;
   font-weight: 500;
   white-space: nowrap;
   text-align: center;
@@ -85,26 +85,26 @@ body{
 .hdr-telemetry-item { 
   display: inline-flex; 
   align-items: center; 
-  gap: 1px; 
+  gap: 2px; 
   justify-content: flex-start;
 }
-.hdr-telemetry-item.item-pr { min-width: clamp(24px,5.9vw,47px); }
-.hdr-telemetry-item.item-sp { min-width: clamp(35px,8.75vw,70px); }
-.hdr-telemetry-item.item-alt { min-width: clamp(26px,6.6vw,53px); }
-.hdr-telemetry-item.item-fix { min-width: clamp(22px,5.6vw,45px); }
-.hdr-telemetry-item.item-hz { min-width: clamp(16px,4vw,33px); }
-.hdr-lbl { color: var(--txt3); font-weight: 400; margin-right: 1px; }
+.hdr-telemetry-item.item-pr { min-width: 95px; }
+.hdr-telemetry-item.item-sp { min-width: 140px; }
+.hdr-telemetry-item.item-alt { min-width: 105px; }
+.hdr-telemetry-item.item-fix { min-width: 90px; }
+.hdr-telemetry-item.item-hz { min-width: 65px; }
+.hdr-lbl { color: var(--txt3); font-weight: 400; margin-right: 2px; }
 
 .app-version{
   font-family:'DM Mono',monospace;
-  font-size:clamp(7px,2.4vw,9.6px);
+  font-size:19.25px;
   font-weight:700;
   color: var(--txt);
   background: var(--surf3);
-  padding: clamp(2px,0.75vw,3px) clamp(4px,1.5vw,6px);
-  border-radius: 2px;
+  padding: 6px 12px;
+  border-radius: 4px;
   border: 1px solid var(--border2);
-  letter-spacing: 0.25px;
+  letter-spacing: 0.5px;
   white-space: nowrap;
 }
 
@@ -419,27 +419,27 @@ body{
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
   border-bottom:1px solid var(--border);
-  padding-bottom:2px;
+  padding-bottom:3px;
   display:flex;
   flex-direction:row;
   align-items:center;
   justify-content:space-between;
-  gap:clamp(2px,0.5vw,4px);
+  gap:4px;
   white-space:nowrap;
   min-width:0;
 }
 .sbar::-webkit-scrollbar{display:none;}
-.sbar-half{display:flex;align-items:center;gap:clamp(2px,0.5vw,4px);flex-shrink:0;overflow:hidden;}
+.sbar-half{display:flex;align-items:center;gap:4px;flex-shrink:0;overflow:hidden;}
 .sbar-half.left{justify-content:flex-start;}
 .sbar-half.right{justify-content:flex-end;}
-.sbar-sep{width:1px;height:10px;background:var(--border);flex-shrink:0;}
+.sbar-sep{width:1px;height:20px;background:var(--border);flex-shrink:0;}
 .sbar-badge{
-  font-size:clamp(5px,1.75vw,7px);font-weight:700;letter-spacing:0.75px;text-transform:uppercase;
-  flex-shrink:0;padding:clamp(1px,0.375vw,2px) clamp(2px,0.75vw,3px);border-radius:2px;
+  font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  flex-shrink:0;padding:2px 6px;border-radius:3px;
 }
 .sbar-badge.cur{color:var(--bg);background:#fff;}
 .sbar-badge.nxt{color:var(--txt3);background:var(--surf3);border:1px solid var(--border);}
-.sbar-text{font-size:clamp(6px,2.1vw,8.5px);font-weight:700;letter-spacing:.05em;flex-shrink:0;}
+.sbar-text{font-size:17px;font-weight:700;letter-spacing:.05em;flex-shrink:0;}
 .sbar-text.cur{color:#fff;}
 .sbar-text.nxt{color:var(--txt3);}
 .sdot{width:10px;height:10px;border-radius:50%;background:var(--txt3);flex-shrink:0;transition:all .3s;}
@@ -515,28 +515,27 @@ body{
 .chip-icons{font-size:9px;opacity:.85;letter-spacing:1px;}
 
 /* Speed panel */
-.spanel{background:var(--surf);border:1px solid var(--border);border-radius:6px;padding:8px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px;width:100%;box-sizing:border-box;}
-.sb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:1;height:40px;box-sizing:border-box;padding:2px 4px;}
-.slb{font-size:8px;font-weight:600;letter-spacing:0.5px;color:var(--txt3);text-transform:uppercase;margin-bottom:1px;}
-.spd-row{display:flex;align-items:baseline;gap:4px;justify-content:center;}
-.sn{font-family:'DM Mono',monospace;font-size:15px;font-weight:500;line-height:1;letter-spacing:-0.5px;color:var(--ahead);transition:color .3s;}
+.spanel{background:var(--surf);border:1px solid var(--border);border-radius:6px;padding:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;width:100%;box-sizing:border-box;}
+.sb{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;}
+.slb{font-size:12px;font-weight:600;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;margin-bottom:2px;}
+.spd-row{display:flex;align-items:baseline;gap:8px;justify-content:center;}
+.sn{font-family:'DM Mono',monospace;font-size:22.8px;font-weight:500;line-height:1;letter-spacing:-1px;color:var(--ahead);transition:color .3s;}
 [data-theme="dark"] .sn{text-shadow:0 0 16px color-mix(in srgb,var(--ahead) 40%,transparent);}
 .sn.over{color:var(--behind);}.sn.good{color:var(--ok);}.sn.near{color:var(--warn);}
-.su{font-size:8px;font-weight:600;color:var(--txt3);}
-.sdiv{width:1px;background:var(--border);height:34px;margin:0 3px;flex-shrink:0;}
+.su{font-size:12px;font-weight:600;color:var(--txt3);}
+.sdiv{width:1px;background:var(--border);height:52px;margin:0 4px;flex-shrink:0;}
 /* Target speed block */
 .tgt-block{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:1;
-  height:40px;box-sizing:border-box;
+  display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;
   background:color-mix(in srgb,var(--warn) 10%,transparent);
   border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);
-  border-radius:5px;padding:2px 5px;margin:0 1px;
+  border-radius:5px;padding:6px 10px;margin:0 2px;
 }
 .tgt-block .slb{color:var(--warn);}
-.st{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--warn);letter-spacing:-0.5px;line-height:1;}
+.st{font-family:'DM Mono',monospace;font-size:16.8px;font-weight:700;color:var(--warn);letter-spacing:-1px;line-height:1;}
 [data-theme="dark"] .st{text-shadow:0 0 12px color-mix(in srgb,var(--warn) 40%,transparent);}
 /* sdiff: in [brackets], reversed colour (red=slower, blue=faster) */
-.sdiff{font-family:'DM Mono',monospace;font-size:12px;font-weight:600;line-height:1;letter-spacing:-0.5px;}
+.sdiff{font-family:'DM Mono',monospace;font-size:17.1px;font-weight:600;line-height:1;letter-spacing:-1px;}
 /* p = positive diff = faster than target = AHEAD = blue */
 .sdiff.p{color:var(--ahead);}
 /* n = negative diff = slower than target = BEHIND = red */
@@ -642,7 +641,7 @@ body{
 
 /* Controls Layout: 3 Columns fixed size buttons */
 .ctrlg-three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-.bc{font-weight:700;font-size:11.7px;line-height:1;padding:7.05px 2.4px;border-radius:2.4px;cursor:pointer;border:none;transition:all .2s; text-align:center;}
+.bc{font-weight:700;font-size:7.8px;padding:9px 2.4px;border-radius:2.4px;cursor:pointer;border:none;transition:all .2s; text-align:center;}
 .bc:active{transform:scale(.97);opacity:.9;}
 .bgo{background:var(--ok);color:#fff;}
 .bstop{background:var(--behind);color:#fff;}
@@ -669,11 +668,9 @@ body{
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 2px;
   align-self: stretch;
 }
-.sec-h-spacer { flex: 0 0 15%; }
-.sec-h-buttons { flex: 0 0 70%; display: flex; flex-direction: column; gap: 2px; min-height: 0; }
 .qlimit-btn {
   flex: 1;
   min-height: 0;
@@ -807,14 +804,14 @@ body{
 }
 .ql-zone-badge {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 4px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
   flex-shrink: 0;
-  padding: 1.5px 3px 1.5px 4px;
+  padding: 3px 6px 3px 8px;
   background: color-mix(in srgb, var(--txt3) 10%, transparent);
   border: 1px solid color-mix(in srgb, var(--txt3) 25%, transparent);
-  border-radius: 3px;
+  border-radius: 5px;
   transition: background 0.25s, border-color 0.25s;
 }
 .ql-zone-badge.active {
@@ -823,9 +820,9 @@ body{
 }
 .ql-zone-badge-lbl {
   font-family: 'DM Sans', sans-serif;
-  font-size: 6px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.75px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--txt3);
   line-height: 1;
@@ -836,7 +833,7 @@ body{
 }
 .ql-zone-val {
   font-family: 'DM Mono', monospace;
-  font-size: 10px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--txt3);
   line-height: 1.2;
@@ -847,7 +844,7 @@ body{
 }
 .ql-zone-badge-unit {
   font-family: 'DM Sans', sans-serif;
-  font-size: 5.5px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--txt3);
   margin-left: 1px;
@@ -933,14 +930,14 @@ body{
 .ql-meters-lbl { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--txt3); }
 
 /* Expanded High-Visibility Results Matrix Table Grid */
-.rtable{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:clamp(7px,1.7vw,10px);}
+.rtable{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:clamp(10px,2.5vw,17.1px);}
 .rtable th{
-  font-size:clamp(6px,1.4vw,8px);
+  font-size:clamp(9px,2vw,13.8px);
   font-weight:700;
-  letter-spacing:.25px;
+  letter-spacing:.5px;
   color:var(--txt3);
   text-transform:uppercase;
-  padding:3px 2px;
+  padding:6px 4px;
   background:var(--surf2);
   text-align:right;
   border-bottom:1px solid var(--border);
@@ -949,16 +946,16 @@ body{
 .rtable th:first-child{text-align:left;}
 .rtable td{
   font-family:'DM Mono',monospace;
-  font-size:clamp(7px,1.7vw,10px);
-  padding:3px 2px;
+  font-size:clamp(10px,2.5vw,17.1px);
+  padding:6px 4px;
   border-bottom:1px solid var(--border);
   color:var(--txt);
   text-align:right;
   vertical-align:middle;
   white-space:nowrap;
 }
-.rtable td:first-child{font-family:'DM Sans',sans-serif;font-weight:700;font-size:clamp(7px,1.7vw,10px);text-align:left;white-space:normal;word-break:break-word;min-width:80px;max-width:160px;}
-.rtable .subrow td { font-size: clamp(6px,1.4vw,8px); color: var(--txt3); background: var(--surf3); }
+.rtable td:first-child{font-family:'DM Sans',sans-serif;font-weight:700;font-size:clamp(10px,2.5vw,17.1px);text-align:left;white-space:normal;word-break:break-word;min-width:80px;max-width:160px;}
+.rtable .subrow td { font-size: clamp(9px,2vw,13px); color: var(--txt3); background: var(--surf3); }
 .rtable tr:last-child td{border-bottom:none;}
 /* Linked stage name cell — light green outline */
 .rtable td.linked-stage{
@@ -1099,9 +1096,9 @@ body{
     <span id="gtxt" style="display:none">NO GPS</span>
   </div>
   
-  <div class="hdr-right" style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
-    <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:12px;padding:2px;line-height:1;" title="Toggle theme">☀️</button>
-    <div class="app-version">RegRally THOR v0.91.03</div>
+  <div class="hdr-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+    <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" title="Toggle theme">☀️</button>
+    <div class="app-version">RegRally THOR v0.91.02</div>
   </div>
 </div>
 
@@ -1327,19 +1324,15 @@ body{
 
       <!-- Section H: Quick Limits -->
       <div class="sec-h" id="sec-h">
-        <div class="sec-h-spacer"></div>
-        <div class="sec-h-buttons">
-          <button class="qlimit-btn" id="ql-10"  onclick="toggleQuickLimit(10)"  data-spd="10">10</button>
-          <button class="qlimit-btn" id="ql-15"  onclick="toggleQuickLimit(15)"  data-spd="15">15</button>
-          <button class="qlimit-btn" id="ql-20"  onclick="toggleQuickLimit(20)"  data-spd="20">20</button>
-          <button class="qlimit-btn" id="ql-30"  onclick="toggleQuickLimit(30)"  data-spd="30">30</button>
-          <button class="qlimit-btn" id="ql-40"  onclick="toggleQuickLimit(40)"  data-spd="40">40</button>
-          <button class="qlimit-btn" id="ql-50"  onclick="toggleQuickLimit(50)"  data-spd="50">50</button>
-          <button class="qlimit-btn" id="ql-60"  onclick="toggleQuickLimit(60)"  data-spd="60">60</button>
-          <button class="qlimit-btn" id="ql-70"  onclick="toggleQuickLimit(70)"  data-spd="70">70</button>
-          <button class="qlimit-marshal-btn" id="ql-marshal" onclick="marshalAction()" title="Marshal">⏱</button>
-        </div>
-        <div class="sec-h-spacer"></div>
+        <button class="qlimit-btn" id="ql-10"  onclick="toggleQuickLimit(10)"  data-spd="10">10</button>
+        <button class="qlimit-btn" id="ql-15"  onclick="toggleQuickLimit(15)"  data-spd="15">15</button>
+        <button class="qlimit-btn" id="ql-20"  onclick="toggleQuickLimit(20)"  data-spd="20">20</button>
+        <button class="qlimit-btn" id="ql-30"  onclick="toggleQuickLimit(30)"  data-spd="30">30</button>
+        <button class="qlimit-btn" id="ql-40"  onclick="toggleQuickLimit(40)"  data-spd="40">40</button>
+        <button class="qlimit-btn" id="ql-50"  onclick="toggleQuickLimit(50)"  data-spd="50">50</button>
+        <button class="qlimit-btn" id="ql-60"  onclick="toggleQuickLimit(60)"  data-spd="60">60</button>
+        <button class="qlimit-btn" id="ql-70"  onclick="toggleQuickLimit(70)"  data-spd="70">70</button>
+        <button class="qlimit-marshal-btn" id="ql-marshal" onclick="marshalAction()" title="Marshal">⏱</button>
       </div>
 
     </div><!-- end .live-with-h -->
