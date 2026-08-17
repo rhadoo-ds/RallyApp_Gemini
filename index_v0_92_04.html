@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" id="theme-color-meta" content="#07090c">
-<title>RegRally THOR v0.92.07</title>
+<title>RegRally THOR v0.92.04</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ── THEME TOKENS ── */
@@ -16,7 +16,7 @@
   --bg:#07090c;--surf:#0e1318;--surf2:#141b22;--surf3:#1a232c;
   --border:#1f2f3d;--border2:#28404f;
   --txt:#dce8f0;--txt2:#8aa0b0;--txt3:#4a6070;
-  --ahead:#29b5ff;--behind:#ff3355;--ok:#00df80;--warn:#ffb020;--purple:#b166f5;
+  --ahead:#29b5ff;--behind:#ff3355;--ok:#00df80;--warn:#ffb020;
   --dim:#162030;--overlay:rgba(7,9,12,.97);
   --neon:#39ff14;--neon-txt:#04150b;
 }
@@ -24,7 +24,7 @@
   --bg:#f0f4f8;--surf:#ffffff;--surf2:#f5f7fa;--surf3:#eaeff4;
   --border:#d0dae4;--border2:#b8c8d8;
   --txt:#0d1f2d;--txt2:#4a6070;--txt3:#8aa0b0;
-  --ahead:#0080cc;--behind:#e0001a;--ok:#00904f;--warn:#b87000;--purple:#8020c8;
+  --ahead:#0080cc;--behind:#e0001a;--ok:#00904f;--warn:#b87000;
   --dim:#c8dce8;--overlay:rgba(240,244,248,.97);
   --neon:#39ff14;--neon-txt:#04150b;
 }
@@ -437,11 +437,11 @@ body{
   font-size:clamp(6px,2.1vw,8.4px);font-weight:700;letter-spacing:0.75px;text-transform:uppercase;
   flex-shrink:0;padding:clamp(1px,0.375vw,2px) clamp(2px,0.75vw,3px);border-radius:2px;
 }
-.sbar-badge.cur{color:#0d1f2d;background:#fff;}
+.sbar-badge.cur{color:var(--bg);background:#fff;}
 .sbar-badge.nxt{color:var(--txt3);background:var(--surf3);border:1px solid var(--border);}
-.sbar-text{font-size:clamp(8.28px,2.898vw,11.73px);font-weight:700;letter-spacing:.05em;flex-shrink:0;}
-.sbar-text.cur{color:var(--ok);}
-.sbar-text.nxt{color:var(--ahead);}
+.sbar-text{font-size:clamp(7.2px,2.52vw,10.2px);font-weight:700;letter-spacing:.05em;flex-shrink:0;}
+.sbar-text.cur{color:var(--txt);}
+.sbar-text.nxt{color:var(--txt3);}
 .sdot{width:10px;height:10px;border-radius:50%;background:var(--txt3);flex-shrink:0;transition:all .3s;}
 .sdot.run{background:var(--ok);box-shadow:0 0 8px var(--ok);animation:blink 1s infinite;}
 .sdot.done{background:var(--behind);}
@@ -470,7 +470,6 @@ body{
   align-items: center;
   user-select: none;
 }
-.collapsible-container:not(.open) .collapsible-trigger { padding: 3px 12px; }
 .collapsible-trigger::after {
   content: '▼';
   font-size: 9px;
@@ -546,28 +545,27 @@ body{
 
 /* Hero display layout panel colors styling matrix */
 .delta-row{display:flex;align-items:stretch;gap:8px;width:100%;}
-.delta-row .delta{flex:0 0 calc(56% - 5.34px);max-width:calc(56% - 5.34px);box-sizing:border-box;margin:0;}
+.delta-row .delta{flex:0 0 calc(70% - 4px);max-width:calc(70% - 4px);box-sizing:border-box;margin:0;}
 .trip-panel{
-  flex:0 0 calc(22% - 5.33px);max-width:calc(22% - 5.33px);box-sizing:border-box;
+  flex:0 0 calc(30% - 4px);max-width:calc(30% - 4px);box-sizing:border-box;
   background:var(--surf);border:1px solid var(--border);border-radius:6px;
-  padding:6.8px 5px;display:flex;flex-direction:column;gap:3.5px;
+  padding:8px 9px;display:flex;flex-direction:column;gap:5px;
 }
 .trip-row{display:flex;align-items:baseline;justify-content:space-between;gap:4px;flex:1;}
 .trip-row .trip-lbl{
-  font-family:'DM Sans',sans-serif;font-size:7.65px;font-weight:700;letter-spacing:0.3px;
+  font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.3px;
   color:var(--txt3);text-transform:uppercase;white-space:nowrap;
 }
 .trip-row .trip-val{
-  font-family:'DM Mono',monospace;font-size:14.28px;font-weight:700;color:var(--txt);white-space:nowrap;
+  font-family:'DM Mono',monospace;font-size:16.8px;font-weight:700;color:var(--txt);white-space:nowrap;
 }
-.trip-row .trip-unit{font-family:'DM Sans',sans-serif;font-size:6.8px;font-weight:600;color:var(--txt3);margin-left:2px;}
-#trip-avg-spd{font-size:22.85px;font-weight:700;color:var(--ok);}
-#trip2-avg-spd{font-size:22.85px;font-weight:700;color:var(--purple);}
+.trip-row .trip-unit{font-family:'DM Sans',sans-serif;font-size:8px;font-weight:600;color:var(--txt3);margin-left:2px;}
+#trip-avg-spd{font-size:26.88px;font-weight:700;color:var(--ok);}
 .trip-reset-btn{
   margin-top:2px;display:flex;align-items:center;justify-content:center;gap:5px;flex:1;
   background:var(--surf3);border:1px solid var(--border2);color:var(--txt2);
-  font-family:'DM Sans',sans-serif;font-size:14.45px;font-weight:700;letter-spacing:0.5px;
-  padding:2px 4px;border-radius:5px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-size:17px;font-weight:700;letter-spacing:0.5px;
+  padding:5px 4px;border-radius:5px;cursor:pointer;
   transition:background-color .2s,border-color .2s,color .2s;
 }
 .trip-reset-btn:active{transform:scale(.95);}
@@ -847,7 +845,7 @@ body{
 }
 .calib-col-lbl {
   font-family: 'DM Sans', sans-serif;
-  font-size: 7.2px;
+  font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;
@@ -857,7 +855,7 @@ body{
 }
 .calib-col-val {
   font-family: 'DM Mono', monospace;
-  font-size: 13.6px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--warn);
   line-height: 1.25;
@@ -866,8 +864,8 @@ body{
 }
 [data-theme="dark"] .calib-col-val{text-shadow:0 0 12px color-mix(in srgb,var(--warn) 40%,transparent);}
 .dlbl-row .dlbl-col {
-  flex: 1 1 45%;
-  max-width: 45%;
+  flex: 1 1 50%;
+  max-width: 50%;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -896,8 +894,8 @@ body{
   align-items: stretch;
   justify-content: center;
   gap: 4px;
-  flex: 1 1 30%;
-  max-width: 30%;
+  flex: 1 1 25%;
+  max-width: 25%;
   min-width: 0;
   padding: 4px 5px;
   background: color-mix(in srgb, var(--txt3) 10%, transparent);
@@ -921,7 +919,7 @@ body{
 }
 .ql-zone-badge-lbl {
   font-family: 'DM Sans', sans-serif;
-  font-size: 8.8px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.75px;
   text-transform: uppercase;
@@ -935,7 +933,7 @@ body{
 }
 .ql-zone-val {
   font-family: 'DM Mono', monospace;
-  font-size: 16.8px;
+  font-size: 21px;
   font-weight: 700;
   color: var(--txt3);
   line-height: 1.2;
@@ -946,7 +944,7 @@ body{
 }
 .ql-zone-badge-unit {
   font-family: 'DM Sans', sans-serif;
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 600;
   color: var(--txt3);
   margin-left: 1px;
@@ -1211,7 +1209,7 @@ body{
     <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;padding:2px;line-height:1;display:flex;align-items:center;justify-content:center;" title="Toggle theme">
       <svg id="theme-btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--warn);"></svg>
     </button>
-    <div class="app-version">RegRally THOR v0.92.07</div>
+    <div class="app-version">RegRally THOR v0.92.04</div>
   </div>
 </div>
 
@@ -1367,9 +1365,9 @@ body{
         <div class="trip-row"><span class="trip-lbl">Chrono</span><span class="trip-val" id="trip-chrono">00:00:00</span></div>
         <div class="trip-row"><span class="trip-lbl">Temp Odo</span><span class="trip-val" id="trip-odo">0.000<span class="trip-unit">km</span></span></div>
         <div class="trip-row"><span class="trip-lbl">Avg speed</span><span class="trip-val" id="trip-avg-spd">0.0<span class="trip-unit">km/h</span></span></div>
-        <button class="trip-reset-btn" id="trip-reset-btn" onclick="resetTrip('trip')" title="Reset Temp Odo &amp; Avg Speed">
+        <button class="trip-reset-btn" id="trip-reset-btn" onclick="resetTripOdo()" title="Reset Temp Odo &amp; Avg Speed">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-          <span>Trip 1 Reset</span>
+          <span>RESET</span>
         </button>
       </div>
       <div class="delta" id="delta" style="--dc:var(--border2)">
@@ -1405,16 +1403,6 @@ body{
           </div>
         </div>
       </div>
-      </div>
-      <div class="trip-panel" id="trip2-panel">
-        <div class="trip-row"><span class="trip-lbl">Reset @</span><span class="trip-val" id="trip2-last-reset">—</span></div>
-        <div class="trip-row"><span class="trip-lbl">Chrono</span><span class="trip-val" id="trip2-chrono">00:00:00</span></div>
-        <div class="trip-row"><span class="trip-lbl">Temp Odo</span><span class="trip-val" id="trip2-odo">0.000<span class="trip-unit">km</span></span></div>
-        <div class="trip-row"><span class="trip-lbl">Avg speed</span><span class="trip-val" id="trip2-avg-spd">0.0<span class="trip-unit">km/h</span></span></div>
-        <button class="trip-reset-btn" id="trip2-reset-btn" onclick="resetTrip('trip2')" title="Reset Temp Odo &amp; Avg Speed">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-          <span>Trip 2 Reset</span>
-        </button>
       </div>
     </div>
 
@@ -1846,36 +1834,29 @@ function fmtDurHMSms(sec){
   const h = Math.floor(sec/3600);
   const m = Math.floor((sec%3600)/60);
   const s = Math.floor(sec%60);
-  const dec = Math.floor((sec - Math.floor(sec)) * 10); // single decimal (tenths of a second)
+  const ms = Math.floor((sec - Math.floor(sec)) * 1000);
   const pad = n => String(n).padStart(2,'0');
-  return pad(h)+':'+pad(m)+':'+pad(s)+'.'+dec;
+  return pad(h)+':'+pad(m)+':'+pad(s)+'.'+String(ms).padStart(3,'0');
 }
 // Trip meter panel — refreshed on its own interval (see bottom of file) so
-// it keeps ticking even when no stage is running. Shared by both the
-// "trip" and "trip2" instances via the idPrefix param.
-function updateTripPanelFields(idPrefix, startTs, startClockMs, distM){
-  const lr = gel(idPrefix+'-last-reset'); if(lr) lr.textContent = fmtClockHMS(startClockMs);
-  const elapsedSec = (performance.now() - startTs) / 1000;
-  const ch = gel(idPrefix+'-chrono'); if(ch) ch.textContent = fmtDurHMSms(elapsedSec);
-  const odoKm = distM / 1000;
-  const od = gel(idPrefix+'-odo'); if(od) od.textContent = odoKm.toFixed(3);
-  const avgKmh = elapsedSec > 1 ? (odoKm / (elapsedSec/3600)) : 0;
-  const av = gel(idPrefix+'-avg-spd'); if(av) av.textContent = avgKmh.toFixed(3);
-}
+// it keeps ticking even when no stage is running.
 function updateTripPanel(){
-  updateTripPanelFields('trip', tripStartTs, tripStartClockMs, tripDistM);
-  updateTripPanelFields('trip2', trip2StartTs, trip2StartClockMs, trip2DistM);
+  const lr = gel('trip-last-reset'); if(lr) lr.textContent = fmtClockHMS(tripStartClockMs);
+  const elapsedSec = (performance.now() - tripStartTs) / 1000;
+  const ch = gel('trip-chrono'); if(ch) ch.textContent = fmtDurHMSms(elapsedSec);
+  const odoKm = tripDistM / 1000;
+  const od = gel('trip-odo'); if(od) od.textContent = odoKm.toFixed(3);
+  const avgKmh = elapsedSec > 1 ? (odoKm / (elapsedSec/3600)) : 0;
+  const av = gel('trip-avg-spd'); if(av) av.textContent = avgKmh.toFixed(3);
 }
-function resetTrip(which){
-  // Per spec: this resets ONLY that one panel's Temp Odo + Avg speed (and
-  // the timestamp/chrono baseline they're derived from) — nothing else,
-  // and never the other trip panel.
-  const now = performance.now();
-  const nowClock = Date.now();
-  if(which === 'trip2'){ trip2StartTs = now; trip2StartClockMs = nowClock; trip2DistM = 0; }
-  else { tripStartTs = now; tripStartClockMs = nowClock; tripDistM = 0; }
+function resetTripOdo(){
+  // Per spec: this resets ONLY Temp Odo + Avg speed (and the timestamp/
+  // chrono baseline they're derived from) — nothing else in the app.
+  tripStartTs = performance.now();
+  tripStartClockMs = Date.now();
+  tripDistM = 0;
   updateTripPanel();
-  const btn = gel(which+'-reset-btn');
+  const btn = gel('trip-reset-btn');
   if(btn){
     btn.classList.remove('flashing');
     void btn.offsetWidth; // restart the animation if clicked again mid-flash
@@ -1922,17 +1903,11 @@ let totalAccPointsThisStage = 0;
 let totalFixesThisStage    = 0;  // every GPS callback while a stage is running, accept+reject+stationary — used for the per-stage average fix rate shown in Results
 
 // ── Trip meter (v0.92.01) — "Temp Odo" / "Avg speed" panel next to the
-// Delta section. Runs continuously regardless of leg state; only each
-// panel's own reset button touches its own state — nothing else in the
-// app does. Two independent instances (v0.92.05): "trip" (left of Delta)
-// and "trip2" (right of Delta) — both fed the same calibrated distance
-// stream, each with its own reset baseline.
+// Delta section. Runs continuously regardless of leg state; only the
+// panel's own reset button touches these — nothing else in the app does.
 let tripStartTs      = performance.now(); // baseline for Chrono reset / Avg speed
 let tripStartClockMs = Date.now();        // wall-clock time of last reset, for the Last reset display
 let tripDistM         = 0;                // accumulated distance since last reset
-let trip2StartTs      = performance.now();
-let trip2StartClockMs = Date.now();
-let trip2DistM         = 0;
 
 function haversine(la1,lo1,la2,lo2){
   const R=6371000,t=Math.PI/180;
@@ -2089,14 +2064,11 @@ function gpsSuccess(pos){
         gpsFixN++;
         totalAccPointsThisStage += c.accuracy;
       }
-      // Temp Odo trip meters (v0.92.01/v0.92.05) — always running,
-      // independent of leg state, always calibrated against the live
-      // Calibration Factor (not gated to legRunning like the main stage
-      // odometer above). Both panels are fed the same calibrated
-      // increment; each is reset only by its own reset button.
-      const tripInc = isStationary ? 0 : (d * wgt) / getCalibFactor();
-      tripDistM  += tripInc;
-      trip2DistM += tripInc;
+      // Temp Odo trip meter (v0.92.01) — always running, independent of
+      // leg state, always calibrated against the live Calibration Factor
+      // (not gated to legRunning like the main stage odometer above).
+      // Reset only by the trip panel's own reset button.
+      tripDistM += isStationary ? 0 : (d * wgt) / getCalibFactor();
       lastGoodPos              = pos;
       lastAcceptedPosTimestamp = pos.timestamp;
       lastAcceptedPerfNow      = currentTimeStamp;
@@ -4057,10 +4029,8 @@ loadResults();
 // Trip meter: prime the panel immediately (don't wait for the first 200ms
 // tick), and clean up the flash class once its animation finishes.
 updateTripPanel();
-['trip-reset-btn','trip2-reset-btn'].forEach(id => {
-  const btn = gel(id);
-  if(btn) btn.addEventListener('animationend', () => btn.classList.remove('flashing'));
-});
+const tripBtn = gel('trip-reset-btn');
+if(tripBtn) tripBtn.addEventListener('animationend', () => tripBtn.classList.remove('flashing'));
 </script>
 </body>
 </html>
